@@ -1,0 +1,420 @@
+<template>
+  <div class="info">
+    <!-- title背景图片 -->
+    <div class="info_title_bgc"
+         :style="bgc"></div>
+    <!-- 内容区域 -->
+    <div class="info_bottom">
+      <div class="btns"
+           v-if="nameType === 'SHIPOWNER'">
+        <el-button type="primary"
+                   @click="isPreservation"
+                   :disabled="!(current && current.length > 0)"
+                   plain>暂存</el-button>
+        <el-button type="primary"
+                   @click="isSubmission"
+                   :disabled="!(current && current.length > 0)"
+                   plain>提交</el-button>
+        <el-form class="form_posi">
+          <el-upload class="upload-demo"
+                     action="/files"
+                     :before-upload="beforeUpload"
+                     list-type="text">
+            <el-button size="small"
+                       type="primary">点击上传</el-button>
+            <div class="el-upload__tip"><span>{{fits}}</span></div>
+          </el-upload>
+        </el-form>
+      </div>
+
+      <el-table :data="tableData"
+                 :default-expand-all="true"
+                 @select="handleSelectionChange"
+                 @select-all="isList"
+                 :row-class-name="switchRowClass"
+                 :empty-text="emptyText"
+                 v-loading="loading"
+                 ref="tableMain"
+                 style="width: 100%">
+        <el-table-column type="selection"
+                         width="29">
+        </el-table-column>
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-table :data="props.row.orderDtos"
+                    border
+                    :cell-style="tableRowClassName"
+                    style="width: 100%">
+              <el-table-column prop="throughArea"
+                               label="特战区域名称">
+              </el-table-column>
+              <el-table-column prop="intime"
+                               width="100px"
+                               label="进入时间">
+              </el-table-column>
+              <el-table-column prop="outtime"
+                               width="100px"
+                               label="离开时间">
+              </el-table-column>
+              <el-table-column prop="days"
+                               label="停留天数">
+              </el-table-column>
+              <el-table-column prop="loadInfo"
+                               label="空满载(请注意修改)">
+                <template slot-scope="scope">
+                  <el-radio v-model="scope.row.loadInfo"
+                            label="满载">满载</el-radio>
+                  <el-radio v-model="scope.row.loadInfo"
+                            label="空载">空载</el-radio>
+                </template>
+
+              </el-table-column>
+              <el-table-column prop="anchoragePort"
+                               label="挂靠港名">
+              </el-table-column>
+              <el-table-column prop="anchorageDate"
+                               label="挂靠特战区港口时间">
+              </el-table-column>
+
+              <el-table-column label="安保人数">
+                <template slot-scope="scope">
+                  <el-select v-model="scope.row.guardsNo"
+                             placeholder="请选择">
+                    <el-option v-for="todos in guardList"
+                               :key="todos.length"
+                               :label="todos.value"
+                               :value="todos.value"></el-option>
+
+                  </el-select>
+                </template>
+              </el-table-column>
+              <el-table-column label="K&R">
+                <template slot-scope="scope">
+                  <el-select v-model="scope.row.karAmount"
+                             placeholder="请选择">
+                    <el-option v-for="todos in KidnapList"
+                               :key="todos.length"
+                               :label="todos.value"
+                               :value="todos.value"></el-option>
+
+                  </el-select>
+                </template>
+              </el-table-column>
+            </el-table>
+          </template>
+        </el-table-column>
+        <el-table-column label="船名"
+                         prop="shipCName">
+        </el-table-column>
+        <el-table-column label="航次"
+                         prop="line">
+        </el-table-column>
+        <el-table-column label="出发港"
+                         prop="departurePort">
+        </el-table-column>
+        <el-table-column label="出发时间"
+                         width="100px"
+                         prop="etd">
+        </el-table-column>
+        <el-table-column label="目的港"
+                         prop="arrivalPort">
+        </el-table-column>
+        <el-table-column label="到达时间"
+                         width="100px"
+                         prop="eta">
+        </el-table-column>
+        <el-table-column label="挂靠港"
+                         prop="ports">
+        </el-table-column>
+        <el-table-column prop="insuranceAmount"
+                         label="保险金额">
+        </el-table-column>
+        <el-table-column label="无需申报"
+                         v-if="nameType === 'SHIPOWNER'">
+          <template slot-scope="scope">
+            <el-switch v-model="scope.row.state"
+                       active-value="1"
+                       inactive-value="0"
+                       active-color="#13ce66"
+                       inactive-color="#ff4949">
+            </el-switch>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="block page_div">
+        <el-pagination
+          @size-change="getTableData"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-size="pageSize"
+          layout="total,prev,pager,next,slot,jumper"
+          :total="totalNum">
+          <span class="button_last_page" @click="handleGotoLastPage">尾页</span>
+        </el-pagination>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+import { getOrderList } from '@/api'
+export default {
+  data () {
+    return {
+      loading: true,
+      allData: [],
+      tableData: [],
+      currentPage: 1,
+      pageSize: 10,
+      totalNum: 0,
+      emptyText: '加载中',
+      KidnapList: [{
+        value: '0',
+        label: '0'
+      },
+        {
+          value: '5,000,000',
+          label: '5,000,000'
+        },
+        {
+          value: '8,000,000',
+          label: '8,000,000'
+        }, {
+          value: '10,000,000',
+          label: '10,000,000'
+        }],
+      guardList: [{
+        value: '0',
+        label: '0'
+      }, {
+        value: '2',
+        label: '2'
+      }, {
+        value: '3',
+        label: '3'
+      }, {
+        value: '>3',
+        label: '>3'
+      }],
+      nameType: {},
+      current: null,
+      select: '',
+      fileName: '',
+      bgc: {
+        backgroundImage: 'url(' + require('../../assets/tzxbgc.png') + ')'
+      },
+      fits: null
+    }
+  },
+  methods: {
+    switchRowClass({row}) {
+      if(!row.line) {
+        return "row_no_line"
+      }
+      return ""
+    },
+    handleSelectionChange (value) {
+      this.current = value
+    },
+    isPreservation () {
+      if (this.current !== '') {
+        let proms = {
+          list: this.current
+        }
+        this.$http.post('/shiper/HoldInsuranceOrders', proms).then(res => {
+          if (res.status === 200) {
+            this.$message({
+              message: '暂存成功',
+              type: 'success'
+            })
+            this.fits = ""
+          }
+        })
+      } else {
+        this.$message({
+          message: '请选择暂存内容',
+          type: 'warning'
+        })
+      }
+    },
+
+    isSubmission () {
+      if (this.current !== '') {
+        let obj = {
+          batchNum: '',
+          status: '',
+          premium: '',
+          fileName: this.fileName,
+          fileId: this.fileId
+        }
+        let promst = {
+          batch: obj,
+          list: this.current
+        }
+        this.$http.post('/shiper/saveInsuranceOrders', promst).then(res => {
+          if (res.status === 200) {
+            this.$message({
+              message: '提交成功',
+              type: 'success'
+            })
+            this.getTableData()
+            this.fits = ""
+          }
+        })
+      } else {
+        this.$message({
+          message: '请选择提交内容',
+          type: 'warning'
+        })
+      }
+    },
+    beforeUpload (file) {
+      let fd = new FormData()
+      fd.append('file', file)// 传文件
+      fd.append('fileName', encodeURI(file.name))
+      this.$http.post('/files/save', fd).then(res => {
+        if (res.status === 200) {
+          this.$message({
+            type: 'success',
+            message: '上传成功'
+          })
+          this.fileId = res.data
+          this.fileName = file.name
+          this.fits = '附件:' + file.name
+        }
+      })
+    },
+    isList (value) {
+      this.current = value
+    },
+    tableRowClassName (row) {
+      if (row.row.throughArea === '印度洋') {
+        return 'background: oldlace'
+      } else if (row.row.throughArea === '亚丁湾') {
+        return 'background: oldlace'
+      } else {
+        return ''
+      }
+    },
+    handleGotoLastPage() {
+      let lastPage = Math.ceil(this.totalNum/this.pageSize)
+      this.handleCurrentChange(lastPage)
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+      this.getTableData()
+    },
+    getTableData() {
+      this.loading = true
+      if(this.allData && this.allData.length > 0) {
+        this.tableData = this.allData.slice((this.currentPage - 1 )*this.pageSize, this.currentPage*this.pageSize)
+        this.loading = false
+      } else {
+        getOrderList().then( res => {
+          this.allData = res.data.list
+          if (!(this.allData && this.allData.length > 0)) {
+            this.emptyText = '暂无数据'
+          }
+          this.tableData = this.allData.slice((this.currentPage - 1 )*this.pageSize, this.currentPage*this.pageSize)
+          this.totalNum = this.allData.length
+          this.loading = false
+          this.$refs.tableMain.toggleAllSelection()
+        })
+      }
+    }
+  },
+  created () {
+    this.nameType = localStorage.getItem('nametype')
+    this.getTableData()
+  }
+}
+</script>
+<style scoped>
+.info {
+  width: 100%;
+  height: 100%;
+  background-color: #f5f5f6;
+}
+.info_title_bgc {
+  width: 100%;
+  height: 200px;
+  background-size: 100% 100%;
+}
+.info_bottom {
+  width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding-top: 10px;
+}
+.fl {
+  float: right;
+}
+.title_ipt {
+  width: 1200px;
+  height: 50px;
+  line-height: 50px;
+  background-color: #fff;
+  margin-top: 10px;
+  padding: 0 23px;
+  box-sizing: border-box;
+}
+.inpt_width {
+  width: 200px;
+}
+.sele_width {
+  width: 150px;
+}
+.maleft {
+  margin-left: 20px;
+}
+.btns {
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  background-color: #fff;
+  box-sizing: border-box;
+  padding-left: 40px;
+  position: relative;
+}
+.demo-table-expand {
+  font-size: 0;
+}
+.demo-table-expand label {
+  width: 90px;
+  color: #99a9bf;
+}
+.demo-table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 50%;
+}
+.nonde {
+  display: none;
+}
+.form_posi {
+  position: absolute;
+  top: 0px;
+  left: 300px;
+}
+.el-upload__tip {
+  float: right;
+  margin-top: 0;
+  margin-left: 8px;
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(153, 153, 153, 1);
+}
+.page_div {
+  text-align: right
+}
+.button_last_page {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+</style>
+<style>
+.row_no_line {
+  background-color: #5cafe0 !important;
+}
+</style>
