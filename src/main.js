@@ -11,12 +11,6 @@ Vue.config.devtools = process.env.NODE_ENV === 'development'
 Vue.prototype.$event = new Vue()
 Vue.prototype.$http = request
 
-new Vue({
-  el: '#app',
-  router,
-  render: h => h(App),
-})
-
 export default new Vue({
   el: '#app',
   router,

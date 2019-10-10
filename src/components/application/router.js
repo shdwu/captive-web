@@ -10,7 +10,7 @@ export default [
         component: Home
     },
     {
-        path: '/batch',
+        path: '/batch/:page?',
         name: 'batch',
         component: Batch
     },

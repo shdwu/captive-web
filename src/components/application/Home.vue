@@ -256,6 +256,7 @@ export default {
               message: '提交成功',
               type: 'success'
             })
+            this.allData = []
             this.getTableData()
             this.fits = ""
           }

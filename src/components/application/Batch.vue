@@ -186,7 +186,7 @@ export default {
       })
     },
     changePage (Page) {
-      this.$router.push(`/application/${Page}`)
+      this.$router.push(`/batch/${Page}`)
     }
   },
   created () {
