@@ -63,11 +63,11 @@
         </div>
       </div>
       <div class="dis">
-        <span class="s_span">总保费：</span>
+        <span class="s_span">保险金额：</span>
         <el-input v-model="item.premium"
                   v-if="item.status === '0' && nameType === 'BROKER'"
                   class="inputs"
-                  placeholder="请输入总保额"></el-input>
+                  placeholder="请输入保险金额"></el-input>
         <span class="inputs_span"
               v-else>{{item.premium}}</span>
       </div>
@@ -168,7 +168,7 @@
                          prop="ports">
         </el-table-column>
         <el-table-column prop="insuranceAmount"
-                         label="总保额">
+                         label="保险金额">
         </el-table-column>
 
         <el-table-column prop="sumPremium"
