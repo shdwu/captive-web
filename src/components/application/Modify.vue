@@ -478,7 +478,7 @@ export default {
     beforeUpload (file) {
       let fd = new FormData()
       fd.append('file', file)// 传文件
-      fd.append('fileName', file.fileName)
+      fd.append('fileName', file.name)
       this.$http.post('/files/save', fd).then(res => {
         if (res.status === 200) {
           this.$message({
