@@ -1,8 +1,7 @@
 <template>
   <div class="info">
     <!-- title背景图片 -->
-    <div class="info_title_bgc"
-         :style="bgc"></div>
+    <div class="header_image"></div>
     <!-- 内容区域 -->
     <div class="info_bottom">
       <div class="btns"
@@ -199,9 +198,6 @@ export default {
       current: null,
       select: '',
       fileName: '',
-      bgc: {
-        backgroundImage: 'url(' + require('../../assets/tzxbgc.png') + ')'
-      },
       fits: null
     }
   },
@@ -335,10 +331,11 @@ export default {
   height: 100%;
   background-color: #f5f5f6;
 }
-.info_title_bgc {
+.header_image {
   width: 100%;
   height: 200px;
   background-size: 100% 100%;
+  background-image: resolve('tzxbgc.png')
 }
 .info_bottom {
   width: 1200px;

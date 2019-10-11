@@ -6,7 +6,7 @@
   "author": "yy <250276837@qq.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "NODE_ENV='development' HOST='0.0.0.0' PORT='8000' webpack-dev-server --inline --progress --config webpack.conf.js",
+    "dev": "cross-env NODE_ENV='development' HOST='0.0.0.0' PORT='8000' webpack-dev-server --inline --progress --config webpack.conf.js",
     "start": "yarn run dev",
     "build": "node build/build.js"
   },
@@ -22,6 +22,7 @@
     "autoprefixer": "^9.6.4",
     "babel-loader": "^8.0.6",
     "copy-webpack-plugin": "^5.0.4",
+    "cross-env": "^6.0.3",
     "css-loader": "^3.2.0",
     "eslint": "^6.5.1",
     "eslint-config-standard": "^14.1.0",
@@ -35,9 +36,11 @@
     "html-webpack-plugin": "^3.2.0",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "ora": "^4.0.2",
+    "postcss-assets": "^5.0.0",
     "postcss-import": "^12.0.1",
     "postcss-loader": "^3.0.0",
     "postcss-url": "^8.0.0",
+    "precss": "^4.0.0",
     "shelljs": "^0.8.3",
     "terser-webpack-plugin": "^2.1.2",
     "url-loader": "^2.1.0",
