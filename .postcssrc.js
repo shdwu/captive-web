@@ -2,8 +2,8 @@
 const path = require("path")
 
 module.exports = {
-  // parser: require("precss"),
   "plugins": {
+    "precss": {},
     "postcss-import": {},
     "postcss-url": {},
     "postcss-assets": {

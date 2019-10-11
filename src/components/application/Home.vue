@@ -1,35 +1,33 @@
 <template>
   <div class="info">
-    <!-- title背景图片 -->
+    <!-- 背景图片 -->
     <div class="header_image"></div>
     <!-- 内容区域 -->
-    <div class="info_bottom">
-      <div class="btns"
-           v-if="nameType === 'SHIPOWNER'">
+    <div class="body_table">
+      <div class="btn_bar"
+           v-if="userType === 'SHIPOWNER'">
         <el-button type="primary"
-                   @click="isPreservation"
-                   :disabled="!(current && current.length > 0)"
+                   @click="temporaryStorage"
+                   :disabled="!(allData.some(t => t.selected))"
                    plain>暂存</el-button>
         <el-button type="primary"
-                   @click="isSubmission"
-                   :disabled="!(current && current.length > 0)"
+                   @click="submit"
+                   :disabled="!(allData.some(t => t.selected))"
                    plain>提交</el-button>
-        <el-form class="form_posi">
-          <el-upload class="upload-demo"
-                     action="/files"
-                     :before-upload="beforeUpload"
-                     list-type="text">
-            <el-button size="small"
-                       type="primary">点击上传</el-button>
-            <div class="el-upload__tip"><span>{{fits}}</span></div>
-          </el-upload>
-        </el-form>
+        <el-upload class="file_upload"
+                    action="/files"
+                    :before-upload="beforeUpload"
+                    list-type="text">
+          <el-button size="small"
+                      type="primary">点击上传</el-button>
+          <div class="el-upload__tip"><span>{{fits}}</span></div>
+        </el-upload>
       </div>
 
       <el-table :data="tableData"
                  :default-expand-all="true"
                  @select="handleSelectionChange"
-                 @select-all="isList"
+                 @select-all="handleSelectAll"
                  :row-class-name="switchRowClass"
                  :empty-text="emptyText"
                  v-loading="loading"
@@ -129,7 +127,7 @@
                          label="保险金额">
         </el-table-column>
         <el-table-column label="无需申报"
-                         v-if="nameType === 'SHIPOWNER'">
+                         v-if="userType === 'SHIPOWNER'">
           <template slot-scope="scope">
             <el-switch v-model="scope.row.state"
                        active-value="1"
@@ -165,6 +163,7 @@ export default {
       currentPage: 1,
       pageSize: 10,
       totalNum: 0,
+      selectAll: true,
       emptyText: '加载中',
       KidnapList: [{
         value: '0',
@@ -194,8 +193,7 @@ export default {
         value: '>3',
         label: '>3'
       }],
-      nameType: {},
-      current: null,
+      userType: null,
       select: '',
       fileName: '',
       fits: null
@@ -208,13 +206,14 @@ export default {
       }
       return ""
     },
-    handleSelectionChange (value) {
-      this.current = value
+    handleSelectionChange (value, row) {
+      row.selected = !row.selected;
     },
-    isPreservation () {
-      if (this.current !== '') {
+    temporaryStorage () {
+      let selectedData = this.allData.filter(t => t.selected)
+      if (selectedData.length > 0) {
         let proms = {
-          list: this.current
+          list: selectedData
         }
         this.$http.post('/shiper/HoldInsuranceOrders', proms).then(res => {
           if (res.status === 200) {
@@ -232,9 +231,9 @@ export default {
         })
       }
     },
-
-    isSubmission () {
-      if (this.current !== '') {
+    submit () {
+      let selectedData = this.allData.filter(t => t.selected)
+      if (selectedData.length > 0) {
         let obj = {
           batchNum: '',
           status: '',
@@ -244,7 +243,7 @@ export default {
         }
         let promst = {
           batch: obj,
-          list: this.current
+          list: selectedData
         }
         this.$http.post('/shiper/saveInsuranceOrders', promst).then(res => {
           if (res.status === 200) {
@@ -280,8 +279,14 @@ export default {
         }
       })
     },
-    isList (value) {
-      this.current = value
+    handleSelectAll () {
+      // 如果存在未选择的全选
+      if(!this.tableData.some(t => t.selected)) {
+        this.allData.forEach(t => t.selected = true)
+      } else {
+        this.allData.forEach(t => t.selected = false)
+      }
+      this.toggleSelection(this.tableData)
     },
     tableRowClassName (row) {
       if (row.row.throughArea === '印度洋') {
@@ -304,6 +309,9 @@ export default {
       this.loading = true
       if(this.allData && this.allData.length > 0) {
         this.tableData = this.allData.slice((this.currentPage - 1 )*this.pageSize, this.currentPage*this.pageSize)
+        this.$nextTick(() => {
+          this.toggleSelection(this.tableData)
+        })
         this.loading = false
       } else {
         getOrderList().then( res => {
@@ -312,37 +320,73 @@ export default {
             this.emptyText = '暂无数据'
           }
           this.tableData = this.allData.slice((this.currentPage - 1 )*this.pageSize, this.currentPage*this.pageSize)
+          // 新增一个属性,标识数据的选中状态
+          this.allData.forEach(e => e.selected = true)
           this.totalNum = this.allData.length
+          this.$nextTick(() => {
+            this.toggleSelection(this.tableData)
+          })
           this.loading = false
-          this.$refs.tableMain.toggleAllSelection()
+        })
+      }
+    },
+    toggleSelection(rows) {
+      if(rows) {
+        rows.forEach(row => {
+          this.$refs.tableMain.toggleRowSelection(row, row.selected)
         })
       }
     }
   },
   created () {
-    this.nameType = localStorage.getItem('nametype')
+    this.userType = localStorage.getItem('nametype')
     this.getTableData()
   }
 }
 </script>
-<style scoped>
+<style lang="postcss" scoped>
+/* variables */
+$maxWidth: 1200px;
+
 .info {
   width: 100%;
   height: 100%;
   background-color: #f5f5f6;
+
+  .header_image {
+    width: 100%;
+    height: 200px;
+    background-size: 100% 100%;
+    background-image: resolve('tzxbgc.png');
+    margin: 0 auto;
+  }
+
+  .body_table {
+    width: $maxWidth;
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding-top: 10px;
+  }
+
 }
-.header_image {
-  width: 100%;
-  height: 200px;
-  background-size: 100% 100%;
-  background-image: resolve('tzxbgc.png')
+
+.body_table {
+  background-color: #ffffff;
+  padding: 0 15px;
+
+  .btn_bar {
+    width: 100%;
+    height: 60px;
+    padding: 5px;
+    box-sizing: border-box;
+  }
+
+  .file_upload {
+    display: inline-block;
+    margin-left: 50px;
+  }
 }
-.info_bottom {
-  width: 1200px;
-  margin: 0 auto;
-  box-sizing: border-box;
-  padding-top: 10px;
-}
+
 .fl {
   float: right;
 }
