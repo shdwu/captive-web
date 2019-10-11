@@ -42,6 +42,20 @@
                    size="mini"
                    @click="isGets()"
                    plain>查询</el-button>
+
+        <div class="float_left">
+          <span class="cm">船名</span>
+          <el-input placeholder="请输入船名"
+                    size="small"
+                    v-model="searchShipName"
+                    @keyup.enter.native="searchByShipName"
+                    class="inpt_width">
+          </el-input>
+          <el-button type="primary"
+                    size="mini"
+                    @click="searchByShipName"
+                    plain>查询</el-button>
+        </div>
       </div>
       <el-table :data="tableData"
                 @cell-click='moreClick'
@@ -75,15 +89,164 @@
                      @current-change="changePage">
       </el-pagination>
     </div>
+    <el-dialog
+      title="船舶搜索结果"
+      :visible.sync="dialogVisible"
+      width="80%">
+      <el-table :data="dialogData"
+              :default-expand-all="true"
+              style="width: 100%">
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-table :data="props.row.orderDtos"
+                    :cell-style="tableRowClassName"
+                    border
+                    style="width: 100%">
+              <el-table-column prop="throughArea"
+                               label="特战区域名称">
+              </el-table-column>
+              <el-table-column prop="intime"
+                               width="100px"
+                               label="进入时间">
+              </el-table-column>
+              <el-table-column prop="outtime"
+                               width="100px"
+                               label="离开时间">
+              </el-table-column>
+              <el-table-column prop="days"
+                               label="停留天数">
+              </el-table-column>
+              <el-table-column label="空满载">
+                <template slot-scope="scope">
+                  <el-radio v-model="scope.row.loadInfo"
+                            v-if="nameType === 'SHIPOWNER' && props.row.state === '2'"
+                            label="满载">满载</el-radio>
+                  <el-radio v-model="scope.row.loadInfo"
+                            v-if="nameType === 'SHIPOWNER' && props.row.state === '2'"
+                            label="空载">空载</el-radio>
+                  <span v-else>{{scope.row.loadInfo}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="anchoragePort"
+                               label="挂靠港名">
+              </el-table-column>
+              <el-table-column prop="anchorageDate"
+                               label="挂靠特战区港口时间">
+              </el-table-column>
+              <el-table-column label="安保人数">
+                <template slot-scope="scope">
+
+                  <el-select v-model="scope.row.guardsNo"
+                             v-if="nameType === 'SHIPOWNER' &&  props.row.state ==='2' "
+                             placeholder="请选择">
+                    <el-option v-for="todos in guardList"
+                               :key="todos.length"
+                               :label="todos.value"
+                               :value="todos.value"></el-option>
+                  </el-select>
+                  <span v-else>{{scope.row.guardsNo}}</span>
+                </template>
+              </el-table-column>
+
+              <el-table-column label="K&R">
+                <template slot-scope="scope">
+                  <el-select v-model="scope.row.karAmount"
+                             v-if="nameType === 'SHIPOWNER' && props.row.state === '2'"
+                             placeholder="请选择">
+                    <el-option v-for="todos in KidnapList"
+                               :key="todos.length"
+                               :label="todos.value"
+                               :value="todos.value"></el-option>
+
+                  </el-select>
+                  <span v-else>{{scope.row.karAmount}}</span>
+                </template>
+              </el-table-column>
+
+            </el-table>
+          </template>
+        </el-table-column>
+        <el-table-column label="船名"
+                         prop="shipCName">
+        </el-table-column>
+        <el-table-column label="航次"
+                         prop="line">
+        </el-table-column>
+        <el-table-column label="出发港"
+                         prop="departurePort">
+        </el-table-column>
+        <el-table-column label="出发时间"
+                         width="100px"
+                         prop="etd">
+        </el-table-column>
+        <el-table-column label="目的港"
+                         prop="arrivalPort">
+        </el-table-column>
+        <el-table-column label="到达时间"
+                         width="100px"
+                         prop="eta">
+        </el-table-column>
+        <el-table-column label="挂靠港"
+                         prop="ports">
+        </el-table-column>
+        <el-table-column prop="insuranceAmount"
+                         label="保险金额">
+        </el-table-column>
+
+        <el-table-column prop="sumPremium"
+                         label="最终保费">
+          <template slot-scope="scope">
+            <span>{{scope.row.sumPremium}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="状态">
+          <template slot-scope="scope">
+
+            <el-button type="info"
+                       v-if="nameType === 'BROKER' &&  scope.row.state ==='0' "
+                       :disabled="item.status==='2'? true:false"
+                       @click="isRuts(scope.row)">不通过</el-button>
+            <el-button type="warning"
+                       :disabled="item.status==='2'? true:false"
+                       v-if="nameType === 'BROKER' &&  scope.row.state ==='1' "
+                       @click="isRuts(scope.row)">需申报</el-button>
+            <el-button type="danger"
+                       :disabled="item.status==='2'? true:false"
+                       v-if="nameType === 'BROKER' &&  scope.row.state ==='2' "
+                       @click="isLings(scope.row)">不通过</el-button>
+            <el-button type="info"
+                       v-if="nameType === 'SHIPOWNER' &&  scope.row.state ==='0' ">待审核</el-button>
+            <el-button type="warning"
+                       v-if="nameType === 'SHIPOWNER' &&  scope.row.state ==='1' ">无需申报</el-button>
+            <el-button type="danger"
+                       v-if="nameType === 'SHIPOWNER' &&  scope.row.state ==='2' ">被退回</el-button>
+
+            <el-button type="info"
+                       v-if="nameType === 'CAPTIVE' &&  scope.row.state ==='0' ">待审核</el-button>
+            <el-button type="warning"
+                       v-if="nameType === 'CAPTIVE' &&  scope.row.state ==='1' ">无需申报</el-button>
+            <el-button type="danger"
+                       v-if="nameType === 'CAPTIVE' &&  scope.row.state ==='2' ">被退回</el-button>
+            <el-button type="success"
+                       v-if="scope.row.state ==='3' ">已审核</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 <script>
+import * as batchApi from '@/api/batch'
+
 export default {
   data () {
     return {
       value: '',
       input: '',
       statu: '',
+      searchShipName: '',
+      dialogData: [],
+      dialogVisible: false,
       bgc: {
         backgroundImage: 'url(' + require('../../assets/tzxbgc.png') + ')'
       },
@@ -106,6 +269,12 @@ export default {
     }
   },
   methods: {
+    searchByShipName() {
+      batchApi.searchByShipName({ shipEName: this.searchShipName}).then(res => {
+        this.dialogData = res.data.list
+        this.dialogVisible = true
+      }) 
+    },
     async isGetList (batchNum = '', createBy = '', status = '', page = 1) {
       let res = await this.$http.get('/broker/batchList', {
         params: {
@@ -252,8 +421,8 @@ export default {
   color: rgba(51, 51, 51, 1);
 }
 .inpt_width {
-  width: 200px;
-  margin-left: 10px;
+  width: 190px;
+  margin-left: 8px;
 }
 .m10 {
   margin-left: 15px;
@@ -283,6 +452,9 @@ export default {
   color: #fff;
 }
 .fl {
+  float: right;
+}
+.float_left {
   float: right;
 }
 </style>
