@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { login } from '@/api'
+import * as authApi from '@/api/auth'
 import infoUrl from '@/assets/login.png'
 import light from '@/assets/light.png'
 import manual from '@/assets/manual.pdf'
@@ -116,7 +116,7 @@ export default {
   methods: {
     submitForm (formName) {
       this.$refs[formName].validate()
-      let ret = login(this.loginForm).then(res => {
+      let ret = authApi.login(this.loginForm).then(res => {
         if (res.status === 200) {
           sessionStorage.setItem('token', res.headers.authorization)
           localStorage.setItem('nametype', res.data.companyType)

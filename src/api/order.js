@@ -1,6 +1,6 @@
 import request from '@/util/request'
 
-export function getOrderList() {
+export function getOrderList(params) {
   let nameType = localStorage.getItem('nametype')
   let prefix = ''
   if (nameType === 'BROKER') {
@@ -12,6 +12,7 @@ export function getOrderList() {
   }
   return request({
     url: `/${prefix}/curOrders`,
-    method: 'get'
+    method: 'get',
+    params
   })
 }

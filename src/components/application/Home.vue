@@ -22,6 +22,16 @@
                       type="primary">点击上传</el-button>
           <div class="el-upload__tip"><span>{{fits}}</span></div>
         </el-upload>
+          <div class="fl">
+          <el-date-picker
+            v-model="searchTime"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期">
+          </el-date-picker>
+          <el-button type="primary" @click="searchByTime">搜索</el-button>
+        </div>
       </div>
 
       <el-table :data="tableData"
@@ -153,7 +163,8 @@
   </div>
 </template>
 <script>
-import { getOrderList } from '@/api'
+import dateFormat from 'dateformat'
+import { getOrderList } from '@/api/order'
 export default {
   data () {
     return {
@@ -196,7 +207,8 @@ export default {
       userType: null,
       select: '',
       fileName: '',
-      fits: null
+      fits: null,
+      searchTime: ''
     }
   },
   methods: {
@@ -305,7 +317,7 @@ export default {
       this.currentPage = val
       this.getTableData()
     },
-    getTableData() {
+    getTableData(params) {
       this.loading = true
       if(this.allData && this.allData.length > 0) {
         this.tableData = this.allData.slice((this.currentPage - 1 )*this.pageSize, this.currentPage*this.pageSize)
@@ -314,7 +326,7 @@ export default {
         })
         this.loading = false
       } else {
-        getOrderList().then( res => {
+        getOrderList(params).then( res => {
           this.allData = res.data.list
           if (!(this.allData && this.allData.length > 0)) {
             this.emptyText = '暂无数据'
@@ -335,6 +347,13 @@ export default {
         rows.forEach(row => {
           this.$refs.tableMain.toggleRowSelection(row, row.selected)
         })
+      }
+    },
+    searchByTime() {
+      if (this.searchTime && this.searchTime.length >= 2) {
+        let startDate = dateFormat(this.searchTime[0], "yyyy-mm-dd")
+        let endDate = dateFormat(this.searchTime[1], "yyyy-mm-dd")
+        this.getTableData({startDate, endDate})
       }
     }
   },
