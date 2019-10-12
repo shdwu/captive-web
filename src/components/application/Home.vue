@@ -213,7 +213,7 @@ export default {
   },
   computed: {
     expandAll() {
-      return localStorage.getItem('currentUser').userCode !== '9999218600'
+      return localStorage.getItem('currentUser').userCode === '9999218600'
     }
   },
   methods: {
