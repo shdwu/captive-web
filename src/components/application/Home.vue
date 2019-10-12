@@ -35,7 +35,7 @@
       </div>
 
       <el-table :data="tableData"
-                 :default-expand-all="true"
+                 :default-expand-all="expandAll"
                  @select="handleSelectionChange"
                  @select-all="handleSelectAll"
                  :row-class-name="switchRowClass"
