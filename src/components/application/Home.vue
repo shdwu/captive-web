@@ -359,6 +359,8 @@ export default {
         let startDate = dateFormat(this.searchTime[0], "yyyy-mm-dd")
         let endDate = dateFormat(this.searchTime[1], "yyyy-mm-dd")
         this.getTableData({startDate, endDate})
+      } else {
+        this.getTableData()
       }
     }
   },
