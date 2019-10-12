@@ -211,6 +211,11 @@ export default {
       searchTime: ''
     }
   },
+  computed: {
+    expandAll() {
+      return localStorage.getItem('currentUser').userCode !== '9999218600'
+    }
+  },
   methods: {
     switchRowClass({row}) {
       if(!row.line) {

@@ -121,6 +121,7 @@ export default {
           sessionStorage.setItem('token', res.headers.authorization)
           localStorage.setItem('nametype', res.data.companyType)
           localStorage.setItem('companyName', res.data.companyName)
+          localStorage.setItem('currentUser', res.data)
           if (res.data.companyType === 'BROKER') {
             this.$router.push({ name: 'batch' })
           } else {
