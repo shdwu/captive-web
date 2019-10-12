@@ -324,7 +324,7 @@ export default {
     },
     getTableData(params) {
       this.loading = true
-      if(this.allData && this.allData.length > 0) {
+      if(this.allData && this.allData.length > 0 && !params) {
         this.tableData = this.allData.slice((this.currentPage - 1 )*this.pageSize, this.currentPage*this.pageSize)
         this.$nextTick(() => {
           this.toggleSelection(this.tableData)
