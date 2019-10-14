@@ -50,7 +50,10 @@
           <el-button @click="resetForm('loginForm')">重置</el-button>
         </el-form-item>
 
-        <div v-if="checkIsIE()" class="browser_tip">推荐使用谷歌浏览器</div>
+        <el-form-item>
+          <div v-if="checkIsIE()" class="browser_tip">推荐使用谷歌浏览器</div>
+        </el-form-item>
+
 
       </el-form>
     </div>
@@ -187,6 +190,7 @@ export default {
   width: 100%;
   color: #f00;
   font-size:14px;
+  margin-top: -10px;
 }
 
 .zhdl {
@@ -200,7 +204,6 @@ export default {
 }
 .info_dw {
   width: 400px;
-  height: 385px;
   background-color: #fff;
   box-sizing: border-box;
   padding: 0px 20px;
