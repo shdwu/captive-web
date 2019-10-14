@@ -38,15 +38,20 @@
           <el-input type="verifyCode"
                     class="mms"
                     v-model="loginForm.verifyCode"
-                    @keyup.enter.native="submitForm('loginForm')"></el-input> <img class="fls"
+                    @keyup.enter.native="submitForm('loginForm')"></el-input>
+          <img class="fls"
                ref="loginForms"
-               src="/api/auth/getCode">
+               :src="codeUrl" @click="refreshCode">
         </el-form-item>
+
         <el-form-item>
           <el-button type="primary"
                      @click="submitForm('loginForm')">登录</el-button>
           <el-button @click="resetForm('loginForm')">重置</el-button>
         </el-form-item>
+
+        <div v-if="checkIsIE()" class="browser_tip">推荐使用谷歌浏览器</div>
+
       </el-form>
     </div>
     <!-- 底部 -->
@@ -70,6 +75,7 @@ import manual from '@/assets/manual.pdf'
 export default {
   data () {
     return {
+      codeUrl:"/api/auth/getCode",
       infoUrl,
       light,
       manual,
@@ -134,6 +140,18 @@ export default {
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()
+    },
+    //刷新验证码
+    refreshCode(){
+      var timestamp = (new Date()).getTime();
+      this.codeUrl = "/api/auth/getCode?time=" + timestamp;
+    },
+    checkIsIE() {
+      if (!!window.ActiveXObject || "ActiveXObject" in window) {
+        return true;
+      }else{
+        return false;
+      }
     }
   }
 }
@@ -164,6 +182,13 @@ export default {
   background-size: 100% 100%;
   position: relative;
 }
+
+.browser_tip{
+  width: 100%;
+  color: #f00;
+  font-size:14px;
+}
+
 .zhdl {
   height: 48px;
   line-height: 48px;
@@ -175,7 +200,7 @@ export default {
 }
 .info_dw {
   width: 400px;
-  height: 345px;
+  height: 385px;
   background-color: #fff;
   box-sizing: border-box;
   padding: 0px 20px;

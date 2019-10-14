@@ -59,7 +59,7 @@
       </div>
       <el-table :data="tableData"
                 @cell-click='moreClick'
-                style="width: 100%">
+                style="width: 100%;cursor:pointer;">
         <el-table-column prop="batchNum"
                          label="申报批次">
         </el-table-column>
