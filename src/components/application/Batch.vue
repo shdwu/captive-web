@@ -251,6 +251,9 @@ export default {
         backgroundImage: 'url(' + require('../../assets/tzxbgc.png') + ')'
       },
       options: [{
+        value: '',
+        label: '全部'
+      },{
         value: '0',
         label: '待审核'
       }, {
