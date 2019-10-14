@@ -133,7 +133,7 @@
         <el-table-column label="挂靠港"
                          prop="ports">
         </el-table-column>
-        <el-table-column prop="insuranceAmount"
+        <el-table-column prop="insuranceAmountCurrency"
                          label="保险金额">
         </el-table-column>
         <el-table-column label="无需申报"
@@ -143,7 +143,7 @@
                        active-value="1"
                        inactive-value="0"
                        active-color="#13ce66"
-                       inactive-color="#ff4949">
+                       inactive-color="#888">
             </el-switch>
           </template>
         </el-table-column>
@@ -170,6 +170,7 @@ export default {
     return {
       loading: true,
       allData: [],
+
       tableData: [],
       currentPage: 1,
       pageSize: 10,
@@ -331,7 +332,18 @@ export default {
         })
         this.loading = false
       } else {
+
         getOrderList(params).then( res => {
+
+          for(let d of res.data.list){
+            if(d['insuranceAmount']){
+              // console.log(d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
+             d['insuranceAmountCurrency'] = d['currency'] + ' ' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
+            }else{
+              d['insuranceAmountCurrency'] = ''
+            }
+          }
+          
           this.allData = res.data.list
           if (!(this.allData && this.allData.length > 0)) {
             this.emptyText = '暂无数据'

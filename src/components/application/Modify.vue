@@ -62,15 +62,7 @@
                class="yth">已退回</div>
         </div>
       </div>
-      <div class="dis">
-        <span class="s_span">保险金额：</span>
-        <el-input v-model="item.premium"
-                  v-if="item.status === '0' && nameType === 'BROKER'"
-                  class="inputs"
-                  placeholder="请输入保险金额"></el-input>
-        <span class="inputs_span"
-              v-else>{{item.premium}}</span>
-      </div>
+   
       <el-table :data="tableData"
               :default-expand-all="true"
               style="width: 100%">
@@ -602,11 +594,7 @@ export default {
   float: right;
   margin-top: -5px;
 }
-.dis {
-  width: 100%;
-  height: 40px;
-  position: relative;
-}
+
 .inputs {
   width: 200px;
   position: absolute;
@@ -640,3 +628,5 @@ export default {
   margin: 25px;
 }
 </style>
+
+
