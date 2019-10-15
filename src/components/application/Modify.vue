@@ -100,7 +100,7 @@
                 </template>
               </el-table-column>
               <el-table-column prop="anchoragePort"
-                               label="挂靠港名">
+                               label="挂靠特战区港口">
               </el-table-column>
               <el-table-column prop="anchorageDate"
                                label="挂靠特战区港口时间">
@@ -145,6 +145,8 @@
         <el-table-column label="经过的特战区"
                          width="115px"
                          prop="throughAreaSum">
+                         <!-- 表格内换行 -->
+                         <template scope="scope">{{scope.row.throughAreaSum}}</template>
         </el-table-column>
          <el-table-column label="停留总天数"
                          width="100px"
@@ -178,14 +180,13 @@
         <el-table-column prop="sumPremium"
                          label="最终保费">
           <template slot-scope="scope">
-            <el-input v-model="scope.row.sumPremium" oninput="value = value.replace(/^\D/g,'')"
+            <el-input v-model="scope.row.sumPremium" type="tel" oninput="value = value.replace(/^0.*/g,'')"
                       v-if="nameType === 'BROKER' && item.status !== '1'"></el-input>
             <span v-else>{{scope.row.sumPremium}}</span>
           </template>
         </el-table-column>
         <el-table-column label="状态">
           <template slot-scope="scope">
-
             <el-button type="info"
                        v-if="nameType === 'BROKER' &&  scope.row.state ==='0' "
                        :disabled="item.status==='2'? true:false"
@@ -281,6 +282,7 @@ export default {
     }
   },
   methods: {
+    // 经济公司
     async isGetList (value) {
       this.loading = true
       let res = await this.$http.get('/broker/orders', {
@@ -297,7 +299,7 @@ export default {
             let sum = '';
             let plus = 0;
             for(let i of d['orderDtos']){
-              sum += i.throughArea + ';'
+              sum += i.throughArea + '\n';
               d['throughAreaSum'] = sum;
               plus += Number(i.days);
               d['daysPlus'] = plus; 
@@ -322,6 +324,7 @@ export default {
       }
       this.loading = false
     },
+    // 货运公司
     async isGetLists (value) {
       this.loading = true
       let res = await this.$http.get('/shiper/orders', {
@@ -332,17 +335,17 @@ export default {
       if (res.status === 200) {
         //千分位
         for(let d of res.data.list){
-          // console.log(d,111)
           if(d['insuranceAmount']){
             d['insuranceAmountCurrency'] = d['currency'] + ' ' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
             let sum = '';
             let plus = 0;
             for(let i of d['orderDtos']){
-              sum += i.throughArea + ';'
+              sum += i.throughArea + '\n';
               d['throughAreaSum'] = sum;
               plus += Number(i.days);
-              d['daysPlus'] = plus; 
+              d['daysPlus'] = plus.toFixed(2); 
             }
+            // console.log(sum)
          }else{
             d['insuranceAmountCurrency'] = ''
           }
@@ -372,7 +375,7 @@ export default {
             let sum = '';
             let plus = 0;
             for(let i of d['orderDtos']){
-              sum += i.throughArea + ';'
+              sum += i.throughArea + '\n';
               d['throughAreaSum'] = sum;
               plus += Number(i.days);
               d['daysPlus'] = plus; 
@@ -457,7 +460,7 @@ export default {
           message: '退回成功',
           type: 'success'
         })
-        this.$router.push({ name: 'application' })
+        this.$router.push({ name: 'batch' })
       }
     },
     checkAdult (item) {
@@ -494,7 +497,7 @@ export default {
             message: '审核通过',
             type: 'success'
           })
-          this.$router.push({ name: 'application' })
+          this.$router.push({ name: 'batch' })
         }
       } else {
         this.$message.error('请完成各航次最终保费')
@@ -586,7 +589,11 @@ export default {
 }
 
 </script>
-<style scoped>
+<style >
+/* 为了实现数据换行 删除scope */
+.el-table .cell {
+  white-space: pre-line;
+}
 .info {
   width: 100%;
 }
@@ -713,6 +720,7 @@ export default {
   display: inline-block;
   margin: 25px;
 }
+
 </style>
 
 
