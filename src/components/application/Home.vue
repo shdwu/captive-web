@@ -111,30 +111,43 @@
           </template>
         </el-table-column>
         <el-table-column label="船名"
+                         width="90px"
                          prop="shipCName">
         </el-table-column>
+        <el-table-column label="经过的特战区"
+                         width="115px"
+                         prop="throughAreaSum">
+                         <!-- 表格内换行 -->
+                         <template scope="scope">{{scope.row.throughAreaSum}}</template>
+        </el-table-column>
+         <el-table-column label="停留总天数"
+                         width="100px"
+                         prop="daysPlus">
+        </el-table-column>
         <el-table-column label="航次"
+                         width="70px"
                          prop="line">
         </el-table-column>
-        <el-table-column label="出发港"
+        <el-table-column width="70px" label="出发港"
                          prop="departurePort">
         </el-table-column>
         <el-table-column label="出发时间"
                          width="100px"
                          prop="etd">
         </el-table-column>
-        <el-table-column label="目的港"
+        <el-table-column width="80px" label="目的港"
                          prop="arrivalPort">
         </el-table-column>
         <el-table-column label="到达时间"
                          width="100px"
                          prop="eta">
         </el-table-column>
-        <el-table-column label="挂靠港"
+        <el-table-column width="80px" label="挂靠港"
                          prop="ports">
         </el-table-column>
         <el-table-column prop="insuranceAmountCurrency"
-                         label="保险金额">
+                         width="135px"
+                         label="保险金额">                 
         </el-table-column>
         <el-table-column label="无需申报"
                          v-if="userType === 'SHIPOWNER'">
@@ -337,8 +350,15 @@ export default {
 
           for(let d of res.data.list){
             if(d['insuranceAmount']){
-              // console.log(d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
-             d['insuranceAmountCurrency'] = d['currency'] + ' ' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
+              d['insuranceAmountCurrency'] = d['currency'] + ' ' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
+              let sum = '';
+              let plus = 0;
+              for(let i of d['orderDtos']){
+                sum += i.throughArea + '\n';
+                d['throughAreaSum'] = sum;
+                plus += Number(i.days);
+                d['daysPlus'] = plus.toFixed(2); 
+              }
             }else{
               d['insuranceAmountCurrency'] = ''
             }

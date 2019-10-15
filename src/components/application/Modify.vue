@@ -282,6 +282,7 @@ export default {
     }
   },
   methods: {
+    // 经济公司
     async isGetList (value) {
       this.loading = true
       let res = await this.$http.get('/broker/orders', {
@@ -342,7 +343,7 @@ export default {
               sum += i.throughArea + '\n';
               d['throughAreaSum'] = sum;
               plus += Number(i.days);
-              d['daysPlus'] = plus; 
+              d['daysPlus'] = plus.toFixed(2); 
             }
             // console.log(sum)
          }else{
