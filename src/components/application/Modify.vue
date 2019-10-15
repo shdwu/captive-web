@@ -180,7 +180,7 @@
         <el-table-column prop="sumPremium"
                          label="最终保费">
           <template slot-scope="scope">
-            <el-input v-model="scope.row.sumPremium" type="tel" oninput="value = value.replace(/^0.*/g,'')"
+            <el-input v-model="scope.row.sumPremium" type="number"
                       v-if="nameType === 'BROKER' && item.status !== '1'"></el-input>
             <span v-else>{{scope.row.sumPremium}}</span>
           </template>
@@ -734,7 +734,12 @@ export default {
   display: inline-block;
   margin: 25px;
 }
-
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button{
+  -webkit-appearance: none !important;
+  margin: 0;
+}
+input[type="number"]{-moz-appearance:textfield;}
 </style>
 
 
