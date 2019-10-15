@@ -23,7 +23,7 @@
           <el-menu-item index="/batch">申报批次</el-menu-item>
           <el-menu-item index="/personal">账号安全</el-menu-item>
           <div class="vademecum">
-            <a class="aaxx" href="http://localhost:8000//static/media/manual.6e4d023.pdf">
+            <a class="aaxx" href="http://localhost:8000//static/media/manual.6e4d023.pdf" target="_blank">
                 <span class="vadchildren">用户手册</span>
             </a>
         </div>

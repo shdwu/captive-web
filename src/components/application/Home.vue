@@ -8,11 +8,9 @@
            v-if="userType === 'SHIPOWNER'">
         <el-button type="primary"
                    @click="temporaryStorage"
-                   :disabled="!(allData.some(t => t.selected))"
                    plain>暂存</el-button>
         <el-button type="primary"
                    @click="submit"
-                   :disabled="!(allData.some(t => t.selected))"
                    plain>提交</el-button>
         <el-upload class="file_upload"
                     action="/files"
@@ -91,7 +89,6 @@
                                :key="todos.length"
                                :label="todos.value"
                                :value="todos.value"></el-option>
-
                   </el-select>
                 </template>
               </el-table-column>
@@ -233,6 +230,7 @@ export default {
         let proms = {
           list: selectedData
         }
+
         this.$http.post('/shiper/HoldInsuranceOrders', proms).then(res => {
           if (res.status === 200) {
             this.$message({
