@@ -3,7 +3,7 @@
     <div class="info_left">
       <div class="info_left_top">中远海运</div>
       <p class="pst">欢迎来到特战险服务平台</p>
-      <p class="pstou">上午好！</p>
+      <p v-if="false" class="pstou">上午好！</p>
     </div>
     <div class="info_right">
       <div class="info_right_title">
