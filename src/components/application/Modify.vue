@@ -140,22 +140,15 @@
                          width="90px"
                          prop="shipCName">
         </el-table-column>
-
-
-
         <el-table-column label="经过的特战区"
                          width="115px"
-                         prop="line">
+                         prop="throughAreaSum">
         </el-table-column>
-         <el-table-column label="停留特战区总天数"
-                         width="135px"
-                         prop="line">
+         <el-table-column label="停留总天数"
+                         width="100px"
+                         prop="daysPlus">
         </el-table-column>
-
-
-
-
-         <el-table-column label="航次"
+        <el-table-column label="航次"
                          width="60px"
                          prop="line">
         </el-table-column>
@@ -180,8 +173,6 @@
                          width="135px"
                          label="保险金额">                 
         </el-table-column>
-
-
         <el-table-column prop="sumPremium"
                          label="最终保费">
           <template slot-scope="scope">
@@ -295,12 +286,16 @@ export default {
       if (res.status === 200) {
         //千分位
         for(let d of res.data.list){
-          // console.log(d,111)
+          console.log(d,111)
           if(d['insuranceAmount']){
             d['insuranceAmountCurrency'] = d['currency'] + ' ' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
-            let arr = [];
+            let sum = '';
+            let plus = 0;
             for(let i of d['orderDtos']){
-              // arr.push(i.)
+              sum += i.throughArea + ';'
+              d['throughAreaSum'] = sum;
+              plus += Number(i.days);
+              d['daysPlus'] = plus; 
             }
          }else{
             d['insuranceAmountCurrency'] = ''
@@ -324,10 +319,17 @@ export default {
       if (res.status === 200) {
         //千分位
         for(let d of res.data.list){
-          // console.log(d,111)
+          // console.log(d,222)
           if(d['insuranceAmount']){
             d['insuranceAmountCurrency'] = d['currency'] + ' ' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
-            
+            let sum = '';
+            let plus = 0;
+            for(let i of d['orderDtos']){
+              sum += i.throughArea + ';'
+              d['throughAreaSum'] = sum;
+              plus += Number(i.days);
+              d['daysPlus'] = plus; 
+            }
          }else{
             d['insuranceAmountCurrency'] = ''
           }
@@ -344,10 +346,17 @@ export default {
       if (res.status === 200) {
         //千分位
         for(let d of res.data.list){
-          console.log(d,111)
+          console.log(d,333)
           if(d['insuranceAmount']){
             d['insuranceAmountCurrency'] = d['currency'] + ' ' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
-            
+            let sum = '';
+            let plus = 0;
+            for(let i of d['orderDtos']){
+              sum += i.throughArea + ';'
+              d['throughAreaSum'] = sum;
+              plus += Number(i.days);
+              d['daysPlus'] = plus; 
+            }
          }else{
             d['insuranceAmountCurrency'] = ''
           }
