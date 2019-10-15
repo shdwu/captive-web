@@ -65,6 +65,8 @@
    
       <el-table :data="tableData"
               :default-expand-all="true"
+              :empty-text="emptyText"
+              v-loading="loading"
               style="width: 100%">
         <el-table-column type="expand">
           <template slot-scope="props">
@@ -235,6 +237,8 @@
 export default {
   data () {
     return {
+      loading: true,
+      emptyText: '加载中',
       tableData: [],
       primarys: 'primary',
       disabled: false,
@@ -311,6 +315,7 @@ export default {
       }
     },
     async isGetLists (value) {
+      this.loading = true
       let res = await this.$http.get('/shiper/orders', {
         params: {
           batchNum: value
@@ -336,6 +341,13 @@ export default {
         }
         this.tableData = res.data.list
       }
+
+      if (!(this.tableData && this.tableData.length > 0)) {
+        this.emptyText = '暂无数据'
+      }else{
+        this.emptyText = ''
+      }
+      this.loading = false
     },
     async isGetListsd (value) {
       let res = await this.$http.get('/captive/orders', {
