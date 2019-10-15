@@ -177,7 +177,7 @@
                          prop="ports">
         </el-table-column>
         <el-table-column prop="insuranceAmountCurrency"
-                         width="128px"
+                         width="135px"
                          label="保险金额">                 
         </el-table-column>
 
@@ -295,13 +295,13 @@ export default {
       if (res.status === 200) {
         //千分位
         for(let d of res.data.list){
-          console.log(d,111)
+          // console.log(d,111)
           if(d['insuranceAmount']){
             d['insuranceAmountCurrency'] = d['currency'] + ' ' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
-            // let arr = [];
-            // for(let i of d['orderDtos']){
-            //   arr.push(i.)
-            // }
+            let arr = [];
+            for(let i of d['orderDtos']){
+              // arr.push(i.)
+            }
          }else{
             d['insuranceAmountCurrency'] = ''
           }
@@ -322,6 +322,16 @@ export default {
         }
       })
       if (res.status === 200) {
+        //千分位
+        for(let d of res.data.list){
+          // console.log(d,111)
+          if(d['insuranceAmount']){
+            d['insuranceAmountCurrency'] = d['currency'] + ' ' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
+            
+         }else{
+            d['insuranceAmountCurrency'] = ''
+          }
+        }
         this.tableData = res.data.list
       }
     },
@@ -332,6 +342,16 @@ export default {
         }
       })
       if (res.status === 200) {
+        //千分位
+        for(let d of res.data.list){
+          console.log(d,111)
+          if(d['insuranceAmount']){
+            d['insuranceAmountCurrency'] = d['currency'] + ' ' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
+            
+         }else{
+            d['insuranceAmountCurrency'] = ''
+          }
+        }
         this.tableData = res.data.list
       }
     },
