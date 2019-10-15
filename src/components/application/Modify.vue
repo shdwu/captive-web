@@ -45,7 +45,7 @@
           <span>{{item.batchNum}}</span>
         </div>
         <div class="fdsa">
-          <span class="ml10">申报人：</span>
+          <span class="ml10">申报公司：</span>
           <span>{{item.createby}}</span>
         </div>
         <div class="fdsa">
@@ -178,7 +178,7 @@
         <el-table-column prop="sumPremium"
                          label="最终保费">
           <template slot-scope="scope">
-            <el-input v-model="scope.row.sumPremium"
+            <el-input v-model="scope.row.sumPremium" oninput="value = value.replace(/^\D/g,'')"
                       v-if="nameType === 'BROKER' && item.status !== '1'"></el-input>
             <span v-else>{{scope.row.sumPremium}}</span>
           </template>
@@ -282,6 +282,7 @@ export default {
   },
   methods: {
     async isGetList (value) {
+      this.loading = true
       let res = await this.$http.get('/broker/orders', {
         params: {
           batchNum: value
@@ -290,7 +291,7 @@ export default {
       if (res.status === 200) {
         //千分位
         for(let d of res.data.list){
-          console.log(d,111)
+          // console.log(d,111)
           if(d['insuranceAmount']){
             d['insuranceAmountCurrency'] = d['currency'] + ' ' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
             let sum = '';
@@ -313,6 +314,13 @@ export default {
           }
         })
       }
+
+      if (!(this.tableData && this.tableData.length > 0)) {
+        this.emptyText = '暂无数据'
+      }else{
+        this.emptyText = ''
+      }
+      this.loading = false
     },
     async isGetLists (value) {
       this.loading = true
@@ -324,7 +332,7 @@ export default {
       if (res.status === 200) {
         //千分位
         for(let d of res.data.list){
-          // console.log(d,222)
+          // console.log(d,111)
           if(d['insuranceAmount']){
             d['insuranceAmountCurrency'] = d['currency'] + ' ' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
             let sum = '';
@@ -350,6 +358,7 @@ export default {
       this.loading = false
     },
     async isGetListsd (value) {
+      this.loading = true
       let res = await this.$http.get('/captive/orders', {
         params: {
           batchNum: value
@@ -358,7 +367,6 @@ export default {
       if (res.status === 200) {
         //千分位
         for(let d of res.data.list){
-          console.log(d,333)
           if(d['insuranceAmount']){
             d['insuranceAmountCurrency'] = d['currency'] + ' ' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
             let sum = '';
@@ -374,6 +382,12 @@ export default {
           }
         }
         this.tableData = res.data.list
+        if (!(this.tableData && this.tableData.length > 0)) {
+          this.emptyText = '暂无数据'
+        }else{
+          this.emptyText = ''
+        }
+        this.loading = false
       }
     },
     isLoad (filename) {

@@ -66,7 +66,7 @@
                          label="申报批次">
         </el-table-column>
         <el-table-column prop="createby"
-                         label="申报人">
+                         label="申报公司">
         </el-table-column>
         <el-table-column prop="createtime"
                          label="提交时间">
@@ -283,6 +283,7 @@ export default {
       }) 
     },
     async isGetList (batchNum = '', createBy = '', status = '', page = 1) {
+      this.loading = true
       let res = await this.$http.get('/broker/batchList', {
         params: {
           batchNum,
@@ -297,6 +298,12 @@ export default {
         this.total = res.data.total
         this.page = res.data.page
       }
+      if (!(this.tableData && this.tableData.length > 0)) {
+        this.emptyText = '暂无数据'
+      }else{
+        this.emptyText = ''
+      }
+      this.loading = false
     },
     async isGetLists (batchNum = '', createBy = '', status = '', page = 1) {
       this.loading = true
@@ -322,6 +329,7 @@ export default {
       this.loading = false
     },
     async isGetListsd (batchNum = '', createBy = '', status = '', page = 1) {
+      this.loading = true
       let res = await this.$http.get('/captive/batchList', {
         params: {
           batchNum,
@@ -336,6 +344,12 @@ export default {
         this.total = res.data.total
         this.page = res.data.page
       }
+      if (!(this.tableData && this.tableData.length > 0)) {
+        this.emptyText = '暂无数据'
+      }else{
+        this.emptyText = ''
+      }
+      this.loading = false
     },
     moreClick (row) {
       localStorage.setItem('leef', JSON.stringify(row))
