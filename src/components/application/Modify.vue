@@ -137,31 +137,50 @@
           </template>
         </el-table-column>
         <el-table-column label="船名"
+                         width="90px"
                          prop="shipCName">
         </el-table-column>
-        <el-table-column label="航次"
+
+
+
+        <el-table-column label="经过的特战区"
+                         width="115px"
                          prop="line">
         </el-table-column>
-        <el-table-column label="出发港"
+         <el-table-column label="停留特战区总天数"
+                         width="135px"
+                         prop="line">
+        </el-table-column>
+
+
+
+
+         <el-table-column label="航次"
+                         width="60px"
+                         prop="line">
+        </el-table-column>
+        <el-table-column width="70px" label="出发港"
                          prop="departurePort">
         </el-table-column>
         <el-table-column label="出发时间"
                          width="100px"
                          prop="etd">
         </el-table-column>
-        <el-table-column label="目的港"
+        <el-table-column width="80px" label="目的港"
                          prop="arrivalPort">
         </el-table-column>
         <el-table-column label="到达时间"
                          width="100px"
                          prop="eta">
         </el-table-column>
-        <el-table-column label="挂靠港"
+        <el-table-column width="80px" label="挂靠港"
                          prop="ports">
         </el-table-column>
-        <el-table-column prop="insuranceAmount"
-                         label="保险金额">
+        <el-table-column prop="insuranceAmountCurrency"
+                         width="128px"
+                         label="保险金额">                 
         </el-table-column>
+
 
         <el-table-column prop="sumPremium"
                          label="最终保费">
@@ -274,6 +293,19 @@ export default {
         }
       })
       if (res.status === 200) {
+        //千分位
+        for(let d of res.data.list){
+          console.log(d,111)
+          if(d['insuranceAmount']){
+            d['insuranceAmountCurrency'] = d['currency'] + ' ' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
+            // let arr = [];
+            // for(let i of d['orderDtos']){
+            //   arr.push(i.)
+            // }
+         }else{
+            d['insuranceAmountCurrency'] = ''
+          }
+        }
         this.tableData = res.data.list
         this.tableData.forEach(item => {
           if (item.state === '2') {
@@ -410,7 +442,7 @@ export default {
           this.$router.push({ name: 'application' })
         }
       } else {
-        this.$message.error('请完成各航次最终保费,以及总保费的填写')
+        this.$message.error('请完成各航次最终保费')
       }
     },
     isRuts (value) {
@@ -623,7 +655,6 @@ export default {
   margin: 10px;
 }
 .right_button {
-  float: right;
   display: inline-block;
   margin: 25px;
 }
