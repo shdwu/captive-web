@@ -77,7 +77,7 @@
 
               </el-table-column>
               <el-table-column prop="anchoragePort"
-                               label="挂靠港名">
+                               label="挂靠特战区港口">
               </el-table-column>
               <el-table-column prop="anchorageDate"
                                label="挂靠特战区港口时间">
