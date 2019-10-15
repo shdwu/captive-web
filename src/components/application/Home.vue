@@ -7,6 +7,7 @@
       <div class="btn_bar"
            v-if="userType === 'SHIPOWNER'">
         <el-button type="primary"
+                   :loading="temporaryLoading"
                    @click="temporaryStorage"
                    plain>暂存</el-button>
         <el-button type="primary"
@@ -219,7 +220,8 @@ export default {
       select: '',
       fileName: '',
       fits: null,
-      searchTime: ''
+      searchTime: '',
+      temporaryLoading:false
     }
   },
   computed: {
@@ -240,6 +242,10 @@ export default {
     temporaryStorage () {
       let selectedData = this.allData.filter(t => t.selected)
       if (selectedData.length > 0) {
+        if(this.temporaryLoading){
+          return;
+        }
+        this.temporaryLoading = true;
         let proms = {
           list: selectedData
         }
@@ -253,6 +259,7 @@ export default {
             this.fits = ""
           }
         })
+        this.temporaryLoading = false;
       } else {
         this.$message({
           message: '请选择暂存内容',
