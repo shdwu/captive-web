@@ -339,7 +339,11 @@ export default {
             d['insuranceAmountCurrency'] = d['currency'] + ' ' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
             let sum = '';
             let plus = 0;
+            let arr = [];
             for(let i of d['orderDtos']){
+              // arr.push(i.throughArea);
+              // console.log(arr,12345432)
+
               sum += i.throughArea + '\n';
               d['throughAreaSum'] = sum;
               plus += Number(i.days);
@@ -471,7 +475,7 @@ export default {
       }
     },
     async isPass () {
-      if (this.tableData.some(this.checkAdult) && this.item.premium !== '') {
+      if (this.tableData.some(this.checkAdult) ) {
         let obj = {
           batchNum: this.item.batchNum,
           status: '1',
@@ -497,12 +501,13 @@ export default {
             message: '审核通过',
             type: 'success'
           })
-          this.$router.push({ name: 'application' })
+          this.$router.push({ name: 'batch' })
         }
       } else {
         this.$message.error('请完成各航次最终保费')
       }
-    },
+    }
+    ,
     isRuts (value) {
       value.state = '2'
       if (this.tableData.some(item => { if (item.state === '2') { return true } })) {

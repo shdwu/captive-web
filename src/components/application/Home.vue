@@ -336,7 +336,22 @@ export default {
       this.currentPage = val
       this.getTableData()
     },
-    getTableData(params) {
+    getsum(arr,d){
+      let sum = '';
+      // console.log(666888);
+      for(let j = 0;j < arr.length - 1;j ++){
+        let throughAreaList = arr[j].split(',');
+        for(let k of throughAreaList){
+          // console.log(k)
+          sum += k + "\n";
+          d['throughAreaSum'] = sum;
+        }
+        // return d['throughAreaSum'];
+      }
+        // return d['throughAreaSum'];
+    }
+    ,
+    getTableData(params,sum) {
       this.loading = true
       if(this.allData && this.allData.length > 0 && !params) {
         this.tableData = this.allData.slice((this.currentPage - 1 )*this.pageSize, this.currentPage*this.pageSize)
@@ -347,22 +362,49 @@ export default {
       } else {
 
         getOrderList(params).then( res => {
-
+          
           for(let d of res.data.list){
-            if(d['insuranceAmount']){
-              d['insuranceAmountCurrency'] = d['currency'] + ' ' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
-              let sum = '';
-              let plus = 0;
+            console.log(d,11111111111111111)
+            // arr.push(d.throughAreas);
+            console.log(d,908070)
+            let plus = 0;
+              let arr = [];
               for(let i of d['orderDtos']){
-                sum += i.throughArea + '\n';
-                d['throughAreaSum'] = sum;
+                // sum += i.throughArea + '\n';
+                // d['throughAreaSum'] = sum;
+                if(!arr.includes(i.throughArea)){
+                   arr.push(i.throughArea);
+                }
                 plus += Number(i.days);
                 d['daysPlus'] = plus.toFixed(2); 
               }
+              d.throughAreaSum = arr.join('\n')
+
+            if(d['insuranceAmount']){
+              d['insuranceAmountCurrency'] = d['currency'] + ' ' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
             }else{
               d['insuranceAmountCurrency'] = ''
             }
           }
+          
+            // // console.log(arr,4444);
+            // for(let j = 0;j < arr.length - 1;j ++){
+            //   // console.log(arr[j],234576545);
+            //   let throughAreaList = arr[j].split(',');
+            //   console.log(throughAreaList,9090)
+            //   for(let k of throughAreaList){
+            //     sum += k + "\n";
+            //     d['throughAreaSum'] = sum;
+            //   }
+            // }
+            
+
+          
+
+
+          
+
+
           
           this.allData = res.data.list
           if (!(this.allData && this.allData.length > 0)) {
