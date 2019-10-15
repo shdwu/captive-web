@@ -293,18 +293,22 @@ export default {
       if (res.status === 200) {
         //千分位
         for(let d of res.data.list){
-          // console.log(d,111)
+          let plus = 0;
+            let arr = [];
+            for(let i of d['orderDtos']){
+              // sum += i.throughArea + '\n';
+              // d['throughAreaSum'] = sum;
+              if(!arr.includes(i.throughArea)){
+                  arr.push(i.throughArea);
+              }
+              plus += Number(i.days);
+              d['daysPlus'] = plus.toFixed(2); 
+            }
+            d.throughAreaSum = arr.join('\n')
+
           if(d['insuranceAmount']){
             d['insuranceAmountCurrency'] = d['currency'] + ' ' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
-            let sum = '';
-            let plus = 0;
-            for(let i of d['orderDtos']){
-              sum += i.throughArea + '\n';
-              d['throughAreaSum'] = sum;
-              plus += Number(i.days);
-              d['daysPlus'] = plus; 
-            }
-         }else{
+          }else{
             d['insuranceAmountCurrency'] = ''
           }
         }
@@ -335,22 +339,22 @@ export default {
       if (res.status === 200) {
         //千分位
         for(let d of res.data.list){
-          if(d['insuranceAmount']){
-            d['insuranceAmountCurrency'] = d['currency'] + ' ' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
-            let sum = '';
-            let plus = 0;
+          let plus = 0;
             let arr = [];
             for(let i of d['orderDtos']){
-              // arr.push(i.throughArea);
-              // console.log(arr,12345432)
-
-              sum += i.throughArea + '\n';
-              d['throughAreaSum'] = sum;
+              // sum += i.throughArea + '\n';
+              // d['throughAreaSum'] = sum;
+              if(!arr.includes(i.throughArea)){
+                  arr.push(i.throughArea);
+              }
               plus += Number(i.days);
               d['daysPlus'] = plus.toFixed(2); 
             }
-            // console.log(sum)
-         }else{
+            d.throughAreaSum = arr.join('\n')
+
+          if(d['insuranceAmount']){
+            d['insuranceAmountCurrency'] = d['currency'] + ' ' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
+          }else{
             d['insuranceAmountCurrency'] = ''
           }
         }
@@ -374,17 +378,22 @@ export default {
       if (res.status === 200) {
         //千分位
         for(let d of res.data.list){
+          let plus = 0;
+            let arr = [];
+            for(let i of d['orderDtos']){
+              // sum += i.throughArea + '\n';
+              // d['throughAreaSum'] = sum;
+              if(!arr.includes(i.throughArea)){
+                  arr.push(i.throughArea);
+              }
+              plus += Number(i.days);
+              d['daysPlus'] = plus.toFixed(2); 
+            }
+            d.throughAreaSum = arr.join('\n')
+
           if(d['insuranceAmount']){
             d['insuranceAmountCurrency'] = d['currency'] + ' ' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
-            let sum = '';
-            let plus = 0;
-            for(let i of d['orderDtos']){
-              sum += i.throughArea + '\n';
-              d['throughAreaSum'] = sum;
-              plus += Number(i.days);
-              d['daysPlus'] = plus; 
-            }
-         }else{
+          }else{
             d['insuranceAmountCurrency'] = ''
           }
         }
