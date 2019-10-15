@@ -59,6 +59,8 @@
       </div>
       <el-table :data="tableData"
                 @cell-click='moreClick'
+                :empty-text="emptyText"
+                v-loading="loading"
                 style="width: 100%;cursor:pointer;">
         <el-table-column prop="batchNum"
                          label="申报批次">
@@ -263,6 +265,8 @@ export default {
         value: '2',
         label: '已退回'
       }],
+      loading: true,
+      emptyText: '加载中',
       tableData: [],
       nameType: '',
       tableList: [],
@@ -295,6 +299,7 @@ export default {
       }
     },
     async isGetLists (batchNum = '', createBy = '', status = '', page = 1) {
+      this.loading = true
       let res = await this.$http.get('/shiper/batchList', {
         params: {
           batchNum,
@@ -309,6 +314,12 @@ export default {
         this.total = res.data.total
         this.page = res.data.page
       }
+      if (!(this.tableData && this.tableData.length > 0)) {
+        this.emptyText = '暂无数据'
+      }else{
+        this.emptyText = ''
+      }
+      this.loading = false
     },
     async isGetListsd (batchNum = '', createBy = '', status = '', page = 1) {
       let res = await this.$http.get('/captive/batchList', {
@@ -319,7 +330,7 @@ export default {
           num: 10,
           page
         } })
-      console.log(res)
+
       if (res.status === 200) {
         this.tableData = res.data.list
         this.total = res.data.total
