@@ -7,12 +7,11 @@
       <div class="btn_bar"
            v-if="userType === 'SHIPOWNER'">
         <el-button type="primary"
+                   :loading="temporaryLoading"
                    @click="temporaryStorage"
-                   :disabled="!(allData.some(t => t.selected))"
                    plain>暂存</el-button>
         <el-button type="primary"
                    @click="submit"
-                   :disabled="!(allData.some(t => t.selected))"
                    plain>提交</el-button>
         <el-upload class="file_upload"
                     action="/files"
@@ -77,7 +76,7 @@
 
               </el-table-column>
               <el-table-column prop="anchoragePort"
-                               label="挂靠港名">
+                               label="挂靠特战区港口">
               </el-table-column>
               <el-table-column prop="anchorageDate"
                                label="挂靠特战区港口时间">
@@ -91,7 +90,6 @@
                                :key="todos.length"
                                :label="todos.value"
                                :value="todos.value"></el-option>
-
                   </el-select>
                 </template>
               </el-table-column>
@@ -222,7 +220,8 @@ export default {
       select: '',
       fileName: '',
       fits: null,
-      searchTime: ''
+      searchTime: '',
+      temporaryLoading:false
     }
   },
   computed: {
@@ -243,9 +242,14 @@ export default {
     temporaryStorage () {
       let selectedData = this.allData.filter(t => t.selected)
       if (selectedData.length > 0) {
+        if(this.temporaryLoading){
+          return;
+        }
+        this.temporaryLoading = true;
         let proms = {
           list: selectedData
         }
+
         this.$http.post('/shiper/HoldInsuranceOrders', proms).then(res => {
           if (res.status === 200) {
             this.$message({
@@ -255,6 +259,7 @@ export default {
             this.fits = ""
           }
         })
+        this.temporaryLoading = false;
       } else {
         this.$message({
           message: '请选择暂存内容',

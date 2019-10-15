@@ -100,7 +100,7 @@
                 </template>
               </el-table-column>
               <el-table-column prop="anchoragePort"
-                               label="挂靠港名">
+                               label="挂靠特战区港口">
               </el-table-column>
               <el-table-column prop="anchorageDate"
                                label="挂靠特战区港口时间">
@@ -464,7 +464,7 @@ export default {
           message: '退回成功',
           type: 'success'
         })
-        this.$router.push({ name: 'application' })
+        this.$router.push({ name: 'batch' })
       }
     },
     checkAdult (item) {
