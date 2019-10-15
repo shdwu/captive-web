@@ -22,6 +22,11 @@
           <el-menu-item index="/application">首页</el-menu-item>
           <el-menu-item index="/batch">申报批次</el-menu-item>
           <el-menu-item index="/personal">账号安全</el-menu-item>
+          <div class="vademecum">
+            <a class="aaxx" href="http://localhost:8000//static/media/manual.6e4d023.pdf">
+                <span class="vadchildren">用户手册</span>
+            </a>
+        </div>
         </el-menu>
       </div>
     </div>
@@ -212,5 +217,20 @@ p {
   float: right;
   margin-right: 30px;
   font-size: 14px;
+}
+.vademecum{
+  width: 96px;
+  height:60px;
+  float: right;
+}
+.vadchildren{
+  line-height: 60px;
+  display: block;
+  text-align: center;
+  color: #909399;
+  font-size: 14px;
+}
+.aaxx{
+  text-decoration: none;
 }
 </style>
