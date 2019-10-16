@@ -41,7 +41,7 @@
                  :empty-text="emptyText"
                  v-loading="loading"
                  ref="tableMain"
-                 style="width: 100%">
+                 style="width: 100%;font-size:12px">
         <el-table-column type="selection"
                          width="29">
         </el-table-column>
@@ -112,14 +112,14 @@
                          width="90px"
                          prop="shipCName">
         </el-table-column>
-        <el-table-column label="经过的特战区"
-                         width="115px"
+        <el-table-column label="特战区"
+                         width="80px"
                          prop="throughAreaSum">
                          <!-- 表格内换行 -->
                          <template scope="scope">{{scope.row.throughAreaSum}}</template>
         </el-table-column>
-         <el-table-column label="停留总天数"
-                         width="100px"
+         <el-table-column label="天数"
+                         width="50px"
                          prop="daysPlus">
         </el-table-column>
         <el-table-column label="航次"
@@ -140,7 +140,7 @@
                          width="100px"
                          prop="eta">
         </el-table-column>
-        <el-table-column width="80px" label="挂靠港"
+        <el-table-column width="120x" label="挂靠港"
                          prop="ports">
         </el-table-column>
         <el-table-column prop="insuranceAmountCurrency"
@@ -367,11 +367,9 @@ export default {
       } else {
 
         getOrderList(params).then( res => {
-
+          //千分位 特战区 总时间
           for(let d of res.data.list){
-            console.log(d,11111111111111111)
             // arr.push(d.throughAreas);
-            console.log(d,908070)
             let plus = 0;
               let arr = [];
               for(let i of d['orderDtos']){
@@ -386,30 +384,11 @@ export default {
               d.throughAreaSum = arr.join('\n')
 
             if(d['insuranceAmount']){
-              d['insuranceAmountCurrency'] = d['currency'] + ' ' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
+              d['insuranceAmountCurrency'] = d['currency'] + '\n' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
             }else{
               d['insuranceAmountCurrency'] = ''
             }
           }
-
-            // // console.log(arr,4444);
-            // for(let j = 0;j < arr.length - 1;j ++){
-            //   // console.log(arr[j],234576545);
-            //   let throughAreaList = arr[j].split(',');
-            //   console.log(throughAreaList,9090)
-            //   for(let k of throughAreaList){
-            //     sum += k + "\n";
-            //     d['throughAreaSum'] = sum;
-            //   }
-            // }
-
-
-
-
-
-
-
-
 
           this.allData = res.data.list
           if (!(this.allData && this.allData.length > 0)) {
