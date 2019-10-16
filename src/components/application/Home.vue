@@ -22,6 +22,7 @@
           <div class="el-upload__tip"><span>{{fits}}</span></div>
         </el-upload>
           <div class="fl">
+            <span class="cm">进入特战区时间</span>
           <el-date-picker
             v-model="searchTime"
             type="daterange"
@@ -494,6 +495,11 @@ $maxWidth: 1200px;
 .fl {
   float: right;
 }
+.cm {
+  font-size: 14px;
+  color: rgba(51, 51, 51, 1);
+}
+
 .title_ipt {
   width: 1200px;
   height: 50px;
