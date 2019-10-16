@@ -51,7 +51,7 @@
                     border
                     :cell-style="tableRowClassName"
                     style="width: 100%">
-              <el-table-column prop="throughArea"
+              <el-table-column width="120px" prop="throughArea"
                                label="特战区域名称">
               </el-table-column>
               <el-table-column prop="intime"
@@ -66,7 +66,7 @@
                                label="停留天数">
               </el-table-column>
               <el-table-column prop="loadInfo"
-                               label="空满载(请注意修改)">
+                               label="空满载">
                 <template slot-scope="scope">
                   <el-radio v-model="scope.row.loadInfo"
                             label="满载">满载</el-radio>
@@ -75,11 +75,11 @@
                 </template>
 
               </el-table-column>
-              <el-table-column prop="anchoragePort"
+              <el-table-column width="120px" prop="anchoragePort"
                                label="挂靠特战区港口">
               </el-table-column>
               <el-table-column prop="anchorageDate"
-                               label="挂靠特战区港口时间">
+                               label="挂靠时间">
               </el-table-column>
 
               <el-table-column label="安保人数">

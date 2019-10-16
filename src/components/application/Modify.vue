@@ -484,7 +484,7 @@ export default {
       }
     },
     async isPass () {
-      if (this.tableData.some(this.checkAdult) ) {
+      if (this.tableData.some(this.checkAdult)) {
         let obj = {
           batchNum: this.item.batchNum,
           status: '1',
@@ -505,12 +505,13 @@ export default {
           list: this.tableData
         }
         let res = await this.$http.post('/broker/saveInsuranceOrders', promst)
-        if (res.status === 200) {
-          this.$message({
+        
+        if (res.status === 200 ) {
+            this.$message({
             message: '审核通过',
             type: 'success'
-          })
-          this.$router.push({ name: 'batch' })
+            })
+            this.$router.push({ name: 'batch' })
         }
       } else {
         this.$message.error('请完成各航次最终保费')
@@ -603,11 +604,11 @@ export default {
 }
 
 </script>
-<style >
+<style scoped>
 /* 为了实现数据换行 删除scope */
-.el-table .cell {
+/* .el-table .cell {
   white-space: pre-line;
-}
+} */
 .info {
   width: 100%;
 }
