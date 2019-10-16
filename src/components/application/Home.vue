@@ -236,7 +236,7 @@ export default {
       }
       return ""
     },
-    handleSelectionChange (value, row) {
+    handleSelectionChange (value, row,) {
       row.selected = !row.selected;
     },
     temporaryStorage () {
@@ -428,12 +428,6 @@ export default {
     this.getTableData()
   }
 }
-
-// if(!file){
-//   message:"请选择上传附件"
-// }else{
-//   message: '上传成功'
-// }
 </script>
 <style lang="postcss" scoped>
 /* variables */
