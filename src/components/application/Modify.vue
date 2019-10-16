@@ -99,11 +99,11 @@
                   <span v-else>{{scope.row.loadInfo}}</span>
                 </template>
               </el-table-column>
-              <el-table-column prop="anchoragePort"
+              <el-table-column width="120px" prop="anchoragePort"
                                label="挂靠特战区港口">
               </el-table-column>
               <el-table-column prop="anchorageDate"
-                               label="挂靠特战区港口时间">
+                               label="挂靠时间">
               </el-table-column>
               <el-table-column label="安保人数">
                 <template slot-scope="scope">
@@ -142,18 +142,18 @@
                          width="90px"
                          prop="shipCName">
         </el-table-column>
-        <el-table-column label="经过的特战区"
-                         width="115px"
+        <el-table-column label="特战区"
+                         width="80px"
                          prop="throughAreaSum">
                          <!-- 表格内换行 -->
                          <template scope="scope">{{scope.row.throughAreaSum}}</template>
         </el-table-column>
-         <el-table-column label="停留总天数"
-                         width="100px"
+         <el-table-column label="天数"
+                         width="50px"
                          prop="daysPlus">
         </el-table-column>
         <el-table-column label="航次"
-                         width="60px"
+                         width="70px"
                          prop="line">
         </el-table-column>
         <el-table-column width="70px" label="出发港"
@@ -170,21 +170,28 @@
                          width="100px"
                          prop="eta">
         </el-table-column>
-        <el-table-column width="80px" label="挂靠港"
+        <el-table-column width="120px" label="挂靠港"
                          prop="ports">
         </el-table-column>
         <el-table-column prop="insuranceAmountCurrency"
                          width="135px"
                          label="保险金额">
         </el-table-column>
+
+
         <el-table-column prop="sumPremium"
                          label="最终保费">
           <template slot-scope="scope">
-            <el-input v-model="scope.row.sumPremium" type="number"
+            <el-input v-model="scope.row.sumPremium" oninput="value=value.replace(/^[^0-9]/,'')"
                       v-if="nameType === 'BROKER' && item.status !== '1'"></el-input>
             <span v-else>{{scope.row.sumPremium}}</span>
           </template>
         </el-table-column>
+
+
+
+
+
         <el-table-column label="状态">
           <template slot-scope="scope">
             <el-button type="info"
@@ -307,7 +314,7 @@ export default {
             d.throughAreaSum = arr.join('\n')
 
           if(d['insuranceAmount']){
-            d['insuranceAmountCurrency'] = d['currency'] + ' ' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
+            d['insuranceAmountCurrency'] = d['currency'] + '\n' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
           }else{
             d['insuranceAmountCurrency'] = ''
           }
@@ -353,7 +360,7 @@ export default {
             d.throughAreaSum = arr.join('\n')
 
           if(d['insuranceAmount']){
-            d['insuranceAmountCurrency'] = d['currency'] + ' ' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
+            d['insuranceAmountCurrency'] = d['currency'] + '\n' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
           }else{
             d['insuranceAmountCurrency'] = ''
           }
@@ -392,7 +399,7 @@ export default {
             d.throughAreaSum = arr.join('\n')
 
           if(d['insuranceAmount']){
-            d['insuranceAmountCurrency'] = d['currency'] + ' ' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
+            d['insuranceAmountCurrency'] = d['currency'] + '\n' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
           }else{
             d['insuranceAmountCurrency'] = ''
           }
@@ -476,15 +483,15 @@ export default {
         this.$router.push({ name: 'batch' })
       }
     },
-    checkAdult (item) {
-      if (item.sumPremium !== null) {
+    checkAdult(item) {
+      if (item.sumPremium !== null && item.sumPremium !== '' && item.sumPremium >= 0) {
         return true
       } else {
         return false
       }
     },
     async isPass () {
-      if (this.tableData.some(this.checkAdult) ) {
+      if (this.tableData.every(this.checkAdult)) {
         let obj = {
           batchNum: this.item.batchNum,
           status: '1',
@@ -505,12 +512,13 @@ export default {
           list: this.tableData
         }
         let res = await this.$http.post('/broker/saveInsuranceOrders', promst)
-        if (res.status === 200) {
-          this.$message({
+
+        if (res.status === 200 ) {
+            this.$message({
             message: '审核通过',
             type: 'success'
-          })
-          this.$router.push({ name: 'batch' })
+            })
+            this.$router.push({ name: 'batch' })
         }
       } else {
         this.$message.error('请完成各航次最终保费')
@@ -603,11 +611,11 @@ export default {
 }
 
 </script>
-<style >
+<style scoped>
 /* 为了实现数据换行 删除scope */
-.el-table .cell {
+/* .el-table .cell {
   white-space: pre-line;
-}
+} */
 .info {
   width: 100%;
 }
@@ -734,12 +742,6 @@ export default {
   display: inline-block;
   margin: 25px;
 }
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button{
-  -webkit-appearance: none !important;
-  margin: 0;
-}
-input[type="number"]{-moz-appearance:textfield;}
 </style>
 
 

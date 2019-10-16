@@ -106,6 +106,7 @@
                     style="width: 100%">
               <el-table-column prop="throughArea"
                                label="特战区域名称">
+                               
               </el-table-column>
               <el-table-column prop="intime"
                                width="100px"
