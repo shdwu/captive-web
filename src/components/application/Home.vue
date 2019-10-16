@@ -237,7 +237,7 @@ export default {
       }
       return ""
     },
-    handleSelectionChange (value, row) {
+    handleSelectionChange (value, row,) {
       row.selected = !row.selected;
     },
     temporaryStorage () {
@@ -250,7 +250,6 @@ export default {
         let proms = {
           list: selectedData
         }
-
         this.$http.post('/shiper/HoldInsuranceOrders', proms).then(res => {
           if (res.status === 200) {
             this.$message({
@@ -313,7 +312,7 @@ export default {
           this.fileId = res.data
           this.fileName = file.name
           this.fits = '附件:' + file.name
-        }
+        }   
       })
     },
     handleSelectAll () {
@@ -337,8 +336,10 @@ export default {
     handleGotoLastPage() {
       let lastPage = Math.ceil(this.totalNum/this.pageSize)
       this.handleCurrentChange(lastPage)
+
     },
     handleCurrentChange(val) {
+      console.log(123)
       this.currentPage = val
       this.getTableData()
     },
