@@ -20,7 +20,7 @@
                      action="/files"
                      :before-upload="beforeUpload"
                      list-type="text">
-            <el-button type="primary">点击上传</el-button>
+            <el-button type="primary">上传附件</el-button>
           </el-upload>
         </el-form>
         <el-button type="primary"
@@ -62,7 +62,7 @@
                class="yth">已退回</div>
         </div>
       </div>
-   
+
       <el-table :data="tableData"
               :default-expand-all="true"
               :empty-text="emptyText"
@@ -175,7 +175,7 @@
         </el-table-column>
         <el-table-column prop="insuranceAmountCurrency"
                          width="135px"
-                         label="保险金额">                 
+                         label="保险金额">
         </el-table-column>
         <el-table-column prop="sumPremium"
                          label="最终保费">
@@ -302,7 +302,7 @@ export default {
                   arr.push(i.throughArea);
               }
               plus += Number(i.days);
-              d['daysPlus'] = plus.toFixed(2); 
+              d['daysPlus'] = plus.toFixed(2);
             }
             d.throughAreaSum = arr.join('\n')
 
@@ -348,7 +348,7 @@ export default {
                   arr.push(i.throughArea);
               }
               plus += Number(i.days);
-              d['daysPlus'] = plus.toFixed(2); 
+              d['daysPlus'] = plus.toFixed(2);
             }
             d.throughAreaSum = arr.join('\n')
 
@@ -387,7 +387,7 @@ export default {
                   arr.push(i.throughArea);
               }
               plus += Number(i.days);
-              d['daysPlus'] = plus.toFixed(2); 
+              d['daysPlus'] = plus.toFixed(2);
             }
             d.throughAreaSum = arr.join('\n')
 

@@ -18,7 +18,7 @@
                     :before-upload="beforeUpload"
                     list-type="text">
           <el-button size="small"
-                      type="primary">点击上传</el-button>
+                      type="primary">上传附件</el-button>
           <div class="el-upload__tip"><span>{{fits}}</span></div>
         </el-upload>
           <div class="fl">
