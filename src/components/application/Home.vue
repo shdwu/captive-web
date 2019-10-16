@@ -31,7 +31,6 @@
           <el-button type="primary" @click="searchByTime">搜索</el-button>
         </div>
       </div>
-
       <el-table :data="tableData"
                  :default-expand-all="expandAll"
                  @select="handleSelectionChange"

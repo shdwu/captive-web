@@ -23,7 +23,8 @@
           <el-menu-item index="/batch">申报批次</el-menu-item>
           <el-menu-item index="/personal">账号安全</el-menu-item>
           <div class="vademecum">
-            <a class="aaxx" href="http://localhost:8000//static/media/manual.6e4d023.pdf" target="_blank">
+            <!-- href="http://localhost:8000//static/media/manual.6e4d023.pdf" -->
+            <a class="aaxx" target="_blank" :href="manual">
                 <span class="vadchildren">用户手册</span>
             </a>
         </div>
@@ -55,9 +56,11 @@
 </template>
 
 <script>
+import manual from '@/assets/manual.pdf'
 export default {
   data () {
     return {
+      manual,
       nameType: '',
       companyName: ''
     }
