@@ -142,18 +142,18 @@
                          width="90px"
                          prop="shipCName">
         </el-table-column>
-        <el-table-column label="经过的特战区"
-                         width="115px"
+        <el-table-column label="特战区"
+                         width="80px"
                          prop="throughAreaSum">
                          <!-- 表格内换行 -->
                          <template scope="scope">{{scope.row.throughAreaSum}}</template>
         </el-table-column>
-         <el-table-column label="停留总天数"
-                         width="100px"
+         <el-table-column label="天数"
+                         width="50px"
                          prop="daysPlus">
         </el-table-column>
         <el-table-column label="航次"
-                         width="60px"
+                         width="70px"
                          prop="line">
         </el-table-column>
         <el-table-column width="70px" label="出发港"
@@ -170,7 +170,7 @@
                          width="100px"
                          prop="eta">
         </el-table-column>
-        <el-table-column width="80px" label="挂靠港"
+        <el-table-column width="120px" label="挂靠港"
                          prop="ports">
         </el-table-column>
         <el-table-column prop="insuranceAmountCurrency"
@@ -314,7 +314,7 @@ export default {
             d.throughAreaSum = arr.join('\n')
 
           if(d['insuranceAmount']){
-            d['insuranceAmountCurrency'] = d['currency'] + ' ' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
+            d['insuranceAmountCurrency'] = d['currency'] + '\n' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
           }else{
             d['insuranceAmountCurrency'] = ''
           }
@@ -360,7 +360,7 @@ export default {
             d.throughAreaSum = arr.join('\n')
 
           if(d['insuranceAmount']){
-            d['insuranceAmountCurrency'] = d['currency'] + ' ' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
+            d['insuranceAmountCurrency'] = d['currency'] + '\n' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
           }else{
             d['insuranceAmountCurrency'] = ''
           }
@@ -399,7 +399,7 @@ export default {
             d.throughAreaSum = arr.join('\n')
 
           if(d['insuranceAmount']){
-            d['insuranceAmountCurrency'] = d['currency'] + ' ' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
+            d['insuranceAmountCurrency'] = d['currency'] + '\n' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
           }else{
             d['insuranceAmountCurrency'] = ''
           }
