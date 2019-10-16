@@ -9,7 +9,7 @@
         <el-button type="primary"
                    :loading="temporaryLoading"
                    @click="temporaryStorage"
-                   plain>暂存</el-button>
+                   plain v-show="false">暂存</el-button>
         <el-button type="primary"
                    @click="submit"
                    plain>提交</el-button>
@@ -145,7 +145,7 @@
         </el-table-column>
         <el-table-column prop="insuranceAmountCurrency"
                          width="135px"
-                         label="保险金额">                 
+                         label="保险金额">
         </el-table-column>
         <el-table-column label="无需申报"
                          v-if="userType === 'SHIPOWNER'">
@@ -367,7 +367,7 @@ export default {
       } else {
 
         getOrderList(params).then( res => {
-          
+
           for(let d of res.data.list){
             console.log(d,11111111111111111)
             // arr.push(d.throughAreas);
@@ -381,7 +381,7 @@ export default {
                    arr.push(i.throughArea);
                 }
                 plus += Number(i.days);
-                d['daysPlus'] = plus.toFixed(2); 
+                d['daysPlus'] = plus.toFixed(2);
               }
               d.throughAreaSum = arr.join('\n')
 
@@ -391,7 +391,7 @@ export default {
               d['insuranceAmountCurrency'] = ''
             }
           }
-          
+
             // // console.log(arr,4444);
             // for(let j = 0;j < arr.length - 1;j ++){
             //   // console.log(arr[j],234576545);
@@ -402,15 +402,15 @@ export default {
             //     d['throughAreaSum'] = sum;
             //   }
             // }
-            
-
-          
 
 
-          
 
 
-          
+
+
+
+
+
           this.allData = res.data.list
           if (!(this.allData && this.allData.length > 0)) {
             this.emptyText = '暂无数据'
