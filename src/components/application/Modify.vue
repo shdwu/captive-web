@@ -62,168 +62,159 @@
                class="yth">已退回</div>
         </div>
       </div>
+      <a href="javascript:void();">
+        <el-table :data="tableData"
+                :default-expand-all="true"
+                :empty-text="emptyText"
+                v-loading="loading"
+                style="width: 100%">
+          <el-table-column type="expand">
+            <template slot-scope="props">
+              <el-table :data="props.row.orderDtos"
+                      border
+                      :cell-style="tableRowClassName"
+                      style="width: 100%;font-size:12px;cursor:hand">
+                <el-table-column prop="throughArea"
+                                label="特战区域名称">
+                </el-table-column>
+                <el-table-column prop="intime"
+                                width="100px"
+                                label="进入时间">
+                </el-table-column>
+                <el-table-column prop="outtime"
+                                width="100px"
+                                label="离开时间">
+                </el-table-column>
+                <el-table-column prop="days"
+                                label="停留天数">
+                </el-table-column>
+                <el-table-column label="空满载">
+                  <template slot-scope="scope">
+                    <el-radio v-model="scope.row.loadInfo"
+                              v-if="nameType === 'SHIPOWNER' && props.row.state === '2'"
+                              label="满载">满载</el-radio>
+                    <el-radio v-model="scope.row.loadInfo"
+                              v-if="nameType === 'SHIPOWNER' && props.row.state === '2'"
+                              label="空载">空载</el-radio>
+                    <span v-else>{{scope.row.loadInfo}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column width="120px" prop="anchoragePort"
+                                label="挂靠特战区港口">
+                </el-table-column>
+                <el-table-column prop="anchorageDate"
+                                label="挂靠时间">
+                </el-table-column>
+                <el-table-column label="安保人数">
+                  <template slot-scope="scope">
 
-      <el-table :data="tableData"
-              :default-expand-all="true"
-              :empty-text="emptyText"
-              v-loading="loading"
-              style="width: 100%">
-        <el-table-column type="expand">
-          <template slot-scope="props">
-            <el-table :data="props.row.orderDtos"
-                    :cell-style="tableRowClassName"
-                    border
-                    style="width: 100%">
-              <el-table-column prop="throughArea"
-                               label="特战区域名称">
-              </el-table-column>
-              <el-table-column prop="intime"
-                               width="100px"
-                               label="进入时间">
-              </el-table-column>
-              <el-table-column prop="outtime"
-                               width="100px"
-                               label="离开时间">
-              </el-table-column>
-              <el-table-column prop="days"
-                               label="停留天数">
-              </el-table-column>
-              <el-table-column label="空满载">
-                <template slot-scope="scope">
-                  <el-radio v-model="scope.row.loadInfo"
-                            v-if="nameType === 'SHIPOWNER' && props.row.state === '2'"
-                            label="满载">满载</el-radio>
-                  <el-radio v-model="scope.row.loadInfo"
-                            v-if="nameType === 'SHIPOWNER' && props.row.state === '2'"
-                            label="空载">空载</el-radio>
-                  <span v-else>{{scope.row.loadInfo}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column width="120px" prop="anchoragePort"
-                               label="挂靠特战区港口">
-              </el-table-column>
-              <el-table-column prop="anchorageDate"
-                               label="挂靠时间">
-              </el-table-column>
-              <el-table-column label="安保人数">
-                <template slot-scope="scope">
+                    <el-select v-model="scope.row.guardsNo"
+                              v-if="nameType === 'SHIPOWNER' &&  props.row.state ==='2' "
+                              placeholder="请选择">
+                      <el-option v-for="todos in guardList"
+                                :key="todos.length"
+                                :label="todos.value"
+                                :value="todos.value"></el-option>
+                    </el-select>
+                    <span v-else>{{scope.row.guardsNo}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="K&R">
+                  <template slot-scope="scope">
+                    <el-select v-model="scope.row.karAmount"
+                              v-if="nameType === 'SHIPOWNER' && props.row.state === '2'"
+                              placeholder="请选择">
+                      <el-option v-for="todos in KidnapList"
+                                :key="todos.length"
+                                :label="todos.value"
+                                :value="todos.value"></el-option>
+                    </el-select>
+                    <span v-else>{{scope.row.karAmount}}</span>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </template>
+          </el-table-column>
+          <el-table-column label="船名"
+                          width="90px"
+                          prop="shipCName">
+          </el-table-column>
+          <el-table-column label="特战区"
+                          width="85px"
+                          prop="throughAreaSum">
+                          <!-- 表格内换行 -->
+                          <template scope="scope">{{scope.row.throughAreaSum}}</template>
+          </el-table-column>
+          <el-table-column label="天数"
+                          width="50px"
+                          prop="daysPlus">
+          </el-table-column>
+          <el-table-column label="航次"
+                          width="70px"
+                          prop="line">
+          </el-table-column>
+          <el-table-column width="70px" label="出发港"
+                          prop="departurePort">
+          </el-table-column>
+          <el-table-column label="出发时间"
+                          width="100px"
+                          prop="etd">
+          </el-table-column>
+          <el-table-column width="80px" label="目的港"
+                          prop="arrivalPort">
+          </el-table-column>
+          <el-table-column label="到达时间"
+                          width="100px"
+                          prop="eta">
+          </el-table-column>
+          <el-table-column width="120px" label="挂靠港"
+                          prop="ports">
+          </el-table-column>
+          <el-table-column prop="insuranceAmountCurrency"
+                          width="135px"
+                          label="保险金额">
+          </el-table-column>
+          <el-table-column prop="sumPremium"
+                          label="最终保费">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.sumPremium" oninput="value=value.replace(/^[^0-9]/,'')"
+                        v-if="nameType === 'BROKER' && item.status !== '1'"></el-input>
+              <span v-else>{{scope.row.sumPremium}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="状态">
+            <template slot-scope="scope">
+              <el-button type="info"
+                        v-if="nameType === 'BROKER' &&  scope.row.state ==='0' "
+                        :disabled="item.status==='2'? true:false"
+                        @click="isRuts(scope.row)">不通过</el-button>
+              <el-button type="warning"
+                        :disabled="item.status==='2'? true:false"
+                        v-if="nameType === 'BROKER' &&  scope.row.state ==='1' "
+                        @click="isRuts(scope.row)">需申报</el-button>
+              <el-button type="danger"
+                        :disabled="item.status==='2'? true:false"
+                        v-if="nameType === 'BROKER' &&  scope.row.state ==='2' "
+                        @click="isLings(scope.row)">不通过</el-button>
+              <el-button type="info"
+                        v-if="nameType === 'SHIPOWNER' &&  scope.row.state ==='0' ">待审核</el-button>
+              <el-button type="warning"
+                        v-if="nameType === 'SHIPOWNER' &&  scope.row.state ==='1' ">无需申报</el-button>
+              <el-button type="danger"
+                        v-if="nameType === 'SHIPOWNER' &&  scope.row.state ==='2' ">被退回</el-button>
 
-                  <el-select v-model="scope.row.guardsNo"
-                             v-if="nameType === 'SHIPOWNER' &&  props.row.state ==='2' "
-                             placeholder="请选择">
-                    <el-option v-for="todos in guardList"
-                               :key="todos.length"
-                               :label="todos.value"
-                               :value="todos.value"></el-option>
-                  </el-select>
-                  <span v-else>{{scope.row.guardsNo}}</span>
-                </template>
-              </el-table-column>
-
-              <el-table-column label="K&R">
-                <template slot-scope="scope">
-                  <el-select v-model="scope.row.karAmount"
-                             v-if="nameType === 'SHIPOWNER' && props.row.state === '2'"
-                             placeholder="请选择">
-                    <el-option v-for="todos in KidnapList"
-                               :key="todos.length"
-                               :label="todos.value"
-                               :value="todos.value"></el-option>
-
-                  </el-select>
-                  <span v-else>{{scope.row.karAmount}}</span>
-                </template>
-              </el-table-column>
-
-            </el-table>
-          </template>
-        </el-table-column>
-        <el-table-column label="船名"
-                         width="90px"
-                         prop="shipCName">
-        </el-table-column>
-        <el-table-column label="特战区"
-                         width="80px"
-                         prop="throughAreaSum">
-                         <!-- 表格内换行 -->
-                         <template scope="scope">{{scope.row.throughAreaSum}}</template>
-        </el-table-column>
-         <el-table-column label="天数"
-                         width="50px"
-                         prop="daysPlus">
-        </el-table-column>
-        <el-table-column label="航次"
-                         width="70px"
-                         prop="line">
-        </el-table-column>
-        <el-table-column width="70px" label="出发港"
-                         prop="departurePort">
-        </el-table-column>
-        <el-table-column label="出发时间"
-                         width="100px"
-                         prop="etd">
-        </el-table-column>
-        <el-table-column width="80px" label="目的港"
-                         prop="arrivalPort">
-        </el-table-column>
-        <el-table-column label="到达时间"
-                         width="100px"
-                         prop="eta">
-        </el-table-column>
-        <el-table-column width="120px" label="挂靠港"
-                         prop="ports">
-        </el-table-column>
-        <el-table-column prop="insuranceAmountCurrency"
-                         width="135px"
-                         label="保险金额">
-        </el-table-column>
-
-
-        <el-table-column prop="sumPremium"
-                         label="最终保费">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row.sumPremium" oninput="value=value.replace(/^[^0-9]/,'')"
-                      v-if="nameType === 'BROKER' && item.status !== '1'"></el-input>
-            <span v-else>{{scope.row.sumPremium}}</span>
-          </template>
-        </el-table-column>
-
-
-
-
-
-        <el-table-column label="状态">
-          <template slot-scope="scope">
-            <el-button type="info"
-                       v-if="nameType === 'BROKER' &&  scope.row.state ==='0' "
-                       :disabled="item.status==='2'? true:false"
-                       @click="isRuts(scope.row)">不通过</el-button>
-            <el-button type="warning"
-                       :disabled="item.status==='2'? true:false"
-                       v-if="nameType === 'BROKER' &&  scope.row.state ==='1' "
-                       @click="isRuts(scope.row)">需申报</el-button>
-            <el-button type="danger"
-                       :disabled="item.status==='2'? true:false"
-                       v-if="nameType === 'BROKER' &&  scope.row.state ==='2' "
-                       @click="isLings(scope.row)">不通过</el-button>
-            <el-button type="info"
-                       v-if="nameType === 'SHIPOWNER' &&  scope.row.state ==='0' ">待审核</el-button>
-            <el-button type="warning"
-                       v-if="nameType === 'SHIPOWNER' &&  scope.row.state ==='1' ">无需申报</el-button>
-            <el-button type="danger"
-                       v-if="nameType === 'SHIPOWNER' &&  scope.row.state ==='2' ">被退回</el-button>
-
-            <el-button type="info"
-                       v-if="nameType === 'CAPTIVE' &&  scope.row.state ==='0' ">待审核</el-button>
-            <el-button type="warning"
-                       v-if="nameType === 'CAPTIVE' &&  scope.row.state ==='1' ">无需申报</el-button>
-            <el-button type="danger"
-                       v-if="nameType === 'CAPTIVE' &&  scope.row.state ==='2' ">被退回</el-button>
-            <el-button type="success"
-                       v-if="scope.row.state ==='3' ">已审核</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+              <el-button type="info"
+                        v-if="nameType === 'CAPTIVE' &&  scope.row.state ==='0' ">待审核</el-button>
+              <el-button type="warning"
+                        v-if="nameType === 'CAPTIVE' &&  scope.row.state ==='1' ">无需申报</el-button>
+              <el-button type="danger"
+                        v-if="nameType === 'CAPTIVE' &&  scope.row.state ==='2' ">被退回</el-button>
+              <el-button type="success"
+                        v-if="scope.row.state ==='3' ">已审核</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </a>
       <div class='thyj'>
         <h4 class="fs">退回意见：</h4>
         <ul id="is">
@@ -357,7 +348,7 @@ export default {
               plus += Number(i.days);
               d['daysPlus'] = plus.toFixed(2);
             }
-            d.throughAreaSum = arr.join('\n')
+            d.throughAreaSum = arr.join('\n');
 
           if(d['insuranceAmount']){
             d['insuranceAmountCurrency'] = d['currency'] + '\n' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
@@ -627,7 +618,7 @@ export default {
 .logo_botton {
   width: 1200px;
   margin: 0 auto;
-  padding: 0 0 40px 0;
+  /* padding: 0 0 40px 0; */
   background-color: #fff;
 }
 
@@ -649,7 +640,10 @@ export default {
 }
 .thyj {
   width: 100%;
-  margin-top: 30px;
+  height: 80px;
+  line-height: 80px;
+  background: #b4b4b4;
+  /* margin-top: 30px; */
 }
 #is {
   padding: 0;
@@ -664,7 +658,7 @@ export default {
   border-radius: 5px;
 }
 .fs {
-  margin-left: 30px;
+  margin:0 0 0 50px;
 }
 .inls {
   margin-top: 20px;
@@ -741,6 +735,9 @@ export default {
 .right_button {
   display: inline-block;
   margin: 25px;
+}
+a{
+  text-decoration:none;
 }
 </style>
 

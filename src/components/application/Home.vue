@@ -33,132 +33,133 @@
           <el-button type="primary" @click="searchByTime">搜索</el-button>
         </div>
       </div>
-      <el-table :data="tableData"
-                 :default-expand-all="expandAll"
-                 @select="handleSelectionChange"
-                 @select-all="handleSelectAll"
-                 :row-class-name="switchRowClass"
-                 :empty-text="emptyText"
-                 v-loading="loading"
-                 ref="tableMain"
-                 style="width: 100%;font-size:12px">
-        <el-table-column type="selection"
-                         width="29">
-        </el-table-column>
-        <el-table-column type="expand">
-          <template slot-scope="props">
-            <el-table :data="props.row.orderDtos"
-                    border
-                    :cell-style="tableRowClassName"
-                    style="width: 100%">
-              <el-table-column width="120px" prop="throughArea"
-                               label="特战区域名称">
-              </el-table-column>
-              <el-table-column prop="intime"
-                               width="100px"
-                               label="进入时间">
-              </el-table-column>
-              <el-table-column prop="outtime"
-                               width="100px"
-                               label="离开时间">
-              </el-table-column>
-              <el-table-column prop="days"
-                               label="停留天数">
-              </el-table-column>
-              <el-table-column prop="loadInfo"
-                               label="空满载">
-                <template slot-scope="scope">
-                  <el-radio v-model="scope.row.loadInfo"
-                            label="满载">满载</el-radio>
-                  <el-radio v-model="scope.row.loadInfo"
-                            label="空载">空载</el-radio>
-                </template>
+      <a href="javascript:void();">
+        <el-table :data="tableData"
+                  :default-expand-all="expandAll"
+                  @select="handleSelectionChange"
+                  @select-all="handleSelectAll"
+                  :row-class-name="switchRowClass"
+                  :empty-text="emptyText"
+                  v-loading="loading"
+                  ref="tableMain"
+                  style="width: 100%;font-size:12px;padding-left:90px">
+          <el-table-column type="selection"
+                          width="29">
+          </el-table-column>
+          <el-table-column type="expand">
+            <template slot-scope="props">
+              <el-table :data="props.row.orderDtos"
+                      border
+                      :cell-style="tableRowClassName"
+                      style="width: 100%;">
+                <el-table-column width="120px" prop="throughArea"
+                                label="特战区域名称">
+                </el-table-column>
+                <el-table-column prop="intime"
+                                width="100px"
+                                label="进入时间">
+                </el-table-column>
+                <el-table-column prop="outtime"
+                                width="100px"
+                                label="离开时间">
+                </el-table-column>
+                <el-table-column prop="days"
+                                label="停留天数">
+                </el-table-column>
+                <el-table-column prop="loadInfo"
+                                label="空满载">
+                  <template slot-scope="scope">
+                    <el-radio v-model="scope.row.loadInfo"
+                              label="满载">满载</el-radio>
+                    <el-radio v-model="scope.row.loadInfo"
+                              label="空载">空载</el-radio>
+                  </template>
+                </el-table-column>
+                <el-table-column width="120px" prop="anchoragePort"
+                                label="挂靠特战区港口">
+                </el-table-column>
+                <el-table-column prop="anchorageDate"
+                                label="挂靠时间">
+                </el-table-column>
+                <el-table-column label="安保人数">
+                  <template slot-scope="scope">
+                    <el-select v-model="scope.row.guardsNo"
+                              placeholder="请选择">
+                      <el-option v-for="todos in guardList"
+                                :key="todos.length"
+                                :label="todos.value"
+                                :value="todos.value"></el-option>
+                    </el-select>
+                  </template>
+                </el-table-column>
+                <el-table-column label="K&R">
+                  <template slot-scope="scope">
+                    <el-select v-model="scope.row.karAmount"
+                              placeholder="请选择">
+                      <el-option v-for="todos in KidnapList"
+                                :key="todos.length"
+                                :label="todos.value"
+                                :value="todos.value"></el-option>
 
-              </el-table-column>
-              <el-table-column width="120px" prop="anchoragePort"
-                               label="挂靠特战区港口">
-              </el-table-column>
-              <el-table-column prop="anchorageDate"
-                               label="挂靠时间">
-              </el-table-column>
+                    </el-select>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </template>
 
-              <el-table-column label="安保人数">
-                <template slot-scope="scope">
-                  <el-select v-model="scope.row.guardsNo"
-                             placeholder="请选择">
-                    <el-option v-for="todos in guardList"
-                               :key="todos.length"
-                               :label="todos.value"
-                               :value="todos.value"></el-option>
-                  </el-select>
-                </template>
-              </el-table-column>
-              <el-table-column label="K&R">
-                <template slot-scope="scope">
-                  <el-select v-model="scope.row.karAmount"
-                             placeholder="请选择">
-                    <el-option v-for="todos in KidnapList"
-                               :key="todos.length"
-                               :label="todos.value"
-                               :value="todos.value"></el-option>
-
-                  </el-select>
-                </template>
-              </el-table-column>
-            </el-table>
-          </template>
-        </el-table-column>
-        <el-table-column label="船名"
-                         width="90px"
-                         prop="shipCName">
-        </el-table-column>
-        <el-table-column label="特战区"
-                         width="80px"
-                         prop="throughAreaSum">
-                         <!-- 表格内换行 -->
-                         <template scope="scope">{{scope.row.throughAreaSum}}</template>
-        </el-table-column>
-         <el-table-column label="天数"
-                         width="50px"
-                         prop="daysPlus">
-        </el-table-column>
-        <el-table-column label="航次"
-                         width="70px"
-                         prop="line">
-        </el-table-column>
-        <el-table-column width="70px" label="出发港"
-                         prop="departurePort">
-        </el-table-column>
-        <el-table-column label="出发时间"
-                         width="100px"
-                         prop="etd">
-        </el-table-column>
-        <el-table-column width="80px" label="目的港"
-                         prop="arrivalPort">
-        </el-table-column>
-        <el-table-column label="到达时间"
-                         width="100px"
-                         prop="eta">
-        </el-table-column>
-        <el-table-column width="120x" label="挂靠港"
-                         prop="ports">
-        </el-table-column>
-        <el-table-column prop="insuranceAmountCurrency"
-                         width="135px"
-                         label="保险金额">
-        </el-table-column>
-        <el-table-column label="无需申报"
-                         v-if="userType === 'SHIPOWNER'">
-          <template slot-scope="scope">
-            <el-switch v-model="scope.row.state"
-                       active-value="1"
-                       inactive-value="0"
-                       active-color="#13ce66"
-                       inactive-color="#888">
-            </el-switch>
-          </template>
-        </el-table-column>
-      </el-table>
+          </el-table-column>
+          <el-table-column label="船名"
+                          width="90px"
+                          prop="shipCName">
+          </el-table-column>
+          <el-table-column label="特战区"
+                          width="85px"
+                          prop="throughAreaSum">
+                          <!-- 表格内换行 -->
+                          <template scope="scope">{{scope.row.throughAreaSum}}</template>
+          </el-table-column>
+          <el-table-column label="天数"
+                          width="50px"
+                          prop="daysPlus">
+          </el-table-column>
+          <el-table-column label="航次"
+                          width="70px"
+                          prop="line">
+          </el-table-column>
+          <el-table-column width="70px" label="出发港"
+                          prop="departurePort">
+          </el-table-column>
+          <el-table-column label="出发时间"
+                          width="100px"
+                          prop="etd">
+          </el-table-column>
+          <el-table-column width="80px" label="目的港"
+                          prop="arrivalPort">
+          </el-table-column>
+          <el-table-column label="到达时间"
+                          width="100px"
+                          prop="eta">
+          </el-table-column>
+          <el-table-column width="120x" label="挂靠港"
+                          prop="ports">
+          </el-table-column>
+          <el-table-column prop="insuranceAmountCurrency"
+                          width="135px"
+                          label="保险金额">
+          </el-table-column>
+          <el-table-column label="无需申报"
+                          v-if="userType === 'SHIPOWNER'">
+            <template slot-scope="scope">
+              <el-switch v-model="scope.row.state"
+                        active-value="1"
+                        inactive-value="0"
+                        active-color="#13ce66"
+                        inactive-color="#888">
+              </el-switch>
+            </template>
+          </el-table-column>
+        </el-table>
+      </a>
       <div class="block page_div">
         <el-pagination
           @size-change="getTableData"
@@ -543,9 +544,15 @@ $maxWidth: 1200px;
   font-weight: 700;
   cursor: pointer;
 }
+a{
+  text-decoration:none;
+}
+.el-table__body, .el-table__footer, .el-table__header{
+  margin: 0 auto;
+}
 </style>
 <style>
-.row_no_line {
+/* .row_no_line {
   background-color: #5cafe0 !important;
-}
+} */
 </style>
