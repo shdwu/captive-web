@@ -182,7 +182,7 @@
         <el-table-column prop="sumPremium"
                          label="最终保费">
           <template slot-scope="scope">
-            <el-input v-model="scope.row.sumPremium" type="number"
+            <el-input v-model="scope.row.sumPremium" oninput="value=value.replace(/^[^0-9]/,'')"
                       v-if="nameType === 'BROKER' && item.status !== '1'"></el-input>
             <span v-else>{{scope.row.sumPremium}}</span>
           </template>
@@ -491,7 +491,6 @@ export default {
       }
     },
     async isPass () {
-      // console.log(this.tableData.some(this.checkAdult),99887766)
       if (this.tableData.some(this.checkAdult)) {
         let obj = {
           batchNum: this.item.batchNum,
@@ -743,12 +742,6 @@ export default {
   display: inline-block;
   margin: 25px;
 }
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button{
-  -webkit-appearance: none !important;
-  margin: 0;
-}
-input[type="number"]{-moz-appearance:textfield;}
 </style>
 
 
