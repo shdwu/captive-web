@@ -99,11 +99,11 @@
                   <span v-else>{{scope.row.loadInfo}}</span>
                 </template>
               </el-table-column>
-              <el-table-column prop="anchoragePort"
+              <el-table-column width="120px" prop="anchoragePort"
                                label="挂靠特战区港口">
               </el-table-column>
               <el-table-column prop="anchorageDate"
-                               label="挂靠特战区港口时间">
+                               label="挂靠时间">
               </el-table-column>
               <el-table-column label="安保人数">
                 <template slot-scope="scope">
@@ -177,6 +177,8 @@
                          width="135px"
                          label="保险金额">
         </el-table-column>
+
+
         <el-table-column prop="sumPremium"
                          label="最终保费">
           <template slot-scope="scope">
@@ -185,6 +187,11 @@
             <span v-else>{{scope.row.sumPremium}}</span>
           </template>
         </el-table-column>
+
+
+
+
+
         <el-table-column label="状态">
           <template slot-scope="scope">
             <el-button type="info"
@@ -477,13 +484,14 @@ export default {
       }
     },
     checkAdult (item) {
-      if (item.sumPremium !== null) {
+      if (item.sumPremium !== null ) {
         return true
       } else {
         return false
       }
     },
     async isPass () {
+      // console.log(this.tableData.some(this.checkAdult),99887766)
       if (this.tableData.some(this.checkAdult)) {
         let obj = {
           batchNum: this.item.batchNum,
