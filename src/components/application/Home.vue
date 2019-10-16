@@ -7,8 +7,9 @@
       <div class="btn_bar"
            v-if="userType === 'SHIPOWNER'">
         <el-button type="primary"
+                   :loading="temporaryLoading"
                    @click="temporaryStorage"
-                   plain>暂存</el-button>
+                   plain v-show="false">暂存</el-button>
         <el-button type="primary"
                    @click="submit"
                    plain>提交</el-button>
@@ -17,7 +18,7 @@
                     :before-upload="beforeUpload"
                     list-type="text">
           <el-button size="small"
-                      type="primary">点击上传</el-button>
+                      type="primary">上传附件</el-button>
           <div class="el-upload__tip"><span>{{fits}}</span></div>
         </el-upload>
           <div class="fl">
@@ -143,7 +144,7 @@
         </el-table-column>
         <el-table-column prop="insuranceAmountCurrency"
                          width="135px"
-                         label="保险金额">                 
+                         label="保险金额">
         </el-table-column>
         <el-table-column label="无需申报"
                          v-if="userType === 'SHIPOWNER'">
@@ -218,7 +219,8 @@ export default {
       select: '',
       fileName: '',
       fits: null,
-      searchTime: ''
+      searchTime: '',
+      temporaryLoading:false
     }
   },
   computed: {
@@ -239,6 +241,10 @@ export default {
     temporaryStorage () {
       let selectedData = this.allData.filter(t => t.selected)
       if (selectedData.length > 0) {
+        if(this.temporaryLoading){
+          return;
+        }
+        this.temporaryLoading = true;
         let proms = {
           list: selectedData
         }
@@ -252,6 +258,7 @@ export default {
             this.fits = ""
           }
         })
+        this.temporaryLoading = false;
       } else {
         this.$message({
           message: '请选择暂存内容',
@@ -333,7 +340,22 @@ export default {
       this.currentPage = val
       this.getTableData()
     },
-    getTableData(params) {
+    getsum(arr,d){
+      let sum = '';
+      // console.log(666888);
+      for(let j = 0;j < arr.length - 1;j ++){
+        let throughAreaList = arr[j].split(',');
+        for(let k of throughAreaList){
+          // console.log(k)
+          sum += k + "\n";
+          d['throughAreaSum'] = sum;
+        }
+        // return d['throughAreaSum'];
+      }
+        // return d['throughAreaSum'];
+    }
+    ,
+    getTableData(params,sum) {
       this.loading = true
       if(this.allData && this.allData.length > 0 && !params) {
         this.tableData = this.allData.slice((this.currentPage - 1 )*this.pageSize, this.currentPage*this.pageSize)
@@ -346,21 +368,48 @@ export default {
         getOrderList(params).then( res => {
 
           for(let d of res.data.list){
+            console.log(d,11111111111111111)
+            // arr.push(d.throughAreas);
+            console.log(d,908070)
+            let plus = 0;
+              let arr = [];
+              for(let i of d['orderDtos']){
+                // sum += i.throughArea + '\n';
+                // d['throughAreaSum'] = sum;
+                if(!arr.includes(i.throughArea)){
+                   arr.push(i.throughArea);
+                }
+                plus += Number(i.days);
+                d['daysPlus'] = plus.toFixed(2);
+              }
+              d.throughAreaSum = arr.join('\n')
+
             if(d['insuranceAmount']){
               d['insuranceAmountCurrency'] = d['currency'] + ' ' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
-              let sum = '';
-              let plus = 0;
-              for(let i of d['orderDtos']){
-                sum += i.throughArea + '\n';
-                d['throughAreaSum'] = sum;
-                plus += Number(i.days);
-                d['daysPlus'] = plus.toFixed(2); 
-              }
             }else{
               d['insuranceAmountCurrency'] = ''
             }
           }
-          
+
+            // // console.log(arr,4444);
+            // for(let j = 0;j < arr.length - 1;j ++){
+            //   // console.log(arr[j],234576545);
+            //   let throughAreaList = arr[j].split(',');
+            //   console.log(throughAreaList,9090)
+            //   for(let k of throughAreaList){
+            //     sum += k + "\n";
+            //     d['throughAreaSum'] = sum;
+            //   }
+            // }
+
+
+
+
+
+
+
+
+
           this.allData = res.data.list
           if (!(this.allData && this.allData.length > 0)) {
             this.emptyText = '暂无数据'
