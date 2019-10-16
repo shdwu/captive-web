@@ -248,7 +248,6 @@ export default {
         let proms = {
           list: selectedData
         }
-
         this.$http.post('/shiper/HoldInsuranceOrders', proms).then(res => {
           if (res.status === 200) {
             this.$message({
@@ -311,7 +310,7 @@ export default {
           this.fileId = res.data
           this.fileName = file.name
           this.fits = '附件:' + file.name
-        }
+        }   
       })
     },
     handleSelectAll () {
@@ -335,8 +334,10 @@ export default {
     handleGotoLastPage() {
       let lastPage = Math.ceil(this.totalNum/this.pageSize)
       this.handleCurrentChange(lastPage)
+
     },
     handleCurrentChange(val) {
+      console.log(123)
       this.currentPage = val
       this.getTableData()
     },
@@ -447,6 +448,12 @@ export default {
     this.getTableData()
   }
 }
+
+// if(!file){
+//   message:"请选择上传附件"
+// }else{
+//   message: '上传成功'
+// }
 </script>
 <style lang="postcss" scoped>
 /* variables */
