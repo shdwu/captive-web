@@ -150,9 +150,9 @@
         <el-table-column label="无需申报"
                          v-if="userType === 'SHIPOWNER'">
           <template slot-scope="scope">
-            <el-switch v-model="scope.row.state"
-                       active-value="1"
-                       inactive-value="0"
+            <el-switch v-model="scope.row.needDeclare"
+                       active-value="0"
+                       inactive-value="1"
                        active-color="#13ce66"
                        inactive-color="#888">
             </el-switch>

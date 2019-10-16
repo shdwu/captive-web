@@ -178,7 +178,6 @@
                          label="保险金额">
         </el-table-column>
 
-
         <el-table-column prop="sumPremium"
                          label="最终保费">
           <template slot-scope="scope">
@@ -187,9 +186,19 @@
             <span v-else>{{scope.row.sumPremium}}</span>
           </template>
         </el-table-column>
-
-
-
+        <el-table-column
+                width="80px" prop="needDeclare"
+                label="无需申报">
+            <template slot-scope="scope">
+                <el-switch v-model="scope.row.needDeclare"
+                           :disabled="nameType === 'BROKER' || scope.row.state !=='2'?true:false"
+                           active-value="0"
+                           inactive-value="1"
+                           active-color="#13ce66"
+                           inactive-color="#888">
+                </el-switch>
+            </template>
+        </el-table-column>
 
 
         <el-table-column label="状态">
@@ -198,25 +207,25 @@
                        v-if="nameType === 'BROKER' &&  scope.row.state ==='0' "
                        :disabled="item.status==='2'? true:false"
                        @click="isRuts(scope.row)">不通过</el-button>
-            <el-button type="warning"
-                       :disabled="item.status==='2'? true:false"
-                       v-if="nameType === 'BROKER' &&  scope.row.state ==='1' "
-                       @click="isRuts(scope.row)">需申报</el-button>
+<!--            <el-button type="warning"-->
+<!--                       :disabled="item.status==='2'? true:false"-->
+<!--                       v-if="nameType === 'BROKER' &&  scope.row.state ==='1' "-->
+<!--                       @click="isRuts(scope.row)">需申报</el-button>-->
             <el-button type="danger"
                        :disabled="item.status==='2'? true:false"
                        v-if="nameType === 'BROKER' &&  scope.row.state ==='2' "
                        @click="isLings(scope.row)">不通过</el-button>
             <el-button type="info"
                        v-if="nameType === 'SHIPOWNER' &&  scope.row.state ==='0' ">待审核</el-button>
-            <el-button type="warning"
-                       v-if="nameType === 'SHIPOWNER' &&  scope.row.state ==='1' ">无需申报</el-button>
+<!--            <el-button type="warning"-->
+<!--                       v-if="nameType === 'SHIPOWNER' &&  scope.row.state ==='1' ">无需申报</el-button>-->
             <el-button type="danger"
                        v-if="nameType === 'SHIPOWNER' &&  scope.row.state ==='2' ">被退回</el-button>
 
             <el-button type="info"
                        v-if="nameType === 'CAPTIVE' &&  scope.row.state ==='0' ">待审核</el-button>
-            <el-button type="warning"
-                       v-if="nameType === 'CAPTIVE' &&  scope.row.state ==='1' ">无需申报</el-button>
+<!--            <el-button type="warning"-->
+<!--                       v-if="nameType === 'CAPTIVE' &&  scope.row.state ==='1' ">无需申报</el-button>-->
             <el-button type="danger"
                        v-if="nameType === 'CAPTIVE' &&  scope.row.state ==='2' ">被退回</el-button>
             <el-button type="success"
