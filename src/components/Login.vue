@@ -139,6 +139,7 @@ export default {
           localStorage.setItem('nametype', res.data.companyType)
           localStorage.setItem('companyName', res.data.companyName)
           localStorage.setItem('currentUser', res.data)
+          sessionStorage.setItem("shipOwnerTipDialog","");
           if (res.data.companyType === 'BROKER') {
             this.$router.push({ name: 'batch' })
           } else {
