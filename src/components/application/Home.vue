@@ -38,23 +38,25 @@
                 :default-expand-all="expandAll"
                 @select="handleSelectionChange"
                 @select-all="handleSelectAll"
+                @row-click="showHide"
                 :row-class-name="switchRowClass"
                 :empty-text="emptyText"
                 v-loading="loading"
                 ref="tableMain"
-                
                 style="width: 100%;font-size:12px;padding-left:20px">
         <el-table-column type="selection"
                         width="29">
         </el-table-column>
-        <el-table-column type="expand">
-          <template slot-scope="props">
+        <el-table-column type="expand" >
+          <template slot-scope="props" >
             <el-table :data="props.row.orderDtos"
                     border
+                    
                     :cell-style="tableRowClassName"
                     style="width: 100%;font-size:12px">
               <el-table-column width="120px" prop="throughArea"
                               label="特战区域名称">
+                              
               </el-table-column>
               <el-table-column prop="intime"
                               width="100px"
@@ -197,6 +199,8 @@ import { getOrderList } from '@/api/order'
 export default {
   data () {
     return {
+      isShow:false,
+      isExpand : true,
       loading: true,
       allData: [],
       enheng:true,
@@ -250,6 +254,10 @@ export default {
     }
   },
   methods: {
+    showHide(row,index,e){
+      this.$refs.tableMain.toggleRowExpansion(row)
+    }
+    ,
     toogleExpand(row) {
       let $table = this.$refs.tableMain;
       this.tableData.map((item) => {
@@ -640,4 +648,5 @@ a{
 .el-table .cell{
   white-space: pre-line;
 }
+
 </style>
