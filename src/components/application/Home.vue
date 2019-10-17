@@ -407,8 +407,7 @@ export default {
         // return d['throughAreaSum'];
       }
         // return d['throughAreaSum'];
-    }
-    ,
+    },
     getTableData(params,sum) {
       this.loading = true
       if(this.allData && this.allData.length > 0 && !params) {
@@ -488,10 +487,10 @@ export default {
         } }
       )
       if((res.status === 200) && (res.data.total>0)) {
-        this.popupDialog(res.data.total);
+        this.popupDialog(res.data.total,status);
       }
     },
-    popupDialog(count) {
+    popupDialog(count,status) {
       sessionStorage.setItem("shipOwnerTipDialog","tip");
       let msg = "存在" + count + "个退回的批次，是否现在处理？";
       this.$confirm(msg, '提示', {
@@ -500,7 +499,7 @@ export default {
         type: 'warning'
       }).then(() => {
         //确定
-        this.$router.push({ name: 'batch' })
+        this.$router.push({name:'batch', params: {status:status}})
       }).catch(() => {
         //取消
       });
