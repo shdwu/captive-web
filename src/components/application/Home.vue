@@ -408,8 +408,7 @@ export default {
         // return d['throughAreaSum'];
       }
         // return d['throughAreaSum'];
-    }
-    ,
+    },
     getTableData(params,sum) {
       this.loading = true
       if(this.allData && this.allData.length > 0 && !params) {
