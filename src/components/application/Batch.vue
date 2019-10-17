@@ -284,7 +284,8 @@ export default {
       }) 
     },
     async isGetList (batchNum = '', createBy = '', status = '', page = 1) {
-      this.loading = true
+      this.loading = true;
+      batchNum = (batchNum==='')?batchNum:('%' + batchNum + '%');
       let res = await this.$http.get('/broker/batchList', {
         params: {
           batchNum,
@@ -308,6 +309,7 @@ export default {
     },
     async isGetLists (batchNum = '', createBy = '', status = '', page = 1) {
       this.loading = true
+      batchNum = (batchNum==='')?batchNum:('%' + batchNum + '%');
       let res = await this.$http.get('/shiper/batchList', {
         params: {
           batchNum,
@@ -317,6 +319,7 @@ export default {
           page
         } }
       )
+
       if (res.status === 200) {
         this.tableData = res.data.list
         this.total = res.data.total
@@ -330,7 +333,8 @@ export default {
       this.loading = false
     },
     async isGetListsd (batchNum = '', createBy = '', status = '', page = 1) {
-      this.loading = true
+      this.loading = true;
+      batchNum = (batchNum==='')?batchNum:('%' + batchNum + '%');
       let res = await this.$http.get('/captive/batchList', {
         params: {
           batchNum,
@@ -393,7 +397,9 @@ export default {
       this.isGetList()
       this.isGetName()
     } else if (this.nameType === 'SHIPOWNER') {
-      this.isGetLists()
+      var param = this.$route.params;
+      this.statu = param?param.status:'';
+      this.isGetLists('', '', this.statu, 1);
     } else {
       this.isGetListsd()
       this.isGetNameList()
