@@ -443,14 +443,48 @@ export default {
       } else {
         this.getTableData()
       }
+    },
+    async getBatchList (batchNum = '', createBy = '', status = '', page = 1) {
+      //船东用户，获取是否存在退回数据，如果有退回数据则弹框提示
+      let res = await this.$http.get('/shiper/batchList', {
+        params: {
+          batchNum,
+          createBy,
+          status,
+          num: 10,
+          page
+        } }
+      )
+      if((res.status === 200) && (res.data.total>0)) {
+        this.popupDialog(res.data.total);
+      }
+    },
+    popupDialog(count) {
+      sessionStorage.setItem("shipOwnerTipDialog","tip");
+      let msg = "存在" + count + "个退回的批次，是否现在处理？";
+      this.$confirm(msg, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        //确定
+        this.$router.push({ name: 'batch' })
+      }).catch(() => {
+        //取消
+      });
     }
   },
   created () {
     this.userType = localStorage.getItem('nametype')
     this.getTableData()
+
+    let tipDialog = sessionStorage.getItem("shipOwnerTipDialog");
+    //船东用户，获取是否存在退回数据，如果有退回数据则弹框提示
+    if((this.userType === 'SHIPOWNER') && (tipDialog === '')){
+      this.getBatchList('','','2',1);
+    }
   }
 }
-        
 </script>
 <style lang="postcss" scoped>
 /* variables */
