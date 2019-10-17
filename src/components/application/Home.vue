@@ -37,133 +37,149 @@
           <el-button type="primary" @click="searchByTime">搜索</el-button>
         </div>
       </div>
-      <a href="javascript:void();">
-        <el-table :data="tableData"
-                  :default-expand-all="expandAll"
-                  @select="handleSelectionChange"
-                  @select-all="handleSelectAll"
-                  :row-class-name="switchRowClass"
-                  :empty-text="emptyText"
-                  v-loading="loading"
-                  ref="tableMain"
-                  style="width: 100%;font-size:12px;padding-left:90px">
-          <el-table-column type="selection"
-                          width="29">
-          </el-table-column>
-          <el-table-column type="expand">
-            <template slot-scope="props">
-              <el-table :data="props.row.orderDtos"
-                      border
-                      :cell-style="tableRowClassName"
-                      style="width: 100%;">
-                <el-table-column width="120px" prop="throughArea"
-                                label="特战区域名称">
-                </el-table-column>
-                <el-table-column prop="intime"
-                                width="100px"
-                                label="进入时间">
-                </el-table-column>
-                <el-table-column prop="outtime"
-                                width="100px"
-                                label="离开时间">
-                </el-table-column>
-                <el-table-column prop="days"
-                                label="停留天数">
-                </el-table-column>
-                <el-table-column prop="loadInfo"
-                                label="空满载">
-                  <template slot-scope="scope">
-                    <el-radio v-model="scope.row.loadInfo"
-                              label="满载">满载</el-radio>
-                    <el-radio v-model="scope.row.loadInfo"
-                              label="空载">空载</el-radio>
-                  </template>
-                </el-table-column>
-                <el-table-column width="120px" prop="anchoragePort"
-                                label="挂靠特战区港口">
-                </el-table-column>
-                <el-table-column prop="anchorageDate"
-                                label="挂靠时间">
-                </el-table-column>
-                <el-table-column label="安保人数">
-                  <template slot-scope="scope">
-                    <el-select v-model="scope.row.guardsNo"
-                              placeholder="请选择">
-                      <el-option v-for="todos in guardList"
-                                :key="todos.length"
-                                :label="todos.value"
-                                :value="todos.value"></el-option>
-                    </el-select>
-                  </template>
-                </el-table-column>
-                <el-table-column label="K&R">
-                  <template slot-scope="scope">
-                    <el-select v-model="scope.row.karAmount"
-                              placeholder="请选择">
-                      <el-option v-for="todos in KidnapList"
-                                :key="todos.length"
-                                :label="todos.value"
-                                :value="todos.value"></el-option>
+      <el-table :data="tableData"
+                :default-expand-all="expandAll"
+                @select="handleSelectionChange"
+                @select-all="handleSelectAll"
+                :row-class-name="switchRowClass"
+                :empty-text="emptyText"
+                v-loading="loading"
+                ref="tableMain"
+                
+                style="width: 100%;font-size:12px;padding-left:20px">
+        <el-table-column type="selection"
+                        width="29">
+        </el-table-column>
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-table :data="props.row.orderDtos"
+                    border
+                    :cell-style="tableRowClassName"
+                    style="width: 100%;font-size:12px">
+              <el-table-column width="120px" prop="throughArea"
+                              label="特战区域名称">
+              </el-table-column>
+              <el-table-column prop="intime"
+                              width="100px"
+                              label="进入时间">
+              </el-table-column>
+              <el-table-column prop="outtime"
+                              width="100px"
+                              label="离开时间">
+              </el-table-column>
+              <el-table-column prop="days"
+                              label="停留天数">
+              </el-table-column>
+              <el-table-column prop="loadInfo"
+                              label="空满载">
+                <template slot-scope="scope">
+                  <el-radio v-model="scope.row.loadInfo"
+                            label="满载">满载</el-radio>
+                  <el-radio v-model="scope.row.loadInfo"
+                            label="空载">空载</el-radio>
+                </template>
+              </el-table-column>
+              <el-table-column width="120px" prop="anchoragePort"
+                              label="挂靠特战区港口">
+              </el-table-column>
+              <el-table-column prop="anchorageDate"
+                              label="挂靠时间">
+              </el-table-column>
+              <el-table-column label="安保人数">
+                <template slot-scope="scope">
+                  <el-select v-model="scope.row.guardsNo"
+                            placeholder="请选择">
+                    <el-option v-for="todos in guardList"
+                              :key="todos.length"
+                              :label="todos.value"
+                              :value="todos.value"></el-option>
+                  </el-select>
+                </template>
+              </el-table-column>
+              <el-table-column label="K&R">
+                <template slot-scope="scope">
+                  <el-select v-model="scope.row.karAmount"
+                            placeholder="请选择">
+                    <el-option v-for="todos in KidnapList"
+                              :key="todos.length"
+                              :label="todos.value"
+                              :value="todos.value"></el-option>
+                  </el-select>
+                </template>
+              </el-table-column>
+            </el-table>
+          </template>
 
-                    </el-select>
-                  </template>
-                </el-table-column>
-              </el-table>
-            </template>
-
-          </el-table-column>
-          <el-table-column label="船名"
-                          width="90px"
-                          prop="shipCName">
-          </el-table-column>
-          <el-table-column label="特战区"
-                          width="85px"
-                          prop="throughAreaSum">
-                          <!-- 表格内换行 -->
-                          <template scope="scope">{{scope.row.throughAreaSum}}</template>
-          </el-table-column>
-          <el-table-column label="天数"
-                          width="50px"
-                          prop="daysPlus">
-          </el-table-column>
-          <el-table-column label="航次"
-                          width="70px"
-                          prop="line">
-          </el-table-column>
-          <el-table-column width="70px" label="出发港"
-                          prop="departurePort">
-          </el-table-column>
-          <el-table-column label="出发时间"
-                          width="100px"
-                          prop="etd">
-          </el-table-column>
-          <el-table-column width="80px" label="目的港"
-                          prop="arrivalPort">
-          </el-table-column>
-          <el-table-column label="到达时间"
-                          width="100px"
-                          prop="eta">
-          </el-table-column>
-          <el-table-column width="120x" label="挂靠港"
-                          prop="ports">
-          </el-table-column>
-          <el-table-column prop="insuranceAmountCurrency"
-                          width="135px"
-                          label="保险金额">
-          </el-table-column>
-          <el-table-column label="无需申报"
-                           v-if="userType === 'SHIPOWNER'">
-            <template slot-scope="scope">
-              <el-switch v-model="scope.row.needDeclare"
-                         active-value="0"
-                         inactive-value="1"
-                         active-color="#13ce66"
-                         inactive-color="#888">
-              </el-switch>
-            </template>
-          </el-table-column>
-        </el-table>
-      </a>
+        </el-table-column>
+        <el-table-column label="船名"
+                        width="90px"
+                        prop="shipCName">
+          
+        </el-table-column>
+        <el-table-column label="特战区"
+                        width="85px"
+                        prop="throughAreaSum">
+                        <!-- 表格内换行 -->
+                        <template scope="scope">{{scope.row.throughAreaSum}}</template>
+        </el-table-column>
+        <el-table-column label="天数"
+                        width="50px"
+                        prop="daysPlus">
+          <template scope="scope">
+            <el-button type="text"
+            style="color:#606266" 
+            @click="toogleExpand(scope.row)"
+            >
+              {{scope.row.daysPlus}}
+            </el-button>
+          </template>
+        </el-table-column>
+        <el-table-column label="航次"
+                        width="70px"
+                        prop="line">
+          <template scope="scope">
+            <el-button type="text"
+            style="color:#606266" 
+            @click="toogleExpand(scope.row)"
+            >
+              {{scope.row.line}}
+            </el-button>
+          </template>
+        </el-table-column>
+        <el-table-column width="70px" label="出发港"
+                        prop="departurePort">
+        </el-table-column>
+        <el-table-column label="出发时间"
+                        width="100px"
+                        prop="etd">
+        </el-table-column>
+        <el-table-column width="80px" label="目的港"
+                        prop="arrivalPort">
+        </el-table-column>
+        <el-table-column label="到达时间"
+                        width="100px"
+                        prop="eta">
+        </el-table-column>
+        <el-table-column width="162px" label="挂靠港"
+                        prop="ports">
+        </el-table-column>
+        <el-table-column prop="insuranceAmountCurrency"
+                        width="135px"
+                        label="保险金额">
+                        <template scope="scope">{{scope.row.insuranceAmountCurrency}}</template>
+        </el-table-column>
+        <el-table-column label="无需申报"
+                          v-if="userType === 'SHIPOWNER'">
+          <template slot-scope="scope">
+            <el-switch v-model="scope.row.needDeclare"
+                        active-value="0"
+                        inactive-value="1"
+                        active-color="#13ce66"
+                        inactive-color="#888">
+            </el-switch>
+          </template>
+        </el-table-column>
+      </el-table>
       <div class="block page_div">
         <el-pagination
           @size-change="getTableData"
@@ -191,6 +207,8 @@ export default {
       currentPage: 1,
       pageSize: 10,
       totalNum: 0,
+      selectAll: true,
+      
       // selectAll: true,
       emptyText: '加载中',
       KidnapList: [{
@@ -235,13 +253,23 @@ export default {
     }
   },
   methods: {
+    toogleExpand(row) {
+      let $table = this.$refs.tableMain;
+      this.tableData.map((item) => {
+        if (row.id != item.id) {
+          $table.toggleRowExpansion(item, false)
+        }
+      })
+      $table.toggleRowExpansion(row)
+    }
+    ,
     switchRowClass({row}) {
       if(!row.line) {
         return "row_no_line"
       }
       return ""
     },
-    handleSelectionChange (value, row,) {
+    handleSelectionChange (value, row) {
       row.selected = !row.selected;
     },
     temporaryStorage () {
@@ -305,6 +333,8 @@ export default {
     },
           
     beforeUpload (file) {
+      // console.log(file,123412454234)
+      // this.handleSelectionChange();
       let fd = new FormData()
       fd.append('file', file)// 传文件
       fd.append('fileName', encodeURI(file.name))
@@ -401,12 +431,14 @@ export default {
                 if(!arr.includes(i.throughArea)){
                    arr.push(i.throughArea);
                 }
+                // 天数
                 plus += Number(i.days);
                 d['daysPlus'] = plus.toFixed(2);
               }
               d.throughAreaSum = arr.join('\n')
 
             if(d['insuranceAmount']){
+              // 保险金额
               d['insuranceAmountCurrency'] = d['currency'] + '\n' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
             }else{
               d['insuranceAmountCurrency'] = ''
@@ -443,14 +475,48 @@ export default {
       } else {
         this.getTableData()
       }
+    },
+    async getBatchList (batchNum = '', createBy = '', status = '', page = 1) {
+      //船东用户，获取是否存在退回数据，如果有退回数据则弹框提示
+      let res = await this.$http.get('/shiper/batchList', {
+        params: {
+          batchNum,
+          createBy,
+          status,
+          num: 10,
+          page
+        } }
+      )
+      if((res.status === 200) && (res.data.total>0)) {
+        this.popupDialog(res.data.total);
+      }
+    },
+    popupDialog(count) {
+      sessionStorage.setItem("shipOwnerTipDialog","tip");
+      let msg = "存在" + count + "个退回的批次，是否现在处理？";
+      this.$confirm(msg, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        //确定
+        this.$router.push({ name: 'batch' })
+      }).catch(() => {
+        //取消
+      });
     }
   },
   created () {
     this.userType = localStorage.getItem('nametype')
     this.getTableData()
+
+    let tipDialog = sessionStorage.getItem("shipOwnerTipDialog");
+    //船东用户，获取是否存在退回数据，如果有退回数据则弹框提示
+    if((this.userType === 'SHIPOWNER') && (tipDialog === '')){
+      this.getBatchList('','','2',1);
+    }
   }
 }
-        
 </script>
 <style lang="postcss" scoped>
 /* variables */
@@ -575,8 +641,11 @@ a{
   margin: 0 auto;
 }
 </style>
-<style>
+<style type="text/css">
 /* .row_no_line {
   background-color: #5cafe0 !important;
 } */
+.el-table .cell{
+  white-space: pre-line;
+}
 </style>

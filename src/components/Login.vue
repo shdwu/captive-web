@@ -61,10 +61,18 @@
     <div class="footer">
       <div class="footer_info">
         <div class="footer_info_top">
-          <span>Copyright 2019-2019 中远海运特战险用户服务平台</span>
-          <span>All rights reserved.Version v2.0.2</span>
+          <span>中远海运特战险用户服务平台</span>
         </div>
-        <div class="footer_xhx"></div>
+        <div class="footer_xhx">
+          <div style="display: flex; flex-direction: row; align-items: center;justify-content:center;">
+            <div><span>Copyright © 2019-2019</span></div>
+            <div style="display: flex; flex-direction: column; align-items: center;">
+              <span>中远海运财产保险自保有限公司</span>
+              <span>中远海运科技股份有限公司 研发创新中心</span>
+            </div>
+            <div><span>All rights reserved.</span></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -131,6 +139,7 @@ export default {
           localStorage.setItem('nametype', res.data.companyType)
           localStorage.setItem('companyName', res.data.companyName)
           localStorage.setItem('currentUser', res.data)
+          sessionStorage.setItem("shipOwnerTipDialog","");
           if (res.data.companyType === 'BROKER') {
             this.$router.push({ name: 'batch' })
           } else {
@@ -234,8 +243,10 @@ export default {
 }
 .footer_xhx {
   width: 100%;
-  margin-top: 22px;
+  margin-top: 5px;
   border-top: 1px solid #c3c3c3;
+  font-size: 12px;
+  color: #6f6f6f;
 }
 .list {
   margin: 20px 0 0 69px;
