@@ -68,6 +68,7 @@
                 :empty-text="emptyText"
                 v-loading="loading"
                 ref="tableMain"
+                @row-click="showHide"
                 style="width: 100%;font-size:12px">
           <el-table-column type="expand">
             <template slot-scope="props">
@@ -310,6 +311,10 @@ export default {
     }
   },
   methods: {
+    showHide(row,index,e){
+      this.$refs.tableMain.toggleRowExpansion(row)
+    }
+    ,
     toogleExpand(row) {
       let $table = this.$refs.tableMain;
       this.tableData.map((item) => {
