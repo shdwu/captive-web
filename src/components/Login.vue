@@ -14,7 +14,6 @@
     <!-- 登陆表单 -->
     <div class="info"
          :style="{backgroundImage: 'url(' + infoUrl + ')' }">
-
       <!-- 表单 -->
       <el-form :model="loginForm"
                :rules="rules"
@@ -305,5 +304,4 @@ p {
   line-height: 100%;
   display: block;
 }
-
 </style>

@@ -648,10 +648,6 @@ export default {
 
 </script>
 <style scoped>
-/* 为了实现数据换行 删除scope */
-/* .el-table .cell {
-  white-space: pre-line;
-} */
 .info {
   width: 100%;
 }

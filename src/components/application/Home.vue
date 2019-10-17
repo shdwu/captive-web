@@ -12,18 +12,15 @@
                    plain v-show="false">暂存</el-button>
         <el-button type="primary"
                    @click="submit"
-                   plain
-                   style="position:absolute;left:10px;">提交</el-button>
+                   plain>提交</el-button>
         <el-upload class="file_upload"
                     action="/files"
                     :before-upload="beforeUpload"
                     list-type="text">
           <el-button size="small"
                       type="primary"
-                       @click="open4"
-                       style="position:absolute;left:120px;top:5px">上传附件</el-button>
-          <div slot="tip" class="el-upload__tip" style="position:absolute;left:108px;bottom:20px">文件不能超过20MB</div>
-          <div class="el-upload__tip" style="position:absolute;left:200px;top:10px;"><span>{{fits}}</span></div>
+                       @click="open4">上传附件</el-button>
+          <div class="el-upload__tip"><span>{{fits}}</span></div>
         </el-upload>
           <div class="fl">
             <span class="cm">进入特战区时间</span>
@@ -54,7 +51,6 @@
           <template slot-scope="props" >
             <el-table :data="props.row.orderDtos"
                     border
-                    
                     :cell-style="tableRowClassName"
                     style="width: 100%;font-size:12px">
               <el-table-column width="120px" prop="throughArea"
@@ -351,7 +347,7 @@ export default {
           if(!this.fits){
               this.$message({
                 type: 'success',
-                message: '上传成功！  下一次上传将会覆盖此文件。'
+                message: '上传成功   下一次上传将会覆盖此文件'
               })
           }else{
              this.$message({
@@ -371,13 +367,8 @@ export default {
         this.allData.forEach(t => t.selected = true)
       } else {
         this.allData.forEach(t => t.selected = false)
-        // this.$notify({
-        //   title: '提示',
-        //   message: '只能选择文件才可以上传附件',
-        //   type: 'warning'
-        // });
-        this.$message({
-          showClose: true,
+        this.$notify({
+          title: '警告',
           message: '只能选择文件才可以上传附件',
           type: 'warning'
         });
@@ -427,6 +418,7 @@ export default {
         })
         this.loading = false
       } else {
+
         getOrderList(params).then( res => {
           //千分位 特战区 总时间
           for(let d of res.data.list){
@@ -558,8 +550,7 @@ $maxWidth: 1200px;
 
   .btn_bar {
     width: 100%;
-    height: 80px;
-    position: relative;
+    height: 60px;
     padding: 5px;
     box-sizing: border-box;
   }
@@ -650,9 +641,9 @@ a{
 }
 </style>
 <style type="text/css">
-/* .row_no_line {
+.row_no_line {
   background-color: #5cafe0 !important;
-} */
+}
 .el-table .cell{
   white-space: pre-line;
 }
