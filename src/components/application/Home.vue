@@ -12,15 +12,18 @@
                    plain v-show="false">暂存</el-button>
         <el-button type="primary"
                    @click="submit"
-                   plain>提交</el-button>
+                   plain
+                   style="position:absolute;left:10px;">提交</el-button>
         <el-upload class="file_upload"
                     action="/files"
                     :before-upload="beforeUpload"
                     list-type="text">
           <el-button size="small"
                       type="primary"
-                       @click="open4">上传附件</el-button>
-          <div class="el-upload__tip"><span>{{fits}}</span></div>
+                       @click="open4"
+                       style="position:absolute;left:120px;top:5px">上传附件</el-button>
+          <div slot="tip" class="el-upload__tip" style="position:absolute;left:108px;bottom:20px">文件不能超过20MB</div>
+          <div class="el-upload__tip" style="position:absolute;left:200px;top:10px;"><span>{{fits}}</span></div>
         </el-upload>
           <div class="fl">
             <span class="cm">进入特战区时间</span>
@@ -348,7 +351,7 @@ export default {
           if(!this.fits){
               this.$message({
                 type: 'success',
-                message: '上传成功   下一次上传将会覆盖此文件'
+                message: '上传成功！  下一次上传将会覆盖此文件。'
               })
           }else{
              this.$message({
@@ -368,8 +371,13 @@ export default {
         this.allData.forEach(t => t.selected = true)
       } else {
         this.allData.forEach(t => t.selected = false)
-        this.$notify({
-          title: '警告',
+        // this.$notify({
+        //   title: '提示',
+        //   message: '只能选择文件才可以上传附件',
+        //   type: 'warning'
+        // });
+        this.$message({
+          showClose: true,
           message: '只能选择文件才可以上传附件',
           type: 'warning'
         });
@@ -419,7 +427,6 @@ export default {
         })
         this.loading = false
       } else {
-
         getOrderList(params).then( res => {
           //千分位 特战区 总时间
           for(let d of res.data.list){
@@ -551,7 +558,8 @@ $maxWidth: 1200px;
 
   .btn_bar {
     width: 100%;
-    height: 60px;
+    height: 80px;
+    position: relative;
     padding: 5px;
     box-sizing: border-box;
   }
