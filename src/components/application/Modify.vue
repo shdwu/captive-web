@@ -62,11 +62,12 @@
                class="yth">已退回</div>
         </div>
       </div>
-      <a href="javascript:void();">
+      
         <el-table :data="tableData"
                 :default-expand-all="true"
                 :empty-text="emptyText"
                 v-loading="loading"
+                ref="tableMain"
                 style="width: 100%;font-size:12px">
           <el-table-column type="expand">
             <template slot-scope="props">
@@ -148,10 +149,26 @@
           <el-table-column label="天数"
                           width="50px"
                           prop="daysPlus">
+            <template scope="scope">
+              <el-button type="text"
+              style="color:#606266" 
+              @click="toogleExpand(scope.row)"
+              >
+                {{scope.row.daysPlus}}
+              </el-button>
+            </template>
           </el-table-column>
           <el-table-column label="航次"
                           width="70px"
                           prop="line">
+            <template scope="scope">
+              <el-button type="text"
+              style="color:#606266" 
+              @click="toogleExpand(scope.row)"
+              >
+                {{scope.row.line}}
+              </el-button>
+            </template>
           </el-table-column>
           <el-table-column width="70px" label="出发港"
                           prop="departurePort">
@@ -167,11 +184,11 @@
                           width="100px"
                           prop="eta">
           </el-table-column>
-          <el-table-column width="162px" label="挂靠港"
+          <el-table-column width="130px" label="挂靠港"
                           prop="ports">
           </el-table-column>
           <el-table-column prop="insuranceAmountCurrency"
-                          width="135px"
+                          width="100px"
                           label="保险金额">
           </el-table-column>
           <el-table-column prop="sumPremium"
@@ -227,7 +244,7 @@
             </template>
           </el-table-column>
         </el-table>
-      </a>
+      
       <div class='thyj'>
         <h4 class="fs">退回意见：</h4>
         <ul id="is">
@@ -293,6 +310,16 @@ export default {
     }
   },
   methods: {
+    toogleExpand(row) {
+      let $table = this.$refs.tableMain;
+      this.tableData.map((item) => {
+        if (row.id != item.id) {
+          $table.toggleRowExpansion(item, false)
+        }
+      })
+      $table.toggleRowExpansion(row)
+    }
+    ,
     // 经济公司
     async isGetList (value) {
       this.loading = true
