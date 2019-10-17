@@ -57,7 +57,7 @@
         </div>
       </div>
     </div>
-    <div class="el-backtop" style="right: 10px; bottom: 180px;" @click="backTop">
+    <div class="el-backtop" style="right: 10px; bottom: 180px" @click="backTop">
       <i class="el-icon-caret-top"></i>
     </div>
   </div>
@@ -114,9 +114,6 @@ export default {
 </script>
 
 <style scoped>
-.el-backtop{
-  z-index: 100000000;
-}
 .login {
   height: 100%;
 }

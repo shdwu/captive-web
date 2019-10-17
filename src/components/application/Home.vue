@@ -18,7 +18,8 @@
                     :before-upload="beforeUpload"
                     list-type="text">
           <el-button size="small"
-                      type="primary">上传附件</el-button>
+                      type="primary"
+                       @click="open4">上传附件</el-button>
           <div class="el-upload__tip"><span>{{fits}}</span></div>
         </el-upload>
           <div class="fl">
@@ -149,13 +150,13 @@
                           <template scope="scope">{{scope.row.insuranceAmountCurrency}}</template>
           </el-table-column>
           <el-table-column label="无需申报"
-                          v-if="userType === 'SHIPOWNER'">
+                           v-if="userType === 'SHIPOWNER'">
             <template slot-scope="scope">
-              <el-switch v-model="scope.row.state"
-                        active-value="1"
-                        inactive-value="0"
-                        active-color="#13ce66"
-                        inactive-color="#888">
+              <el-switch v-model="scope.row.needDeclare"
+                         active-value="0"
+                         inactive-value="1"
+                         active-color="#13ce66"
+                         inactive-color="#888">
               </el-switch>
             </template>
           </el-table-column>
@@ -183,12 +184,14 @@ export default {
     return {
       loading: true,
       allData: [],
+      enheng:true,
       tableData: [],
       currentPage: 1,
       pageSize: 10,
       totalNum: 0,
       selectAll: true,
       
+      // selectAll: true,
       emptyText: '加载中',
       KidnapList: [{
         value: '0',
@@ -300,6 +303,7 @@ export default {
         })
       }
     },
+          
     beforeUpload (file) {
       // console.log(file,123412454234)
       // this.handleSelectionChange();
@@ -307,15 +311,22 @@ export default {
       fd.append('file', file)// 传文件
       fd.append('fileName', encodeURI(file.name))
       this.$http.post('/files/save', fd).then(res => {
-        if (res.status === 200 ) {
-          this.$message({
-            type: 'success',
-            message: '上传成功'
-          })
+        if (res.status === 200) {
+          if(!this.fits){
+              this.$message({
+                type: 'success',
+                message: '上传成功   下一次上传将会覆盖此文件'
+              })
+          }else{
+             this.$message({
+                type: 'success',
+                message: '覆盖成功'
+             })
+          }
           this.fileId = res.data
           this.fileName = file.name
           this.fits = '附件:' + file.name
-        }   
+        }
       })
     },
     handleSelectAll () {
@@ -324,6 +335,11 @@ export default {
         this.allData.forEach(t => t.selected = true)
       } else {
         this.allData.forEach(t => t.selected = false)
+        this.$notify({
+          title: '警告',
+          message: '只能选择文件才可以上传附件',
+          type: 'warning'
+        });
       }
       this.toggleSelection(this.tableData)
     },
@@ -434,6 +450,7 @@ export default {
     this.getTableData()
   }
 }
+        
 </script>
 <style lang="postcss" scoped>
 /* variables */
