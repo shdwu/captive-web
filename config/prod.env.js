@@ -2,5 +2,5 @@
 module.exports = {
   NODE_ENV: '"production"',
   BASE_URL: '"/api"',
-  TIMEOUT: '6000'
+  TIMEOUT: '30000'
 }
