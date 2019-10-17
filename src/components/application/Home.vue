@@ -42,7 +42,8 @@
                   :empty-text="emptyText"
                   v-loading="loading"
                   ref="tableMain"
-                  style="width: 100%;font-size:12px;padding-left:90px">
+                  
+                  style="width: 100%;font-size:12px;padding-left:20px">
           <el-table-column type="selection"
                           width="29">
           </el-table-column>
@@ -51,7 +52,7 @@
               <el-table :data="props.row.orderDtos"
                       border
                       :cell-style="tableRowClassName"
-                      style="width: 100%;">
+                      style="width: 100%;font-size:12px">
                 <el-table-column width="120px" prop="throughArea"
                                 label="特战区域名称">
                 </el-table-column>
@@ -100,7 +101,6 @@
                                 :key="todos.length"
                                 :label="todos.value"
                                 :value="todos.value"></el-option>
-
                     </el-select>
                   </template>
                 </el-table-column>
@@ -140,12 +140,13 @@
                           width="100px"
                           prop="eta">
           </el-table-column>
-          <el-table-column width="120x" label="挂靠港"
+          <el-table-column width="162px" label="挂靠港"
                           prop="ports">
           </el-table-column>
           <el-table-column prop="insuranceAmountCurrency"
                           width="135px"
                           label="保险金额">
+                          <template scope="scope">{{scope.row.insuranceAmountCurrency}}</template>
           </el-table-column>
           <el-table-column label="无需申报"
                           v-if="userType === 'SHIPOWNER'">
@@ -182,12 +183,12 @@ export default {
     return {
       loading: true,
       allData: [],
-
       tableData: [],
       currentPage: 1,
       pageSize: 10,
       totalNum: 0,
       selectAll: true,
+      
       emptyText: '加载中',
       KidnapList: [{
         value: '0',
@@ -237,7 +238,7 @@ export default {
       }
       return ""
     },
-    handleSelectionChange (value, row,) {
+    handleSelectionChange (value, row) {
       row.selected = !row.selected;
     },
     temporaryStorage () {
@@ -300,11 +301,13 @@ export default {
       }
     },
     beforeUpload (file) {
+      // console.log(file,123412454234)
+      // this.handleSelectionChange();
       let fd = new FormData()
       fd.append('file', file)// 传文件
       fd.append('fileName', encodeURI(file.name))
       this.$http.post('/files/save', fd).then(res => {
-        if (res.status === 200) {
+        if (res.status === 200 ) {
           this.$message({
             type: 'success',
             message: '上传成功'
@@ -380,12 +383,14 @@ export default {
                 if(!arr.includes(i.throughArea)){
                    arr.push(i.throughArea);
                 }
+                // 天数
                 plus += Number(i.days);
                 d['daysPlus'] = plus.toFixed(2);
               }
               d.throughAreaSum = arr.join('\n')
 
             if(d['insuranceAmount']){
+              // 保险金额
               d['insuranceAmountCurrency'] = d['currency'] + '\n' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
             }else{
               d['insuranceAmountCurrency'] = ''
@@ -552,8 +557,11 @@ a{
   margin: 0 auto;
 }
 </style>
-<style>
+<style type="text/css">
 /* .row_no_line {
   background-color: #5cafe0 !important;
 } */
+.el-table .cell{
+  white-space: pre-line;
+}
 </style>

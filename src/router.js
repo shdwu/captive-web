@@ -27,7 +27,6 @@ routers.beforeEach((to, from, next) => {
     next()
     return
   }
-
   const token = sessionStorage.getItem('token')
   if (token) {
     // 登录

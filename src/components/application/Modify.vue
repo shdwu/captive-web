@@ -67,7 +67,7 @@
                 :default-expand-all="true"
                 :empty-text="emptyText"
                 v-loading="loading"
-                style="width: 100%">
+                style="width: 100%;font-size:12px">
           <el-table-column type="expand">
             <template slot-scope="props">
               <el-table :data="props.row.orderDtos"
@@ -167,7 +167,7 @@
                           width="100px"
                           prop="eta">
           </el-table-column>
-          <el-table-column width="120px" label="挂靠港"
+          <el-table-column width="162px" label="挂靠港"
                           prop="ports">
           </el-table-column>
           <el-table-column prop="insuranceAmountCurrency"
@@ -738,6 +738,11 @@ export default {
 }
 a{
   text-decoration:none;
+}
+</style>
+<style type="text/css">
+.el-table .cell{
+  white-space: pre-line;
 }
 </style>
 
