@@ -340,8 +340,6 @@ export default {
     },
 
     beforeUpload (file) {
-      // console.log(file,123412454234)
-      // this.handleSelectionChange();
       let fd = new FormData()
       fd.append('file', file)// 传文件
       fd.append('fileName', encodeURI(file.name))
@@ -370,11 +368,6 @@ export default {
         this.allData.forEach(t => t.selected = true)
       } else {
         this.allData.forEach(t => t.selected = false)
-        this.$notify({
-          title: '警告',
-          message: '只能选择文件才可以上传附件',
-          type: 'warning'
-        });
       }
       this.toggleSelection(this.tableData)
     },
