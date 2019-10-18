@@ -57,11 +57,11 @@
                               label="特战区域名称">
 
               </el-table-column>
-              <el-table-column prop="intime"
+              <el-table-column prop="intime_ext"
                               width="100px"
                               label="进入时间">
               </el-table-column>
-              <el-table-column prop="outtime"
+              <el-table-column prop="outtime_ext"
                               width="100px"
                               label="离开时间">
               </el-table-column>
@@ -149,14 +149,14 @@
         </el-table-column>
         <el-table-column label="出发时间"
                         width="90px"
-                        prop="etd">
+                        prop="etd_ext">
         </el-table-column>
         <el-table-column width="80px" label="目的港"
                         prop="arrivalPort">
         </el-table-column>
         <el-table-column label="到达时间"
                         width="90px"
-                        prop="eta">
+                        prop="eta_ext">
         </el-table-column>
         <el-table-column width="162px" label="挂靠港"
                         prop="ports">
@@ -253,7 +253,10 @@ export default {
     }
   },
   methods: {
-    showHide(row,index,e){
+    showHide(row,column,e){
+      if(column.label === '无需申报'){
+        return;
+      }
       this.$refs.tableMain.toggleRowExpansion(row)
     }
     ,
@@ -431,10 +434,10 @@ export default {
               plus += Number(i.days);
               d['daysPlus'] = plus.toFixed(2);
               if(i['intime']){
-                i['intime']=i['intime'].replace(' ','\n')
+                i['intime_ext']=i['intime'].replace(' ','\n')
               }
               if(i['outtime']){
-                i['outtime']=i['outtime'].replace(' ','\n')
+                i['outtime_ext']=i['outtime'].replace(' ','\n')
               }
             }
             d.throughAreaSum = arr.join('\n')
@@ -446,10 +449,10 @@ export default {
               d['insuranceAmountCurrency'] = ''
             }
             if(d['eta']){
-              d['eta'] = d['eta'].replace(' ','\n')
+              d['eta_ext'] = d['eta'].replace(' ','\n')
             }
             if(d['etd']){
-              d['etd'] = d['etd'].replace(' ','\n')
+              d['etd_ext'] = d['etd'].replace(' ','\n')
             }
           }
 
