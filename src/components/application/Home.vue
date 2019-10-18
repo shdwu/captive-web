@@ -55,7 +55,7 @@
                     style="width: 100%;font-size:12px">
               <el-table-column width="120px" prop="throughArea"
                               label="特战区域名称">
-                              
+
               </el-table-column>
               <el-table-column prop="intime"
                               width="100px"
@@ -112,7 +112,7 @@
         <el-table-column label="船名"
                         width="90px"
                         prop="shipCName">
-          
+
         </el-table-column>
         <el-table-column label="特战区"
                         width="85px"
@@ -121,11 +121,11 @@
                         <template scope="scope">{{scope.row.throughAreaSum}}</template>
         </el-table-column>
         <el-table-column label="天数"
-                        width="50px"
+                        width="60px"
                         prop="daysPlus">
           <template scope="scope">
             <el-button type="text"
-            style="color:#606266" 
+            style="color:#606266"
             @click="toogleExpand(scope.row)"
             >
               {{scope.row.daysPlus}}
@@ -137,7 +137,7 @@
                         prop="line">
           <template scope="scope">
             <el-button type="text"
-            style="color:#606266" 
+            style="color:#606266"
             @click="toogleExpand(scope.row)"
             >
               {{scope.row.line}}
@@ -148,14 +148,14 @@
                         prop="departurePort">
         </el-table-column>
         <el-table-column label="出发时间"
-                        width="100px"
+                        width="90px"
                         prop="etd">
         </el-table-column>
         <el-table-column width="80px" label="目的港"
                         prop="arrivalPort">
         </el-table-column>
         <el-table-column label="到达时间"
-                        width="100px"
+                        width="90px"
                         prop="eta">
         </el-table-column>
         <el-table-column width="162px" label="挂靠港"
@@ -208,7 +208,7 @@ export default {
       pageSize: 10,
       totalNum: 0,
       selectAll: true,
-      
+
       // selectAll: true,
       emptyText: '加载中',
       KidnapList: [{
@@ -335,7 +335,7 @@ export default {
         })
       }
     },
-          
+
     beforeUpload (file) {
       // console.log(file,123412454234)
       // this.handleSelectionChange();
@@ -420,27 +420,36 @@ export default {
 
         getOrderList(params).then( res => {
           //千分位 特战区 总时间
-          for(let d of res.data.list){
-            // arr.push(d.throughAreas);
+          for (let d of res.data.list) {
             let plus = 0;
-              let arr = [];
-              for(let i of d['orderDtos']){
-                // sum += i.throughArea + '\n';
-                // d['throughAreaSum'] = sum;
-                if(!arr.includes(i.throughArea)){
-                   arr.push(i.throughArea);
-                }
-                // 天数
-                plus += Number(i.days);
-                d['daysPlus'] = plus.toFixed(2);
+            let arr = [];
+            for (let i of d['orderDtos']) {
+              if (!arr.includes(i.throughArea)) {
+                arr.push(i.throughArea);
               }
-              d.throughAreaSum = arr.join('\n')
+              // 天数
+              plus += Number(i.days);
+              d['daysPlus'] = plus.toFixed(2);
+              if(i['intime']){
+                i['intime']=i['intime'].replace(' ','\n')
+              }
+              if(i['outtime']){
+                i['outtime']=i['outtime'].replace(' ','\n')
+              }
+            }
+            d.throughAreaSum = arr.join('\n')
 
-            if(d['insuranceAmount']){
+            if (d['insuranceAmount']) {
               // 保险金额
               d['insuranceAmountCurrency'] = d['currency'] + '\n' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
-            }else{
+            } else {
               d['insuranceAmountCurrency'] = ''
+            }
+            if(d['eta']){
+              d['eta'] = d['eta'].replace(' ','\n')
+            }
+            if(d['etd']){
+              d['etd'] = d['etd'].replace(' ','\n')
             }
           }
 

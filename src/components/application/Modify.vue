@@ -62,7 +62,7 @@
                class="yth">已退回</div>
         </div>
       </div>
-      
+
         <el-table :data="tableData"
                 :default-expand-all="true"
                 :empty-text="emptyText"
@@ -148,11 +148,11 @@
                           <template scope="scope">{{scope.row.throughAreaSum}}</template>
           </el-table-column>
           <el-table-column label="天数"
-                          width="50px"
+                          width="60px"
                           prop="daysPlus">
             <template scope="scope">
               <el-button type="text"
-              style="color:#606266" 
+              style="color:#606266"
               @click="toogleExpand(scope.row)"
               >
                 {{scope.row.daysPlus}}
@@ -164,7 +164,7 @@
                           prop="line">
             <template scope="scope">
               <el-button type="text"
-              style="color:#606266" 
+              style="color:#606266"
               @click="toogleExpand(scope.row)"
               >
                 {{scope.row.line}}
@@ -175,14 +175,14 @@
                           prop="departurePort">
           </el-table-column>
           <el-table-column label="出发时间"
-                          width="100px"
+                          width="90px"
                           prop="etd">
           </el-table-column>
           <el-table-column width="80px" label="目的港"
                           prop="arrivalPort">
           </el-table-column>
           <el-table-column label="到达时间"
-                          width="100px"
+                          width="90px"
                           prop="eta">
           </el-table-column>
           <el-table-column width="130px" label="挂靠港"
@@ -201,7 +201,7 @@
             </template>
           </el-table-column>
             <el-table-column
-                    width="80px" prop="needDeclare"
+                    width="70px" prop="needDeclare"
                     label="无需申报">
                 <template slot-scope="scope">
                     <el-switch v-model="scope.row.needDeclare"
@@ -245,7 +245,7 @@
             </template>
           </el-table-column>
         </el-table>
-      
+
       <div class='thyj'>
         <h4 class="fs">退回意见：</h4>
         <ul id="is">
@@ -326,7 +326,7 @@ export default {
     }
     ,
     // 经济公司
-    async isGetList (value) {
+    async isGetList(value) {
       this.loading = true
       let res = await this.$http.get('/broker/orders', {
         params: {
@@ -335,24 +335,34 @@ export default {
       })
       if (res.status === 200) {
         //千分位
-        for(let d of res.data.list){
+        for (let d of res.data.list) {
           let plus = 0;
-            let arr = [];
-            for(let i of d['orderDtos']){
-              // sum += i.throughArea + '\n';
-              // d['throughAreaSum'] = sum;
-              if(!arr.includes(i.throughArea)){
-                  arr.push(i.throughArea);
-              }
-              plus += Number(i.days);
-              d['daysPlus'] = plus.toFixed(2);
+          let arr = [];
+          for (let i of d['orderDtos']) {
+            if (!arr.includes(i.throughArea)) {
+              arr.push(i.throughArea);
             }
-            d.throughAreaSum = arr.join('\n')
+            plus += Number(i.days);
+            d['daysPlus'] = plus.toFixed(2);
+            if (i['intime']) {
+              i['intime'] = i['intime'].replace(' ', '\n')
+            }
+            if (i['outtime']) {
+              i['outtime'] = i['outtime'].replace(' ', '\n')
+            }
+          }
+          d.throughAreaSum = arr.join('\n')
 
-          if(d['insuranceAmount']){
+          if (d['insuranceAmount']) {
             d['insuranceAmountCurrency'] = d['currency'] + '\n' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
-          }else{
+          } else {
             d['insuranceAmountCurrency'] = ''
+          }
+          if (d['eta']) {
+            d['eta'] = d['eta'].replace(' ', '\n')
+          }
+          if (d['etd']) {
+            d['etd'] = d['etd'].replace(' ', '\n')
           }
         }
         this.tableData = res.data.list
@@ -366,13 +376,13 @@ export default {
 
       if (!(this.tableData && this.tableData.length > 0)) {
         this.emptyText = '暂无数据'
-      }else{
+      } else {
         this.emptyText = ''
       }
       this.loading = false
     },
     // 货运公司
-    async isGetLists (value) {
+    async isGetLists(value) {
       this.loading = true
       let res = await this.$http.get('/shiper/orders', {
         params: {
@@ -381,24 +391,34 @@ export default {
       })
       if (res.status === 200) {
         //千分位
-        for(let d of res.data.list){
+        for (let d of res.data.list) {
           let plus = 0;
-            let arr = [];
-            for(let i of d['orderDtos']){
-              // sum += i.throughArea + '\n';
-              // d['throughAreaSum'] = sum;
-              if(!arr.includes(i.throughArea)){
-                  arr.push(i.throughArea);
-              }
-              plus += Number(i.days);
-              d['daysPlus'] = plus.toFixed(2);
+          let arr = [];
+          for (let i of d['orderDtos']) {
+            if (!arr.includes(i.throughArea)) {
+              arr.push(i.throughArea);
             }
-            d.throughAreaSum = arr.join('\n');
+            plus += Number(i.days);
+            d['daysPlus'] = plus.toFixed(2);
+            if (i['intime']) {
+              i['intime'] = i['intime'].replace(' ', '\n')
+            }
+            if (i['outtime']) {
+              i['outtime'] = i['outtime'].replace(' ', '\n')
+            }
+          }
+          d.throughAreaSum = arr.join('\n');
 
-          if(d['insuranceAmount']){
+          if (d['insuranceAmount']) {
             d['insuranceAmountCurrency'] = d['currency'] + '\n' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
-          }else{
+          } else {
             d['insuranceAmountCurrency'] = ''
+          }
+          if (d['eta']) {
+            d['eta'] = d['eta'].replace(' ', '\n')
+          }
+          if (d['etd']) {
+            d['etd'] = d['etd'].replace(' ', '\n')
           }
         }
         this.tableData = res.data.list
@@ -406,12 +426,12 @@ export default {
 
       if (!(this.tableData && this.tableData.length > 0)) {
         this.emptyText = '暂无数据'
-      }else{
+      } else {
         this.emptyText = ''
       }
       this.loading = false
     },
-    async isGetListsd (value) {
+    async isGetListsd(value) {
       this.loading = true
       let res = await this.$http.get('/captive/orders', {
         params: {
@@ -420,30 +440,40 @@ export default {
       })
       if (res.status === 200) {
         //千分位
-        for(let d of res.data.list){
+        for (let d of res.data.list) {
           let plus = 0;
-            let arr = [];
-            for(let i of d['orderDtos']){
-              // sum += i.throughArea + '\n';
-              // d['throughAreaSum'] = sum;
-              if(!arr.includes(i.throughArea)){
-                  arr.push(i.throughArea);
-              }
-              plus += Number(i.days);
-              d['daysPlus'] = plus.toFixed(2);
+          let arr = [];
+          for (let i of d['orderDtos']) {
+            if (!arr.includes(i.throughArea)) {
+              arr.push(i.throughArea);
             }
-            d.throughAreaSum = arr.join('\n')
+            plus += Number(i.days);
+            d['daysPlus'] = plus.toFixed(2);
+            if (i['intime']) {
+              i['intime'] = i['intime'].replace(' ', '\n')
+            }
+            if (i['outtime']) {
+              i['outtime'] = i['outtime'].replace(' ', '\n')
+            }
+          }
+          d.throughAreaSum = arr.join('\n')
 
-          if(d['insuranceAmount']){
+          if (d['insuranceAmount']) {
             d['insuranceAmountCurrency'] = d['currency'] + '\n' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
-          }else{
+          } else {
             d['insuranceAmountCurrency'] = ''
+          }
+          if (d['eta']) {
+            d['eta'] = d['eta'].replace(' ', '\n')
+          }
+          if (d['etd']) {
+            d['etd'] = d['etd'].replace(' ', '\n')
           }
         }
         this.tableData = res.data.list
         if (!(this.tableData && this.tableData.length > 0)) {
           this.emptyText = '暂无数据'
-        }else{
+        } else {
           this.emptyText = ''
         }
         this.loading = false
