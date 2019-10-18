@@ -511,7 +511,7 @@ export default {
         filename = file.includes('filename=') ? file.split('=')[1] : filename
         this.download(response.data, filename)
       }).catch(error => {
-        console.log(error)
+        this.$message.error('导出错误！');
       })
     },
     tableRowClassName (row) {

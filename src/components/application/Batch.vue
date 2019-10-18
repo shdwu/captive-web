@@ -42,21 +42,42 @@
                    size="mini"
                    @click="isGets()"
                    plain>查询</el-button>
-
-        <div class="float_left">
-          <span class="cm">船名</span>
-          <el-input placeholder="请输入船名"
-                    size="small"
-                    v-model="searchShipName"
-                    @keyup.enter.native="searchByShipName"
-                    class="inpt_width">
-          </el-input>
-          <el-button type="primary"
-                    size="mini"
-                    @click="searchByShipName"
-                    plain>查询</el-button>
-        </div>
       </div>
+
+      <div class="info_ss" style="margin-top: 0px;">
+        <span class="cm">申报详情</span>
+        <el-input placeholder="请输入船名"
+                  size="small"
+                  v-model="searchShipName"
+                  class="inpt_width">
+        </el-input>
+        <span class="cm m10">状态</span>
+        <el-select v-model="state"
+                   clearable
+                   size="small"
+                   class="inpt_width"
+                   placeholder="请选择">
+          <el-option v-for="item in states"
+                     :key="item.value"
+                     :label="item.label"
+                     :value="item.value">
+          </el-option>
+        </el-select>
+        <span class="cm m10">航次起始日期</span>
+        <el-date-picker
+                v-model="startEndDate"
+                type="daterange"
+                size="small"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期">
+        </el-date-picker>
+        <el-button type="primary"
+                   size="mini"
+                   @click="detailsSearch()"
+                   plain>查询</el-button>
+      </div>
+
       <el-table :data="tableData"
                 @cell-click='moreClick'
                 :empty-text="emptyText"
@@ -92,149 +113,159 @@
       </el-pagination>
     </div>
     <el-dialog
-      title="船舶搜索结果"
       :visible.sync="dialogVisible"
       width="80%">
-      <el-table :data="dialogData"
-              :default-expand-all="true"
-              style="width: 100%">
-        <el-table-column type="expand">
-          <template slot-scope="props">
-            <el-table :data="props.row.orderDtos"
-                    :cell-style="tableRowClassName"
-                    border
-                    style="width: 100%">
-              <el-table-column prop="throughArea"
-                               label="特战区域名称">
-                               
-              </el-table-column>
-              <el-table-column prop="intime"
-                               width="100px"
-                               label="进入时间">
-              </el-table-column>
-              <el-table-column prop="outtime"
-                               width="100px"
-                               label="离开时间">
-              </el-table-column>
-              <el-table-column prop="days"
-                               label="停留天数">
-              </el-table-column>
-              <el-table-column label="空满载">
-                <template slot-scope="scope">
-                  <el-radio v-model="scope.row.loadInfo"
-                            v-if="nameType === 'SHIPOWNER' && props.row.state === '2'"
-                            label="满载">满载</el-radio>
-                  <el-radio v-model="scope.row.loadInfo"
-                            v-if="nameType === 'SHIPOWNER' && props.row.state === '2'"
-                            label="空载">空载</el-radio>
-                  <span v-else>{{scope.row.loadInfo}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column prop="anchoragePort"
-                               label="挂靠港名">
-              </el-table-column>
-              <el-table-column prop="anchorageDate"
-                               label="挂靠特战区港口时间">
-              </el-table-column>
-              <el-table-column label="安保人数">
-                <template slot-scope="scope">
+      <template slot="title">
+        <div class="dialog-layer">
+          <div class="dialog-layer-title">船舶搜索结果</div>
+          <el-button type="primary"
+                     size="mini"
+                     @click="detailsSearchExport()"
+                     class="dialog-layer-export">导出</el-button>
+        </div>
+      </template>
+      <template slot="footer">
+        <el-table :data="dialogData"
+                  :default-expand-all="true"
+                  style="width: 100%;margin-top:-50px;">
+          <el-table-column type="expand">
+            <template slot-scope="props">
+              <el-table :data="props.row.orderDtos"
+                        :cell-style="tableRowClassName"
+                        border
+                        style="width: 100%">
+                <el-table-column prop="throughArea"
+                                 label="特战区域名称">
 
-                  <el-select v-model="scope.row.guardsNo"
-                             v-if="nameType === 'SHIPOWNER' &&  props.row.state ==='2' "
-                             placeholder="请选择">
-                    <el-option v-for="todos in guardList"
-                               :key="todos.length"
-                               :label="todos.value"
-                               :value="todos.value"></el-option>
-                  </el-select>
-                  <span v-else>{{scope.row.guardsNo}}</span>
-                </template>
-              </el-table-column>
+                </el-table-column>
+                <el-table-column prop="intime"
+                                 width="100px"
+                                 label="进入时间">
+                </el-table-column>
+                <el-table-column prop="outtime"
+                                 width="100px"
+                                 label="离开时间">
+                </el-table-column>
+                <el-table-column prop="days"
+                                 label="停留天数">
+                </el-table-column>
+                <el-table-column label="空满载">
+                  <template slot-scope="scope">
+                    <el-radio v-model="scope.row.loadInfo"
+                              v-if="nameType === 'SHIPOWNER' && props.row.state === '2'"
+                              label="满载">满载</el-radio>
+                    <el-radio v-model="scope.row.loadInfo"
+                              v-if="nameType === 'SHIPOWNER' && props.row.state === '2'"
+                              label="空载">空载</el-radio>
+                    <span v-else>{{scope.row.loadInfo}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="anchoragePort"
+                                 label="挂靠港名">
+                </el-table-column>
+                <el-table-column prop="anchorageDate"
+                                 label="挂靠特战区港口时间">
+                </el-table-column>
+                <el-table-column label="安保人数">
+                  <template slot-scope="scope">
 
-              <el-table-column label="K&R">
-                <template slot-scope="scope">
-                  <el-select v-model="scope.row.karAmount"
-                             v-if="nameType === 'SHIPOWNER' && props.row.state === '2'"
-                             placeholder="请选择">
-                    <el-option v-for="todos in KidnapList"
-                               :key="todos.length"
-                               :label="todos.value"
-                               :value="todos.value"></el-option>
+                    <el-select v-model="scope.row.guardsNo"
+                               v-if="nameType === 'SHIPOWNER' &&  props.row.state ==='2' "
+                               placeholder="请选择">
+                      <el-option v-for="todos in guardList"
+                                 :key="todos.length"
+                                 :label="todos.value"
+                                 :value="todos.value"></el-option>
+                    </el-select>
+                    <span v-else>{{scope.row.guardsNo}}</span>
+                  </template>
+                </el-table-column>
 
-                  </el-select>
-                  <span v-else>{{scope.row.karAmount}}</span>
-                </template>
-              </el-table-column>
+                <el-table-column label="K&R">
+                  <template slot-scope="scope">
+                    <el-select v-model="scope.row.karAmount"
+                               v-if="nameType === 'SHIPOWNER' && props.row.state === '2'"
+                               placeholder="请选择">
+                      <el-option v-for="todos in KidnapList"
+                                 :key="todos.length"
+                                 :label="todos.value"
+                                 :value="todos.value"></el-option>
 
-            </el-table>
-          </template>
-        </el-table-column>
-        <el-table-column label="船名"
-                         prop="shipCName">
-        </el-table-column>
-        <el-table-column label="航次"
-                         prop="line">
-        </el-table-column>
-        <el-table-column label="出发港"
-                         prop="departurePort">
-        </el-table-column>
-        <el-table-column label="出发时间"
-                         width="100px"
-                         prop="etd">
-        </el-table-column>
-        <el-table-column label="目的港"
-                         prop="arrivalPort">
-        </el-table-column>
-        <el-table-column label="到达时间"
-                         width="100px"
-                         prop="eta">
-        </el-table-column>
-        <el-table-column label="挂靠港"
-                         prop="ports">
-        </el-table-column>
-        <el-table-column prop="insuranceAmount"
-                         label="保险金额">
-        </el-table-column>
+                    </el-select>
+                    <span v-else>{{scope.row.karAmount}}</span>
+                  </template>
+                </el-table-column>
 
-        <el-table-column prop="sumPremium"
-                         label="最终保费">
-          <template slot-scope="scope">
-            <span>{{scope.row.sumPremium}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="状态">
-          <template slot-scope="scope">
+              </el-table>
+            </template>
+          </el-table-column>
+          <el-table-column label="船名"
+                           prop="shipCName">
+          </el-table-column>
+          <el-table-column label="航次"
+                           prop="line">
+          </el-table-column>
+          <el-table-column label="出发港"
+                           prop="departurePort">
+          </el-table-column>
+          <el-table-column label="出发时间"
+                           width="100px"
+                           prop="etd">
+          </el-table-column>
+          <el-table-column label="目的港"
+                           prop="arrivalPort">
+          </el-table-column>
+          <el-table-column label="到达时间"
+                           width="100px"
+                           prop="eta">
+          </el-table-column>
+          <el-table-column label="挂靠港"
+                           prop="ports">
+          </el-table-column>
+          <el-table-column prop="insuranceAmount"
+                           label="保险金额">
+          </el-table-column>
 
-            <el-button type="info"
-                       v-if="nameType === 'BROKER' &&  scope.row.state ==='0' "
-                       :disabled="item.status==='2'? true:false"
-                       @click="isRuts(scope.row)">不通过</el-button>
-            <el-button type="warning"
-                       :disabled="item.status==='2'? true:false"
-                       v-if="nameType === 'BROKER' &&  scope.row.state ==='1' "
-                       @click="isRuts(scope.row)">需申报</el-button>
-            <el-button type="danger"
-                       :disabled="item.status==='2'? true:false"
-                       v-if="nameType === 'BROKER' &&  scope.row.state ==='2' "
-                       @click="isLings(scope.row)">不通过</el-button>
-            <el-button type="info"
-                       v-if="nameType === 'SHIPOWNER' &&  scope.row.state ==='0' ">待审核</el-button>
-            <el-button type="warning"
-                       v-if="nameType === 'SHIPOWNER' &&  scope.row.state ==='1' ">无需申报</el-button>
-            <el-button type="danger"
-                       v-if="nameType === 'SHIPOWNER' &&  scope.row.state ==='2' ">被退回</el-button>
+          <el-table-column prop="sumPremium"
+                           label="最终保费">
+            <template slot-scope="scope">
+              <span>{{scope.row.sumPremium}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="状态">
+            <template slot-scope="scope">
 
-            <el-button type="info"
-                       v-if="nameType === 'CAPTIVE' &&  scope.row.state ==='0' ">待审核</el-button>
-            <el-button type="warning"
-                       v-if="nameType === 'CAPTIVE' &&  scope.row.state ==='1' ">无需申报</el-button>
-            <el-button type="danger"
-                       v-if="nameType === 'CAPTIVE' &&  scope.row.state ==='2' ">被退回</el-button>
-            <el-button type="success"
-                       v-if="scope.row.state ==='3' ">已审核</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+              <el-button type="info"
+                         v-if="nameType === 'BROKER' &&  scope.row.state ==='0' "
+                         :disabled="item.status==='2'? true:false"
+                         @click="isRuts(scope.row)">不通过</el-button>
+              <el-button type="warning"
+                         :disabled="item.status==='2'? true:false"
+                         v-if="nameType === 'BROKER' &&  scope.row.state ==='1' "
+                         @click="isRuts(scope.row)">需申报</el-button>
+              <el-button type="danger"
+                         :disabled="item.status==='2'? true:false"
+                         v-if="nameType === 'BROKER' &&  scope.row.state ==='2' "
+                         @click="isLings(scope.row)">不通过</el-button>
+              <el-button type="info"
+                         v-if="nameType === 'SHIPOWNER' &&  scope.row.state ==='0' ">待审核</el-button>
+              <el-button type="warning"
+                         v-if="nameType === 'SHIPOWNER' &&  scope.row.state ==='1' ">无需申报</el-button>
+              <el-button type="danger"
+                         v-if="nameType === 'SHIPOWNER' &&  scope.row.state ==='2' ">被退回</el-button>
+
+              <el-button type="info"
+                         v-if="nameType === 'CAPTIVE' &&  scope.row.state ==='0' ">待审核</el-button>
+              <el-button type="warning"
+                         v-if="nameType === 'CAPTIVE' &&  scope.row.state ==='1' ">无需申报</el-button>
+              <el-button type="danger"
+                         v-if="nameType === 'CAPTIVE' &&  scope.row.state ==='2' ">被退回</el-button>
+              <el-button type="success"
+                         v-if="scope.row.state ==='3' ">已审核</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </template>
     </el-dialog>
   </div>
 </template>
@@ -266,6 +297,23 @@ export default {
         value: '2',
         label: '已退回'
       }],
+      state: '',
+      states:[
+        {
+          value: '',
+          label: '全部'
+        },{
+          value: '0',
+          label: '待审核'
+        }, {
+          value: '2',
+          label: '已退回'
+        }, {
+          value: '3',
+          label: '已审核'
+        }
+      ],
+      startEndDate: [],
       loading: true,
       emptyText: '加载中',
       tableData: [],
@@ -277,11 +325,57 @@ export default {
     }
   },
   methods: {
-    searchByShipName() {
-      batchApi.searchByShipName({ shipEName: this.searchShipName}).then(res => {
+    dateFormat(date){
+      if(date){
+        return new Date(date).toLocaleDateString().replace(/\//g,'-');
+      }
+      return null;
+    },
+    detailsSearch() {
+      let [startDate,endDate] = (this.startEndDate.length>0)?this.startEndDate:[];
+      let par = {
+        state:this.state,
+        shipEName: this.searchShipName,
+        dateStatus: '0',//固定按照航次开始日期查询
+        endDate: (endDate?this.dateFormat(endDate) + ' 23:59:59':''),
+        startDate: (startDate?this.dateFormat(startDate) + ' 00:00:00':'')
+      };
+      batchApi.detailsSearch(par).then(res => {
         this.dialogData = res.data.list
         this.dialogVisible = true
-      }) 
+      })
+    },
+
+    detailsSearchExport(){
+      let [startDate,endDate] = (this.startEndDate.length>0)?this.startEndDate:[];
+      let startTime = startDate?this.dateFormat(startDate) + ' 00:00:00':'';
+      let endTime = endDate?this.dateFormat(endDate) + ' 23:59:59':'';
+      let reqUrl = `/files/exportDeclared?state=${this.state}&shipEName=${this.searchShipName}'+
+          '&dateStatus=0&startDate=${startTime}&endDate=${endTime}`;
+      this.$http({
+        method: 'get',
+        url: reqUrl,
+        responseType: 'blob'
+      }).then(response => {
+        const file = response.headers['content-disposition']
+        let filename = file.split('=')[1];
+        let pos = filename.lastIndexOf('.');
+        filename = 'Bath' + new Date().getTime() + filename.substr(pos);
+        this.download(response.data, filename)
+      }).catch(error => {
+        this.$message.error('导出错误！');
+      })
+    },
+    download (data, file) {
+      if (!data) {
+        return
+      }
+      let url = window.URL.createObjectURL(new Blob([data]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', file)
+      document.body.appendChild(link)
+      link.click()
     },
     async isGetList (batchNum = '', createBy = '', status = '', page = 1) {
       this.loading = true;
@@ -492,4 +586,20 @@ export default {
 .float_left {
   float: right;
 }
+
+.dialog-layer{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+.dialog-layer-title{
+   margin-left: 20px;
+   font-size: 18px;
+}
+.dialog-layer-export{
+  margin-left:auto;
+  margin-right: 100px;
+}
+
 </style>
