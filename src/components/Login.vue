@@ -3,12 +3,14 @@
     <!-- 头部 -->
     <div class="header">
       <div class="header_info">
-        <div class="logo"
-             :style="logo"></div>
+        <div class="logo" :style="logo"></div>
         <a class="help_doc" :href="manual" target="_blank">
           <img :src="light"/>
           <span>用户手册</span>
         </a>
+        <div style="position: absolute;right: 110px;top: 10px;">
+          <img src="../assets/innovation.png">
+        </div>
       </div>
     </div>
     <!-- 登陆表单 -->
@@ -292,7 +294,7 @@ p {
   flex-direction: row;
   align-items: center;
   right: 30px;
-  top: 20px;
+  top: 65px;
   cursor: pointer;
   text-decoration: none;
 }
