@@ -498,7 +498,7 @@ export default {
       this.isGetName()
     } else if (this.nameType === 'SHIPOWNER') {
       var param = this.$route.params;
-      this.statu = param?param.status:'';
+      this.statu = param?(param.status?param.status:''):'';
       this.isGetLists('', '', this.statu, 1);
     } else {
       this.isGetListsd()
