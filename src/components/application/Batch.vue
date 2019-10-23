@@ -5,8 +5,11 @@
          :style="bgc"></div>
     <!-- 具体内容 -->
     <div class="info_title">
+      <div class="info_ss" style="height: 40px;line-height: 40px;">
+        <span class="cm" style="font-size: 16px;">申报批次：</span>
+      </div>
       <div class="info_ss">
-        <span class="cm">申报批次</span>
+        <span class="cm">批次</span>
         <el-input placeholder="请输入申报批次"
                   size="small"
                   v-model="input"
@@ -44,8 +47,11 @@
                    plain>查询</el-button>
       </div>
 
-      <div class="info_ss" style="margin-top: 0px;">
-        <span class="cm">申报详情</span>
+      <div class="info_ss" style="height: 40px;line-height: 40px;">
+        <span class="cm" style="font-size: 16px;">申报详情：</span>
+      </div>
+      <div class="info_ss">
+        <span class="cm">船名</span>
         <el-input placeholder="请输入船名"
                   size="small"
                   v-model="searchShipName"
@@ -534,7 +540,6 @@ export default {
   height: 50px;
   line-height: 50px;
   background-color: #fff;
-  margin-top: 22px;
   box-sizing: border-box;
   padding: 0 23px;
 }
