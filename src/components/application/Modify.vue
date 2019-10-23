@@ -25,15 +25,18 @@
         </el-form>
         <el-button type="primary"
                    class="right_button"
+                   :loading="returnOperLoading"
                    v-if="nameType === 'BROKER'  && item.status === '0'"
                    :disabled='!disabled'
                    @click="isReturns">退回</el-button>
         <el-button :type="primarys"
                    class="right_button"
+                   :loading="passeOperLoading"
                    v-if="nameType === 'BROKER'  && item.status === '0'"
                    :disabled='disabled'
                    @click="isPass">审核通过</el-button>
         <el-button type="primary"
+                   :loading="submitOperLoading"
                    v-if="nameType === 'SHIPOWNER' && item.status === '2' "
                    @click="isSubmission"
                    class="right_button">提交</el-button>
@@ -307,7 +310,10 @@ export default {
       }, {
         value: '>3',
         label: '>3'
-      }]
+      }],
+      returnOperLoading:false,
+      passeOperLoading:false,
+      submitOperLoading:false
     }
   },
   methods: {
@@ -529,6 +535,11 @@ export default {
       }
     },
     async isReturns () {
+      if(this.returnOperLoading){
+        return ;
+      }
+      this.returnOperLoading = true;
+
       let obj = {
         batchNum: this.item.batchNum,
         status: '2',
@@ -553,6 +564,8 @@ export default {
         })
         this.$router.push({ name: 'batch' })
       }
+
+      this.returnOperLoading = false;
     },
     checkAdult(item) {
       if (item.sumPremium !== null && item.sumPremium !== '' && item.sumPremium >= 0) {
@@ -562,6 +575,11 @@ export default {
       }
     },
     async isPass () {
+      if(this.passeOperLoading){
+        return ;
+      }
+      this.passeOperLoading = true;
+
       if (this.tableData.every(this.checkAdult)) {
         let obj = {
           batchNum: this.item.batchNum,
@@ -594,6 +612,7 @@ export default {
       } else {
         this.$message.error('请完成各航次最终保费')
       }
+      this.passeOperLoading = false;
     }
     ,
     isRuts (value) {
@@ -626,6 +645,11 @@ export default {
       }
     },
     async isSubmission () {
+      if(this.submitOperLoading){
+        return ;
+      }
+      this.submitOperLoading = true;
+
       let obj = {
         batchNum: this.item.batchNum,
         status: '0',
@@ -649,6 +673,8 @@ export default {
         })
         this.$router.go(-1)
       }
+
+      this.submitOperLoading = false;
     },
     beforeUpload (file) {
       let fd = new FormData()
