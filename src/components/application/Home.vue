@@ -11,6 +11,7 @@
                    @click="temporaryStorage"
                    plain v-show="false">暂存</el-button>
         <el-button type="primary"
+                   :loading="submitLoading"
                    @click="submit"
                    plain>提交</el-button>
         <el-upload class="file_upload"
@@ -244,7 +245,8 @@ export default {
       fileName: '',
       fits: null,
       searchTime: '',
-      temporaryLoading:false
+      temporaryLoading:false,
+      submitLoading:false
     }
   },
   computed: {
@@ -280,26 +282,28 @@ export default {
       row.selected = !row.selected;
     },
     temporaryStorage () {
+      if(this.temporaryLoading){
+        return;
+      }
+      this.temporaryLoading = true;
+
       let selectedData = this.allData.filter(t => t.selected)
       if (selectedData.length > 0) {
-        if(this.temporaryLoading){
-          return;
-        }
-        this.temporaryLoading = true;
         let proms = {
           list: selectedData
         }
         this.$http.post('/shiper/HoldInsuranceOrders', proms).then(res => {
-          if (res.status === 200) {
+          if(res.status === 200) {
             this.$message({
               message: '暂存成功',
               type: 'success'
             })
             this.fits = ""
           }
+          this.temporaryLoading = false;
         })
-        this.temporaryLoading = false;
       } else {
+        this.temporaryLoading = false;
         this.$message({
           message: '请选择暂存内容',
           type: 'warning'
@@ -307,6 +311,11 @@ export default {
       }
     },
     submit () {
+      if(this.submitLoading){
+        return;
+      }
+      this.submitLoading = true;
+
       let selectedData = this.allData.filter(t => t.selected)
       if (selectedData.length > 0) {
         let obj = {
@@ -330,8 +339,10 @@ export default {
             this.getTableData()
             this.fits = ""
           }
+          this.submitLoading = false;
         })
       } else {
+        this.submitLoading = false;
         this.$message({
           message: '请选择提交内容',
           type: 'warning'
