@@ -247,22 +247,25 @@
                         v-if="scope.row.state ==='3' ">已审核</el-button>
             </template>
           </el-table-column>
+
+          <div slot="append" style="width: 100%;display: flex;flex-direction: column;">
+            <div class='thyj' style="width: 100%;">
+              <h4 class="fs">退回意见：</h4>
+              <ul id="is">
+                <li v-for="todos in getList"
+                    :key="todos.length" style="border-color: #888888;">{{todos.content}}</li>
+              </ul>
+            </div>
+            <el-input type="textarea"
+                      v-if="nameType === 'BROKER'"
+                      :rows="5"
+                      class="inls"
+                      placeholder="请输入退回意见"
+                      v-model="textarea2">
+            </el-input>
+          </div>
         </el-table>
 
-      <div class='thyj'>
-        <h4 class="fs">退回意见：</h4>
-        <ul id="is">
-          <li v-for="todos in getList"
-              :key="todos.length">{{todos.content}}</li>
-        </ul>
-      </div>
-      <el-input type="textarea"
-                v-if="nameType === 'BROKER'"
-                :rows="5"
-                class="inls"
-                placeholder="请输入退回意见"
-                v-model="textarea2">
-      </el-input>
     </div>
   </div>
 </template>
@@ -742,10 +745,7 @@ export default {
 }
 .thyj {
   width: 100%;
-  height: 80px;
-  line-height: 80px;
   background: #b4b4b4;
-  /* margin-top: 30px; */
 }
 #is {
   padding: 0;
@@ -760,10 +760,13 @@ export default {
   border-radius: 5px;
 }
 .fs {
-  margin:0 0 0 50px;
+  color: black;
+  font-size: 15px;
+  margin:15px 0 15px 50px;
 }
 .inls {
   margin-top: 20px;
+  margin-bottom: 2px;
 }
 .title_s {
   width: 100%;
