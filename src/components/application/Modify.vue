@@ -368,7 +368,8 @@ export default {
           d.throughAreaSum = arr.join('\n')
 
           if (d['insuranceAmount']) {
-            d['insuranceAmountCurrency'] = d['currency'] + '\n' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
+            var amountStr = d['insuranceAmount'].replace(/\s*/g,"");
+            d['insuranceAmountCurrency'] = d['currency'] + '\n' + (amountStr.replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'));
           } else {
             d['insuranceAmountCurrency'] = ''
           }
@@ -424,7 +425,8 @@ export default {
           d.throughAreaSum = arr.join('\n');
 
           if (d['insuranceAmount']) {
-            d['insuranceAmountCurrency'] = d['currency'] + '\n' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
+            var amountStr = d['insuranceAmount'].replace(/\s*/g,"");
+            d['insuranceAmountCurrency'] = d['currency'] + '\n' + (amountStr.replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'));
           } else {
             d['insuranceAmountCurrency'] = ''
           }
@@ -473,7 +475,8 @@ export default {
           d.throughAreaSum = arr.join('\n')
 
           if (d['insuranceAmount']) {
-            d['insuranceAmountCurrency'] = d['currency'] + '\n' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
+            var amountStr = d['insuranceAmount'].replace(/\s*/g,"");
+            d['insuranceAmountCurrency'] = d['currency'] + '\n' + (amountStr.replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'));
           } else {
             d['insuranceAmountCurrency'] = ''
           }
