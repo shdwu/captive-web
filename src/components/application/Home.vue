@@ -397,7 +397,6 @@ export default {
 
     },
     handleCurrentChange(val) {
-      console.log(123)
       this.currentPage = val
       this.getTableData()
     },
@@ -448,7 +447,8 @@ export default {
 
             if (d['insuranceAmount']) {
               // 保险金额
-              d['insuranceAmountCurrency'] = d['currency'] + '\n' + (d['insuranceAmount'].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
+              var amountStr = d['insuranceAmount'].replace(/\s*/g,"");
+              d['insuranceAmountCurrency'] = d['currency'] + '\n' + (amountStr.replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'));
             } else {
               d['insuranceAmountCurrency'] = ''
             }
