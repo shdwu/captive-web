@@ -760,6 +760,7 @@ export default {
   border-radius: 5px;
 }
 .fs {
+  color: black;
   font-size: 15px;
   margin:15px 0 15px 50px;
 }
