@@ -761,7 +761,7 @@ export default {
 }
 .fs {
   font-size: 15px;
-  margin:20px 0 10px 50px;
+  margin:15px 0 15px 50px;
 }
 .inls {
   margin-top: 20px;
