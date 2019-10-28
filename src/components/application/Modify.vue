@@ -553,6 +553,7 @@ export default {
         fileName: this.item.fileName,
         fileId: this.item.fileId,
         createby: this.item.createby,
+        createName:this.item.createName,
         createtime: this.item.createtime,
         uuid: this.item.uuid
       }
@@ -594,6 +595,7 @@ export default {
           fileName: this.item.fileName,
           fileId: this.item.fileId,
           createby: this.item.createby,
+          createName:this.item.createName,
           createtime: this.item.createtime,
           uuid: this.item.uuid
         }

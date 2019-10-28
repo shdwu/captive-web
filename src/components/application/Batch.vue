@@ -398,6 +398,7 @@ export default {
           page
         }
       })
+      console.log("haitang isGetList",res);
       if (res.status === 200) {
         this.tableData = res.data.list
         this.total = res.data.total
