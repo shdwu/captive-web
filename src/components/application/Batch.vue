@@ -95,6 +95,9 @@
         <el-table-column prop="createby"
                          label="申报公司">
         </el-table-column>
+        <el-table-column prop="createName"
+                         label="提交人">
+        </el-table-column>
         <el-table-column prop="createtime"
                          label="提交时间">
         </el-table-column>
