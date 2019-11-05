@@ -143,6 +143,8 @@
           <el-table-column label="船名"
                           width="90px"
                           prop="shipCName">
+                          <!-- 表格内换行 -->
+                          <template scope="scope">{{scope.row.shipCName}}</template>
           </el-table-column>
           <el-table-column label="特战区"
                           width="85px"
