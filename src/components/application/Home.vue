@@ -415,7 +415,7 @@ export default {
         // return d['throughAreaSum'];
     },
     getTableData(params,sum) {
-      this.loading = true
+      this.loading = true;
       if(this.allData && this.allData.length > 0 && !params) {
         this.tableData = this.allData.slice((this.currentPage - 1 )*this.pageSize, this.currentPage*this.pageSize)
         this.$nextTick(() => {
@@ -483,12 +483,13 @@ export default {
       }
     },
     searchByTime() {
+      this.currentPage = 1;
       if (this.searchTime && this.searchTime.length >= 2) {
         let startDate = dateFormat(this.searchTime[0], "yyyy-mm-dd")
         let endDate = dateFormat(this.searchTime[1], "yyyy-mm-dd")
         this.getTableData({startDate, endDate})
       } else {
-        this.getTableData()
+        this.getTableData({})
       }
     },
     async getBatchList (batchNum = '', createBy = '', status = '', page = 1) {
