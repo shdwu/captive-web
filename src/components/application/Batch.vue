@@ -341,7 +341,7 @@ export default {
       return null;
     },
     detailsSearch() {
-      let [startDate,endDate] = (this.startEndDate.length>0)?this.startEndDate:[];
+      let [startDate,endDate] = (this.startEndDate && (this.startEndDate.length>0))?this.startEndDate:[];
       let par = {
         state:this.state,
         shipEName: this.searchShipName,
