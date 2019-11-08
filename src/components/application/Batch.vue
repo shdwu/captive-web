@@ -356,7 +356,7 @@ export default {
     },
 
     detailsSearchExport(){
-      let [startDate,endDate] = (this.startEndDate.length>0)?this.startEndDate:[];
+      let [startDate,endDate] = (this.startEndDate && (this.startEndDate.length>0))?this.startEndDate:[];
       let startTime = startDate?this.dateFormat(startDate) + ' 00:00:00':'';
       let endTime = endDate?this.dateFormat(endDate) + ' 23:59:59':'';
       let reqUrl = `/files/exportDeclared?state=${this.state}&shipEName=${this.searchShipName}'+
@@ -398,7 +398,7 @@ export default {
           page
         }
       })
-      console.log("haitang isGetList",res);
+
       if (res.status === 200) {
         this.tableData = res.data.list
         this.total = res.data.total

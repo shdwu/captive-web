@@ -2,6 +2,7 @@ import Home from './Home'
 import Batch from './Batch'
 import Modify from './Modify'
 import Personal from './Personal'
+import Monitor from './Monitor'
 
 export default [
     {
@@ -23,5 +24,10 @@ export default [
         path: '/personal',
         name: 'personal',
         component: Personal
+    },
+    {
+        path: '/monitor',
+        name: 'monitor',
+        component: Monitor
     }
 ]
