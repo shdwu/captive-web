@@ -85,7 +85,7 @@ export default {
       let par = {
         startDate: (startDate?this.dateFormat(startDate):''),
         endDate: (endDate?this.dateFormat(endDate):''),
-        name: (this.searchShipName?('%' + this.searchShipName + '%'):'')
+        name: (this.searchShipName?this.searchShipName:'')
       };
       return par;
     },
