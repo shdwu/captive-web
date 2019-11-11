@@ -36,11 +36,11 @@
                 :empty-text="emptyText"
                 v-loading="loading"
                 style="width: 100%;cursor:pointer;">
-        <el-table-column prop="date"
+        <el-table-column prop="dateExt"
                          label="日期">
         </el-table-column>
         <el-table-column prop="shipEn"
-                         label="船名">
+                         label="异常船舶">
         </el-table-column>
       </el-table>
 
@@ -120,6 +120,15 @@ export default {
       link.click()
     },
 
+    handleDateTime(array){
+      let list = [];
+      for(let item of array) {
+          item.dateExt = this.dateFormat(item.date);
+          list.push(item);
+      }
+      return list;
+    },
+
     getTableData() {
       this.loading = true;
       let par = this.getSearchPar();
@@ -130,9 +139,9 @@ export default {
         method: 'post',
         params: par
       }).then(res => {
-        if((res.status === 200) && (res.data.total>0)) {
+        if(res.status === 200) {
           this.total = res.data.total;
-          this.tableData = res.data.list;
+          this.tableData = this.handleDateTime(res.data.list);
         }
         this.emptyText = (this.total>0)?"":"暂无数据";
         this.loading = false;
