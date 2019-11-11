@@ -18,16 +18,16 @@
                  class="el-menu-demo"
                  mode="horizontal"
                  :router="true">
+          <template v-for="(menu,idx) in menuList">
+            <el-menu-item :index="menu.index">{{menu.name}}</el-menu-item>
+          </template>
 
-          <el-menu-item index="/application">首页</el-menu-item>
-          <el-menu-item index="/batch">申报批次</el-menu-item>
-          <el-menu-item index="/personal">账号安全</el-menu-item>
           <div class="vademecum">
             <!-- href="http://localhost:8000//static/media/manual.6e4d023.pdf" -->
             <a class="aaxx" target="_blank" :href="manual">
                 <span class="vadchildren">用户手册</span>
             </a>
-        </div>
+          </div>
         </el-menu>
       </div>
     </div>
@@ -70,7 +70,8 @@ export default {
     return {
       manual,
       nameType: '',
-      companyName: ''
+      companyName: '',
+      menuList:[]
     }
   },
   computed: {
@@ -78,7 +79,7 @@ export default {
     activePath () {
       const { path } = this.$route
       const pathArr = path.split('/')
-      return pathArr.length === 3 ? '/' + pathArr[1] : path
+      return pathArr.length === 3 ? '/' + pathArr[1] : path;
     }
   },
   methods: {
@@ -108,7 +109,43 @@ export default {
     }
   },
   created () {
-    this.companyName = localStorage.getItem('companyName')
+    this.companyName = localStorage.getItem('companyName');
+    this.nameType = localStorage.getItem('nametype');
+    if(this.nameType === 'SHIPOWNER') {
+      this.menuList = [
+        {
+          name:"首页",
+          index:"/application"
+        },
+        {
+          name:"申报批次",
+          index:"/batch"
+        },
+        {
+          name:"账号安全",
+          index:"/personal"
+        }
+      ];
+    } else {
+      this.menuList = [
+        {
+          name:"首页",
+          index:"/application"
+        },
+        {
+          name:"申报批次",
+          index:"/batch"
+        },
+        {
+          name:"AIS监控",
+          index:"/monitor"
+        },
+        {
+          name:"账号安全",
+          index:"/personal"
+        }
+      ];
+    }
   }
 }
 </script>
