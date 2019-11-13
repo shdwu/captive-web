@@ -87,7 +87,7 @@ import manual from '@/assets/manual.pdf'
 export default {
   data () {
     return {
-      codeUrl:"/api/auth/getCode",
+      codeUrl:"/api/auth/getCode?time="+(new Date()).getTime(),
       infoUrl,
       light,
       manual,
