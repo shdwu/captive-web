@@ -39,6 +39,9 @@
         <el-table-column prop="dateExt"
                          label="日期">
         </el-table-column>
+        <el-table-column prop="mmsi"
+                         label="mmsi">
+        </el-table-column>
         <el-table-column prop="shipEn"
                          label="异常船舶">
         </el-table-column>
