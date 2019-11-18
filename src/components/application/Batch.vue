@@ -8,6 +8,7 @@
       <div class="info_ss" style="height: 40px;line-height: 40px;">
         <span class="cm" style="font-size: 16px;">申报批次：</span>
       </div>
+	  
       <div class="info_ss">
         <span class="cm">批次</span>
         <el-input placeholder="请输入申报批次"
