@@ -6,14 +6,15 @@
   "author": "yy <250276837@qq.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "cross-env NODE_ENV='development' HOST='0.0.0.0' PORT='8000' webpack-dev-server --inline --progress --config webpack.conf.js",
+    "dev": "cross-env NODE_ENV='development' HOST='0.0.0.0' PORT='9000' webpack-dev-server --inline --progress --config webpack.conf.js",
     "start": "yarn run dev",
     "build": "node build/build.js"
   },
   "dependencies": {
     "dateformat": "^3.0.3",
     "vue": "^2.6.10",
-    "vue-route": "^1.5.1"
+    "vue-route": "^1.5.1",
+    "@csnt/map-core": "^0.0.12-alpha.10"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.2",

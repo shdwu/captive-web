@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/components/Login'
+import Test from '@/components/test'
 import * as Application from '@/components/application'
 Vue.use(Router)
 
@@ -15,11 +16,18 @@ const routers = new Router({
     name: 'login'
   },
   {
+    path: '/test',
+    component: Test,
+    name: 'test'
+  },
+  {
     path: '/application',
     component: Application.app,
     name: 'application',
     children: Application.router
-  }]
+  }
+
+]
 })
 
 routers.beforeEach((to, from, next) => {
@@ -32,7 +40,6 @@ routers.beforeEach((to, from, next) => {
     // 登录
     next()
   } else {
-    // 没有登录
     next('/login')
   }
 })

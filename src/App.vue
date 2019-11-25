@@ -1,24 +1,25 @@
 <template>
-<!-- hello world -->
+  <!-- hello world -->
   <div id="app">
-      <router-view />
+    <router-view />
   </div>
 </template>
 
 <script>
-export default {
-  name: 'App'
+  export default {
+    name: 'App'
 
-}
+  }
 </script>
 
 <style>
-#app {
-  height: 100%;
-}
-html,
-body {
-  padding: 0;
-  margin: 0;
-}
+  #app {
+    height: 100%;
+  }
+
+  html,
+  body {
+    padding: 0;
+    margin: 0;
+  }
 </style>
