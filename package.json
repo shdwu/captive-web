@@ -6,7 +6,7 @@
   "author": "yy <250276837@qq.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "cross-env NODE_ENV='development' HOST='0.0.0.0' PORT='9000' webpack-dev-server --inline --progress --config webpack.conf.js",
+    "dev": "cross-env NODE_ENV='development' HOST='0.0.0.0' PORT='8000' webpack-dev-server --inline --progress --config webpack.conf.js",
     "start": "yarn run dev",
     "build": "node build/build.js"
   },

@@ -3,6 +3,7 @@ import Batch from './Batch'
 import Modify from './Modify'
 import Personal from './Personal'
 import Monitor from './Monitor'
+
 export default [
     {
         path: '',

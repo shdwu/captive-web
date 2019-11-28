@@ -23,9 +23,7 @@
               <span class="vadchildren">用户手册</span>
             </a>
           </div>
-          <!-- <el-button @click="mapButton">map button</el-button> -->
         </el-menu>
-
       </div>
     </div>
     <!-- 内容区域 -->
@@ -82,15 +80,6 @@
       }
     },
     methods: {
-
-      mapButton() {
-        this.$router.push({
-          name: 'test'
-        })
-      },
-
-
-
       // 退出功能
       async logout() {
         try {
@@ -132,7 +121,6 @@
             name: "账号安全",
             index: "/personal"
           }
-
         ];
       } else {
         this.menuList = [{

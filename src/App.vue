@@ -6,6 +6,7 @@
 </template>
 
 <script>
+// import '@csnt/map-core/dist/map-core.min.css';
   export default {
     name: 'App'
 
@@ -13,6 +14,7 @@
 </script>
 
 <style>
+
   #app {
     height: 100%;
   }
