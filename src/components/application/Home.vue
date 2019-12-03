@@ -85,7 +85,7 @@
         <el-table-column label="航次" width="70px" prop="line">
           <template scope="scope">
             <el-button type="text" style="color:#606266" @click="toogleExpand(scope.row)">
-              {{scope.row.line}}
+              <span class="line-class" @click="clickLine(scope.row)">{{scope.row.line}}</span>
             </el-button>
           </template>
         </el-table-column>
@@ -343,15 +343,35 @@
         }
         // return d['throughAreaSum'];
       },
+
+      // 点击航次跳转到地图页，查看当前船舶的航迹信息
+      clickLine(row) {
+        if(row){
+          let mmsi = row.mmsi;
+          if(row.orderDtos&&row.orderDtos.length != 0){
+            let start =  row.orderDtos[0].intime.replace(/-/g, '/'); //将时间字符串转成格式2019/11/11 20:11:11兼容ios
+            let end = row.orderDtos[row.orderDtos.length-1].outtime.replace(/-/g, '/');
+            start =  start.substring(0,10)+' 00:00'
+            end =  end.substring(0,10)+' 23:59'
+            start = Date.parse(start) //将时间字符串转时间戳
+            end = Date.parse(end)
+            //  打开新的页面并跳转到该地址
+            window.open('http://localhost:8080/#/?mmsi=' + mmsi + '&start=' + start + '&end=' + end)
+          }
+        }
+     },
+
       getTableData(params, sum) {
         this.loading = true;
         if (this.allData && this.allData.length > 0 && !params) {
           this.tableData = this.allData.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize)
+
           this.$nextTick(() => {
             this.toggleSelection(this.tableData)
           })
           this.loading = false
         } else {
+
 
           getOrderList(params).then(res => {
             //千分位 特战区 总时间
@@ -391,6 +411,7 @@
             }
 
             this.allData = res.data.list
+
             if (!(this.allData && this.allData.length > 0)) {
               this.emptyText = '暂无数据'
             }
@@ -406,6 +427,7 @@
           })
         }
       },
+
       toggleSelection(rows) {
         if (rows) {
           rows.forEach(row => {
@@ -603,7 +625,7 @@
   }
 
   a {
-    text-decoration: none;
+    /* text-decoration: none; */
   }
 
   .el-table__body,
@@ -619,5 +641,12 @@
 
   .el-table .cell {
     white-space: pre-line;
+  }
+</style>
+
+<style scoped>
+  .line-class {
+    text-decoration: underline;
+    color: #409EFF
   }
 </style>
