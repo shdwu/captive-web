@@ -5,17 +5,17 @@
     <!-- 内容区域 -->
     <div class="body_table">
       <div class="btn_bar">
-        <el-button @click="exportExcel" class="out-button" type="primary" plain :loading="temporaryLoading" >导出
+        <el-button @click="exportExcel" class="out-button" type="primary" plain :loading="temporaryLoading">导出
         </el-button>
         <div style="display: inline;" v-if="userType === 'SHIPOWNER'">
           <el-button type="primary" :loading="temporaryLoading" @click="temporaryStorage" plain v-show="false">暂存
           </el-button>
-          <el-button type="primary" plain :loading="submitLoading" @click="submit" >提交</el-button>
+          <el-button type="primary" plain :loading="submitLoading" @click="submit">提交</el-button>
           <el-upload class="file_upload" action="/files" :before-upload="beforeUpload" list-type="text">
-            <el-button size="small" type="primary"   @click="open4">上传附件</el-button>
+            <el-button size="small" type="primary" @click="open4">上传附件</el-button>
             <div class="el-upload__tip"><span>{{fits}}</span></div>
           </el-upload>
-   
+
           <div class="fl">
             <span class="cm">进入特战区时间</span>
             <el-date-picker v-model="searchTime" type="daterange" range-separator="至" start-placeholder="开始日期"
@@ -28,9 +28,9 @@
       <el-table id="detailTeble" :data="tableData" :default-expand-all="expandAll" @select="handleSelectionChange"
         @select-all="handleSelectAll" @row-click="showHide" :row-class-name="switchRowClass" :empty-text="emptyText"
         v-loading="loading" ref="tableMain" style="width: 100%;font-size:12px;padding-left:20px">
-        <el-table-column type="selection" width="29">
+        <el-table-column type="selection" width="45">
         </el-table-column>
-        <el-table-column type="expand">
+        <el-table-column width="25" type="expand">
           <template slot-scope="props">
             <el-table :data="props.row.orderDtos" border :cell-style="tableRowClassName"
               style="width: 100%;font-size:12px">
@@ -71,18 +71,18 @@
               </el-table-column>
             </el-table>
           </template>
-
         </el-table-column>
+
         <el-table-column label="船名" width="90px" prop="shipCName">
         </el-table-column>
-        <el-table-column label="航次" width="70px" prop="line">
+        <el-table-column label="航次" align='center' width="70px" prop="line">
           <template scope="scope">
             <el-button type="text" style="color:#606266" @click="toogleExpand(scope.row)">
               <span class="line-class" @click="clickLine(scope.row)">{{scope.row.line}}</span>
             </el-button>
           </template>
         </el-table-column>
-        <el-table-column label="出发港/出发时间" prop="departurePort">
+        <el-table-column label="出发港/出发时间" align='center' prop="departurePort">
           <template slot-scope="scope">
             <span>{{ scope.row.departurePort }}</span><br>
             <span>{{scope.row.etd}}</span>
@@ -90,17 +90,13 @@
         </el-table-column>
         <!-- <el-table-column label="出发时间" width="90px" prop="etd_ext">
         </el-table-column> -->
-        <el-table-column label="目的港/到达时间" prop="arrivalPort">
+        <el-table-column label="目的港/到达时间" align='center' prop="arrivalPort">
           <template slot-scope="scope">
             <span>{{ scope.row.arrivalPort }}</span><br>
             <span>{{scope.row.eta}}</span>
           </template>
         </el-table-column>
-        <!-- <el-table-column label="到达时间" width="90px" prop="eta_ext">
-        </el-table-column> -->
-
-        <el-table-column label="特战区" width="85px" prop="throughAreaSum">
-          <!-- 表格内换行 -->
+        <el-table-column label="特战区" width="100px" prop="throughAreaSum">
           <template scope="scope">{{scope.row.throughAreaSum}}</template>
         </el-table-column>
         <el-table-column label="天数" width="60px" prop="daysPlus">
@@ -110,12 +106,9 @@
             </el-button>
           </template>
         </el-table-column>
-
-
-
-        <el-table-column width="162px" label="挂靠港" prop="ports">
+        <el-table-column  label="挂靠港" align='center' prop="ports">
         </el-table-column>
-        <el-table-column prop="insuranceAmountCurrency" width="135px" label="保险金额">
+        <el-table-column prop="insuranceAmountCurrency" align='center' width="135px" label="保险金额">
           <template scope="scope">{{scope.row.insuranceAmountCurrency}}</template>
         </el-table-column>
         <el-table-column label="无需申报" v-if="userType === 'SHIPOWNER'">
@@ -139,7 +132,7 @@
   import dateFormat from 'dateformat'
   import storage from '../../util/storage.js'
   import FileSaver from 'file-saver'
-import XLSX from 'xlsx'
+  import XLSX from 'xlsx'
   import {
     getOrderList
   } from '@/api/order'
@@ -204,7 +197,7 @@ import XLSX from 'xlsx'
     },
     methods: {
 
-        // 到处excel的方法
+      // 到处excel的方法
       exportExcel() {
         // 绑定table的id
         var wb = XLSX.utils.table_to_book(document.querySelector('#detailTeble'));
@@ -546,11 +539,12 @@ import XLSX from 'xlsx'
 <style lang="postcss" scoped>
   /* variables */
   $maxWidth: 1200px;
-  .out-button{
+
+  .out-button {
     margin-left: 15px;
   }
- 
-  .el-button{
+
+  .el-button {
     height: 40px;
   }
 
