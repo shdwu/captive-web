@@ -1,9 +1,11 @@
 <template>
+  <!-- s申报批次点击查询后的弹出框 -->
   <div class="info">
     <!-- 背景图片 -->
     <div class="bgc" :style="bgc"></div>
     <!-- 具体内容 -->
     <div class="info_title">
+
       <div class="info_ss" style="height: 40px;line-height: 40px;">
         <span class="cm" style="font-size: 16px;">申报批次：</span>
       </div>
@@ -45,7 +47,7 @@
         <el-button type="primary" size="mini" @click="detailsSearch()" plain>查询</el-button>
       </div>
 
-      <el-table :data="tableData" @cell-click='moreClick' :empty-text="emptyText" v-loading="loading"
+      <el-table id="detailTeble" :data="tableData" @cell-click='moreClick' :empty-text="emptyText" v-loading="loading"
         style="width: 100%;cursor:pointer;">
         <el-table-column prop="batchNum" label="申报批次">
         </el-table-column>
@@ -54,6 +56,10 @@
         <el-table-column prop="createName" label="提交人">
         </el-table-column>
         <el-table-column prop="createtime" label="提交时间">
+        </el-table-column>
+        <el-table-column prop="createtime" label="审核时间">
+        </el-table-column>
+        <el-table-column prop="createtime" label="审核人">
         </el-table-column>
         <el-table-column label="状态">
           <template slot-scope="scope">
@@ -67,6 +73,8 @@
         :page-size="pagesize" @current-change="changePage">
       </el-pagination>
     </div>
+
+
     <el-dialog :visible.sync="dialogVisible" width="80%">
       <template slot="title">
         <div class="dialog-layer">
@@ -81,7 +89,6 @@
             <template slot-scope="props">
               <el-table :data="props.row.orderDtos" :cell-style="tableRowClassName" border style="width: 100%">
                 <el-table-column prop="throughArea" label="特战区域名称">
-
                 </el-table-column>
                 <el-table-column prop="intime" width="100px" label="进入时间">
                 </el-table-column>
@@ -131,16 +138,27 @@
           </el-table-column>
           <el-table-column label="船名" prop="shipCName">
           </el-table-column>
-          <el-table-column label="航次" prop="line">
+          <el-table-column width="70px" label="航次" prop="line">
+            <template scope="scope">
+              <span class="line-class" @click="clickLine(scope.row)">{{scope.row.line}}</span>
+            </template>
           </el-table-column>
-          <el-table-column label="出发港" prop="departurePort">
+          <el-table-column label="出发港/时间" prop="departurePort">
+            <template slot-scope="scope">
+              <span>{{ scope.row.departurePort }}</span><br>
+              <span>{{scope.row.etd}}</span>
+            </template>
           </el-table-column>
-          <el-table-column label="出发时间" width="100px" prop="etd">
-          </el-table-column>
+          <!-- <el-table-column label="出发时间" width="100px" prop="etd">
+          </el-table-column> -->
           <el-table-column label="目的港" prop="arrivalPort">
+            <template slot-scope="scope">
+              <span>{{ scope.row.arrivalPort }}</span><br>
+              <span>{{scope.row.eta}}</span>
+            </template>
           </el-table-column>
-          <el-table-column label="到达时间" width="100px" prop="eta">
-          </el-table-column>
+          <!-- <el-table-column label="到达时间" width="100px" prop="eta">
+          </el-table-column> -->
           <el-table-column label="挂靠港" prop="ports">
           </el-table-column>
           <el-table-column prop="insuranceAmount" label="保险金额">
@@ -177,6 +195,8 @@
 </template>
 <script>
   import * as batchApi from '@/api/batch'
+  import storage from '../../util/storage.js'
+
 
   export default {
     data() {
@@ -229,6 +249,12 @@
       }
     },
     methods: {
+
+
+
+      clickLine(row) {
+        storage.clickLine(row);
+      },
       dateFormat(date) {
         if (date) {
           return new Date(date).toLocaleDateString().replace(/\//g, '-');
@@ -296,6 +322,7 @@
 
         if (res.status === 200) {
           this.tableData = res.data.list
+          console.log(this.tableData)
           this.total = res.data.total
           this.page = res.data.page
         }
@@ -306,6 +333,9 @@
         }
         this.loading = false
       },
+
+
+      // tableData的数据
       async isGetLists(batchNum = '', createBy = '', status = '', page = 1) {
         this.loading = true
         batchNum = (batchNum === '') ? batchNum : ('%' + batchNum + '%');
@@ -321,6 +351,7 @@
 
         if (res.status === 200) {
           this.tableData = res.data.list
+          console.log(this.tableData)
           this.total = res.data.total
           this.page = res.data.page
         }
@@ -346,6 +377,7 @@
 
         if (res.status === 200) {
           this.tableData = res.data.list
+          console.log(this.tableData)
           this.total = res.data.total
           this.page = res.data.page
         }

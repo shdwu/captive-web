@@ -23,4 +23,9 @@
     padding: 0;
     margin: 0;
   }
+
+ .line-class {
+    text-decoration: underline;
+    color: #409EFF
+  }
 </style>

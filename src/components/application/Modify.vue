@@ -1,4 +1,5 @@
 <template>
+  <!-- 申报批次点击待审核后的页面 -->
   <div class="info">
     <!-- 头部背景图片 -->
     <div class="logo_bgc" :style="bgc"></div>
@@ -42,9 +43,9 @@
         </div>
       </div>
 
-      <el-table :data="tableData" :default-expand-all="true" :empty-text="emptyText" v-loading="loading" ref="tableMain"
+      <el-table  align='center' :data="tableData" :default-expand-all="true" :empty-text="emptyText" v-loading="loading" ref="tableMain"
         @row-click="showHide" style="width: 100%;font-size:12px">
-        <el-table-column type="expand">
+        <el-table-column width='30' type="expand">
           <template slot-scope="props">
             <el-table :data="props.row.orderDtos" border :cell-style="tableRowClassName"
               style="width: 100%;font-size:12px;cursor:hand">
@@ -71,7 +72,6 @@
               </el-table-column>
               <el-table-column label="安保人数">
                 <template slot-scope="scope">
-
                   <el-select v-model="scope.row.guardsNo" v-if="nameType === 'SHIPOWNER' &&  props.row.state ==='2' "
                     placeholder="请选择">
                     <el-option v-for="todos in guardList" :key="todos.length" :label="todos.value" :value="todos.value">
@@ -93,45 +93,61 @@
             </el-table>
           </template>
         </el-table-column>
-        <el-table-column label="船名" width="90px" prop="shipCName">
-          <!-- 表格内换行 -->
+        <el-table-column  label="船名" width="90px" prop="shipCName">
           <template scope="scope">{{scope.row.shipCName}}</template>
         </el-table-column>
-        <el-table-column label="特战区" width="85px" prop="throughAreaSum">
+        <el-table-column align='center' label="航次" width="60px" prop="line">
+          <template scope="scope">
+            <el-button type="text" style="color:#606266" @click="toogleExpand(scope.row)">
+             <span class="line-class" @click="clickLine(scope.row)">{{scope.row.line}}</span>
+            </el-button>
+          </template>
+        </el-table-column>
+        <el-table-column align='center' label="出发港/时间" prop="departurePort">
+          <template slot-scope="scope">
+            <span>{{ scope.row.departurePort }}</span><br>
+            <span>{{scope.row.etd_ext}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align='center' label="目的港/时间" prop="arrivalPort">
+          <template slot-scope="scope">
+            <span>{{ scope.row.arrivalPort }}</span><br>
+            <span>{{scope.row.eta_ext}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column  label="特战区" width="85px" prop="throughAreaSum">
           <!-- 表格内换行 -->
           <template scope="scope">{{scope.row.throughAreaSum}}</template>
         </el-table-column>
-        <el-table-column label="天数" width="60px" prop="daysPlus">
+        <el-table-column align='center' label="天数" width="50px" prop="daysPlus">
           <template scope="scope">
             <el-button type="text" style="color:#606266" @click="toogleExpand(scope.row)">
               {{scope.row.daysPlus}}
             </el-button>
           </template>
         </el-table-column>
-        <el-table-column label="航次" width="70px" prop="line">
-          <template scope="scope">
-            <el-button type="text" style="color:#606266" @click="toogleExpand(scope.row)">
-              {{scope.row.line}}
-            </el-button>
-          </template>
+        <el-table-column align='center' width="130px" label="挂靠港" prop="ports">
         </el-table-column>
-        <el-table-column width="70px" label="出发港" prop="departurePort">
+        <el-table-column align='center' prop="insuranceAmountCurrency" width="100px" label="保险金额">
         </el-table-column>
-        <el-table-column label="出发时间" width="90px" prop="etd_ext">
-        </el-table-column>
-        <el-table-column width="80px" label="目的港" prop="arrivalPort">
-        </el-table-column>
-        <el-table-column label="到达时间" width="90px" prop="eta_ext">
-        </el-table-column>
-        <el-table-column width="130px" label="挂靠港" prop="ports">
-        </el-table-column>
-        <el-table-column prop="insuranceAmountCurrency" width="100px" label="保险金额">
-        </el-table-column>
-        <el-table-column prop="sumPremium" label="最终保费">
+        <el-table-column align='center'  width="220px" prop="sumPremium" label="最终保费">
           <template slot-scope="scope">
-            <el-input v-model="scope.row.sumPremium" oninput="value=value.replace(/^[^0-9]/,'')"
-              v-if="nameType === 'BROKER' && item.status !== '1'"></el-input>
-            <span v-else>{{scope.row.sumPremium}}</span>
+            <div  v-if="nameType === 'BROKER' && item.status !== '1'">
+              <el-form id="amountForm" :label-position="labelPosition" label-width="90px" :model="formLabelAlign">
+                <el-form-item label="赎金险">
+                  <el-input v-model="scope.row.karAmount" oninput="value=value.replace(/^[^0-9]/,'')"></el-input>
+                </el-form-item>
+                <el-form-item label="租金损失险">
+                  <el-input v-model="scope.row.rentLossAmount"></el-input>
+                </el-form-item>
+                <el-form-item label="最终保费">
+                  <el-input v-model="scope.row.sumPremium"></el-input>
+                </el-form-item>
+              </el-form>
+               <!-- <el-input v-model="scope.row.sumPremium" oninput="value=value.replace(/^[^0-9]/,'')"></el-input>
+                  -->
+            </div>
+            <span v-else>{{scope.row.sumPremium}}</span>  
           </template>
         </el-table-column>
         <el-table-column width="70px" prop="needDeclare" label="无需申报">
@@ -142,7 +158,7 @@
             </el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="状态">
+        <el-table-column align='center' label="状态">
           <template slot-scope="scope">
             <el-button type="info" v-if="nameType === 'BROKER' &&  scope.row.state ==='0' "
               :disabled="item.status==='2'? true:false" @click="isRuts(scope.row)">不通过</el-button>
@@ -182,9 +198,11 @@
   </div>
 </template>
 <script>
+ import storage from '../../util/storage.js'
   export default {
     data() {
       return {
+        labelPosition: 'right',
         loading: true,
         emptyText: '加载中',
         tableData: [],
@@ -233,6 +251,9 @@
       }
     },
     methods: {
+      clickLine(row){
+        storage.clickLine(row);
+      },
       showHide(row, column, e) {
         if ((column.label === '最终保费') ||
           (column.label === '无需申报') ||
@@ -645,6 +666,16 @@
   }
 </script>
 <style scoped>
+  #amountForm /deep/ .el-form-item__label{
+    font-size: 12px ;
+  }
+   #amountForm /deep/ .el-form-item{
+     margin-bottom: 0px;
+   }
+  #amountForm /deep/ .el-input__inner{
+       height: 30px;
+   }
+
   .info {
     width: 100%;
   }

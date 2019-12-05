@@ -4,23 +4,28 @@
     <div class="header_image"></div>
     <!-- 内容区域 -->
     <div class="body_table">
-      <div class="btn_bar" v-if="userType === 'SHIPOWNER'">
-        <el-button type="primary" :loading="temporaryLoading" @click="temporaryStorage" plain v-show="false">暂存
+      <div class="btn_bar">
+        <el-button @click="exportExcel" class="out-button" type="primary" plain :loading="temporaryLoading" >导出
         </el-button>
-        <el-button type="primary" :loading="submitLoading" @click="submit" plain>提交</el-button>
-        <el-upload class="file_upload" action="/files" :before-upload="beforeUpload" list-type="text">
-          <el-button size="small" type="primary" @click="open4">上传附件</el-button>
-          <div class="el-upload__tip"><span>{{fits}}</span></div>
-        </el-upload>
-        <div class="fl">
-          <span class="cm">进入特战区时间</span>
-          <el-date-picker v-model="searchTime" type="daterange" range-separator="至" start-placeholder="开始日期"
-            end-placeholder="结束日期">
-          </el-date-picker>
-          <el-button type="primary" @click="searchByTime">搜索</el-button>
+        <div style="display: inline;" v-if="userType === 'SHIPOWNER'">
+          <el-button type="primary" :loading="temporaryLoading" @click="temporaryStorage" plain v-show="false">暂存
+          </el-button>
+          <el-button type="primary" plain :loading="submitLoading" @click="submit" >提交</el-button>
+          <el-upload class="file_upload" action="/files" :before-upload="beforeUpload" list-type="text">
+            <el-button size="small" type="primary"   @click="open4">上传附件</el-button>
+            <div class="el-upload__tip"><span>{{fits}}</span></div>
+          </el-upload>
+   
+          <div class="fl">
+            <span class="cm">进入特战区时间</span>
+            <el-date-picker v-model="searchTime" type="daterange" range-separator="至" start-placeholder="开始日期"
+              end-placeholder="结束日期">
+            </el-date-picker>
+            <el-button type="primary" @click="searchByTime">搜索</el-button>
+          </div>
         </div>
       </div>
-      <el-table :data="tableData" :default-expand-all="expandAll" @select="handleSelectionChange"
+      <el-table id="detailTeble" :data="tableData" :default-expand-all="expandAll" @select="handleSelectionChange"
         @select-all="handleSelectAll" @row-click="showHide" :row-class-name="switchRowClass" :empty-text="emptyText"
         v-loading="loading" ref="tableMain" style="width: 100%;font-size:12px;padding-left:20px">
         <el-table-column type="selection" width="29">
@@ -69,8 +74,31 @@
 
         </el-table-column>
         <el-table-column label="船名" width="90px" prop="shipCName">
-
         </el-table-column>
+        <el-table-column label="航次" width="70px" prop="line">
+          <template scope="scope">
+            <el-button type="text" style="color:#606266" @click="toogleExpand(scope.row)">
+              <span class="line-class" @click="clickLine(scope.row)">{{scope.row.line}}</span>
+            </el-button>
+          </template>
+        </el-table-column>
+        <el-table-column label="出发港/出发时间" prop="departurePort">
+          <template slot-scope="scope">
+            <span>{{ scope.row.departurePort }}</span><br>
+            <span>{{scope.row.etd}}</span>
+          </template>
+        </el-table-column>
+        <!-- <el-table-column label="出发时间" width="90px" prop="etd_ext">
+        </el-table-column> -->
+        <el-table-column label="目的港/到达时间" prop="arrivalPort">
+          <template slot-scope="scope">
+            <span>{{ scope.row.arrivalPort }}</span><br>
+            <span>{{scope.row.eta}}</span>
+          </template>
+        </el-table-column>
+        <!-- <el-table-column label="到达时间" width="90px" prop="eta_ext">
+        </el-table-column> -->
+
         <el-table-column label="特战区" width="85px" prop="throughAreaSum">
           <!-- 表格内换行 -->
           <template scope="scope">{{scope.row.throughAreaSum}}</template>
@@ -82,21 +110,9 @@
             </el-button>
           </template>
         </el-table-column>
-        <el-table-column label="航次" width="70px" prop="line">
-          <template scope="scope">
-            <el-button type="text" style="color:#606266" @click="toogleExpand(scope.row)">
-              <span class="line-class" @click="clickLine(scope.row)">{{scope.row.line}}</span>
-            </el-button>
-          </template>
-        </el-table-column>
-        <el-table-column width="70px" label="出发港" prop="departurePort">
-        </el-table-column>
-        <el-table-column label="出发时间" width="90px" prop="etd_ext">
-        </el-table-column>
-        <el-table-column width="80px" label="目的港" prop="arrivalPort">
-        </el-table-column>
-        <el-table-column label="到达时间" width="90px" prop="eta_ext">
-        </el-table-column>
+
+
+
         <el-table-column width="162px" label="挂靠港" prop="ports">
         </el-table-column>
         <el-table-column prop="insuranceAmountCurrency" width="135px" label="保险金额">
@@ -121,6 +137,9 @@
 </template>
 <script>
   import dateFormat from 'dateformat'
+  import storage from '../../util/storage.js'
+  import FileSaver from 'file-saver'
+import XLSX from 'xlsx'
   import {
     getOrderList
   } from '@/api/order'
@@ -184,6 +203,31 @@
       }
     },
     methods: {
+
+        // 到处excel的方法
+      exportExcel() {
+        // 绑定table的id
+        var wb = XLSX.utils.table_to_book(document.querySelector('#detailTeble'));
+        /* get binary string as output */
+        var wbout = XLSX.write(wb, {
+          bookType: "xlsx",
+          bookSST: true,
+          type: "array"
+        });
+        try {
+          FileSaver.saveAs(
+            new Blob([wbout], {
+              type: "application/octet-stream"
+            }),
+            "统计报表.xlsx" //到处的名字
+          );
+        } catch (e) {
+          if (typeof console !== "undefined") console.log(e, wbout);
+        }
+        return wbout;
+      },
+
+
       showHide(row, column, e) {
         if (column.label === '无需申报') {
           return;
@@ -346,20 +390,23 @@
 
       // 点击航次跳转到地图页，查看当前船舶的航迹信息
       clickLine(row) {
-        if(row){
-          let mmsi = row.mmsi;
-          if(row.orderDtos&&row.orderDtos.length != 0){
-            let start =  row.orderDtos[0].intime.replace(/-/g, '/'); //将时间字符串转成格式2019/11/11 20:11:11兼容ios
-            let end = row.orderDtos[row.orderDtos.length-1].outtime.replace(/-/g, '/');
-            start =  start.substring(0,10)+' 00:00'
-            end =  end.substring(0,10)+' 23:59'
-            start = Date.parse(start) //将时间字符串转时间戳
-            end = Date.parse(end)
-            //  打开新的页面并跳转到该地址
-            window.open('http://localhost:8080/#/?mmsi=' + mmsi + '&start=' + start + '&end=' + end)
-          }
-        }
-     },
+        storage.clickLine(row);
+        // if (row) {
+        //   let mmsi = row.mmsi;
+        //   if (row.orderDtos && row.orderDtos.length != 0) {
+        //     let start = row.orderDtos[0].intime.replace(/-/g, '/'); //将时间字符串转成格式2019/11/11 20:11:11兼容ios
+        //     let end = row.orderDtos[row.orderDtos.length - 1].outtime.replace(/-/g, '/');
+        //     start = start.substring(0, 10) + ' 00:00'
+        //     end = end.substring(0, 10) + ' 23:59'
+        //     start = new Date(start).getTime()
+        //     end = new Date(end).getTime()
+        //     // start = Date.parse(start) //将时间字符串转时间戳
+        //     // end = Date.parse(end)
+        //     //  打开新的页面并跳转到该地址
+        //     window.open('http://localhost:8080/#/?mmsi=' + mmsi + '&start=' + start + '&end=' + end)
+        //   }
+        // }
+      },
 
       getTableData(params, sum) {
         this.loading = true;
@@ -417,6 +464,7 @@
             }
             this.tableData = this.allData.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this
               .pageSize)
+            console.log(this.tableData)
             // 新增一个属性,标识数据的选中状态
             this.allData.forEach(e => e.selected = true)
             this.totalNum = this.allData.length
@@ -498,6 +546,13 @@
 <style lang="postcss" scoped>
   /* variables */
   $maxWidth: 1200px;
+  .out-button{
+    margin-left: 15px;
+  }
+ 
+  .el-button{
+    height: 40px;
+  }
 
   .info {
     width: 100%;
@@ -534,7 +589,7 @@
 
     .file_upload {
       display: inline-block;
-      margin-left: 50px;
+      /* margin-left: 50px; */
     }
   }
 
@@ -645,8 +700,5 @@
 </style>
 
 <style scoped>
-  .line-class {
-    text-decoration: underline;
-    color: #409EFF
-  }
+
 </style>
