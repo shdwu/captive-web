@@ -211,7 +211,7 @@
   </div>
 </template>
 <script>
- import storage from '../../util/storage.js'
+
   export default {
     data() {
       return {
@@ -266,7 +266,7 @@
     methods: {
       // 点击航次
       clickLine(row){
-        storage.clickLine(row);
+        this.storage.clickLine(row);
       },
       // 点击暂存
       async tempSave(){

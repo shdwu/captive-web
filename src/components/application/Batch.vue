@@ -195,9 +195,6 @@
 </template>
 <script>
   import * as batchApi from '@/api/batch'
-  import storage from '../../util/storage.js'
-
-
   export default {
     data() {
       return {
@@ -253,7 +250,7 @@
 
 
       clickLine(row) {
-        storage.clickLine(row);
+        this.storage.clickLine(row);
       },
       dateFormat(date) {
         if (date) {

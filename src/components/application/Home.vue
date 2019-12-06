@@ -129,7 +129,6 @@
 </template>
 <script>
   import dateFormat from 'dateformat'
-  import storage from '../../util/storage.js'
   import FileSaver from 'file-saver'
   import XLSX from 'xlsx'
   import {
@@ -418,22 +417,7 @@
 
       // 点击航次跳转到地图页，查看当前船舶的航迹信息
       clickLine(row) {
-        storage.clickLine(row);
-        // if (row) {
-        //   let mmsi = row.mmsi;
-        //   if (row.orderDtos && row.orderDtos.length != 0) {
-        //     let start = row.orderDtos[0].intime.replace(/-/g, '/'); //将时间字符串转成格式2019/11/11 20:11:11兼容ios
-        //     let end = row.orderDtos[row.orderDtos.length - 1].outtime.replace(/-/g, '/');
-        //     start = start.substring(0, 10) + ' 00:00'
-        //     end = end.substring(0, 10) + ' 23:59'
-        //     start = new Date(start).getTime()
-        //     end = new Date(end).getTime()
-        //     // start = Date.parse(start) //将时间字符串转时间戳
-        //     // end = Date.parse(end)
-        //     //  打开新的页面并跳转到该地址
-        //     window.open('http://localhost:8080/#/?mmsi=' + mmsi + '&start=' + start + '&end=' + end)
-        //   }
-        // }
+        this.storage.clickLine(row);
       },
 
       getTableData(params, sum) {
