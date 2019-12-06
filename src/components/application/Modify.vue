@@ -137,11 +137,11 @@
                 <el-form-item label="赎金险">
                   <el-input v-model="scope.row.karAmount" oninput="value=value.replace(/^[^0-9]/,'')"></el-input>
                 </el-form-item>
+                <el-form-item label="特战险">
+                  <el-input v-model="scope.row.sumPremium"></el-input>
+                </el-form-item>
                 <el-form-item label="租金损失险">
                   <el-input v-model="scope.row.rentLossAmount"></el-input>
-                </el-form-item>
-                <el-form-item label="最终保费">
-                  <el-input v-model="scope.row.sumPremium"></el-input>
                 </el-form-item>
               </el-form>
                <!-- <el-input v-model="scope.row.sumPremium" oninput="value=value.replace(/^[^0-9]/,'')"></el-input>
