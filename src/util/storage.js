@@ -11,7 +11,7 @@ var storage = {
         start = new Date(start).getTime()
         end = new Date(end).getTime()
         //  打开新的页面并跳转到该地址
-        window.open('http://localhost:8080/#/?mmsi=' + mmsi + '&start=' + start + '&end=' + end)
+        window.open('http://10.18.121.90:8090/#/?mmsi=' + mmsi + '&start=' + start + '&end=' + end)
       }
     }
   }

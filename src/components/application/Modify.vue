@@ -14,6 +14,8 @@
             <el-button type="primary">上传附件</el-button>
           </el-upload>
         </el-form>
+         <el-button :type="primarys" :loading="passeOperLoading"
+          v-if="nameType === 'BROKER'  && item.status === '0'" @click="tempSave">暂存</el-button>
         <el-button type="primary" class="right_button" :loading="returnOperLoading"
           v-if="nameType === 'BROKER'  && item.status === '0'" :disabled='!disabled' @click="isReturns">退回</el-button>
         <el-button :type="primarys" class="right_button" :loading="passeOperLoading"
@@ -133,7 +135,7 @@
         <el-table-column align='center'  width="220px" prop="sumPremium" label="最终保费">
           <template slot-scope="scope">
             <div  v-if="nameType === 'BROKER' && item.status !== '1'">
-              <el-form id="amountForm" :label-position="labelPosition" label-width="90px" :model="formLabelAlign">
+              <el-form id="amountForm" :label-position="labelPosition" label-width="90px">
                 <el-form-item label="赎金险">
                   <el-input v-model="scope.row.karAmount" oninput="value=value.replace(/^[^0-9]/,'')"></el-input>
                 </el-form-item>
@@ -144,10 +146,21 @@
                   <el-input v-model="scope.row.rentLossAmount"></el-input>
                 </el-form-item>
               </el-form>
-               <!-- <el-input v-model="scope.row.sumPremium" oninput="value=value.replace(/^[^0-9]/,'')"></el-input>
-                  -->
             </div>
-            <span v-else>{{scope.row.sumPremium}}</span>  
+            <div v-else>
+              <div class="box">
+                <div class="title">赎金险</div>
+                <div class="value">{{scope.row.karAmount}}</div>
+              </div>
+              <div class="box">
+                <div class="title">特战险</div>
+                <div class="value">{{scope.row.sumPremium}}</div>
+              </div>
+               <div class="box">
+                <div class="title">租金损失险</div>
+                <div class="value">{{scope.row.rentLossAmount}}</div>
+              </div>
+            </div>
           </template>
         </el-table-column>
         <el-table-column width="70px" prop="needDeclare" label="无需申报">
@@ -251,9 +264,23 @@
       }
     },
     methods: {
+      // 点击航次
       clickLine(row){
         storage.clickLine(row);
       },
+      // 点击暂存
+      async tempSave(){
+        let promst = {
+          list: this.tableData
+        }
+        let res = await this.$http.post('/broker/saveInsuranceOrdersPremium', promst);
+        if(res.status === 200){
+          this.$message.success('暂存成功')
+        }else{
+          this.$message.error('暂存失败')
+        }
+      },
+
       showHide(row, column, e) {
         if ((column.label === '最终保费') ||
           (column.label === '无需申报') ||
@@ -667,6 +694,18 @@
   }
 </script>
 <style scoped>
+.title{
+  flex: 1;
+  text-align: right
+}
+.value{
+  flex: 1;
+  text-align: left;
+  padding-left: 15px;
+}
+.box{
+  display: flex;
+}
   #amountForm /deep/ .el-form-item__label{
     font-size: 12px ;
   }
