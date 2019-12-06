@@ -5,7 +5,7 @@
     <!-- 内容区域 -->
     <div class="body_table">
       <div class="btn_bar">
-        <el-button @click="exportExcel" class="out-button" type="primary" plain :loading="temporaryLoading">导出
+        <el-button @click="handleTableExport" class="out-button" type="primary" plain :loading="temporaryLoading">导出
         </el-button>
         <div style="display: inline;" v-if="userType === 'SHIPOWNER'">
           <el-button type="primary" :loading="temporaryLoading" @click="temporaryStorage" plain v-show="false">暂存
@@ -35,7 +35,6 @@
             <el-table :data="props.row.orderDtos" border :cell-style="tableRowClassName"
               style="width: 100%;font-size:12px">
               <el-table-column width="120px" prop="throughArea" label="特战区域名称">
-
               </el-table-column>
               <el-table-column prop="intime_ext" width="100px" label="进入时间">
               </el-table-column>
@@ -180,7 +179,8 @@
         }, {
           value: '>3',
           label: '>3'
-        }],
+        }
+      ],
         userType: null,
         select: '',
         fileName: '',
@@ -196,6 +196,40 @@
       }
     },
     methods: {
+     
+      /**
+       * 导出
+       */
+      handleTableExport() {
+      // params: status = '', state = '', startDate = '', endDate = ''
+        // let reqUrl = `/files/exportVoyageList?status=${this.status}&state=${this.state}'+
+        //   '&startDate=${startTime}&endDate=${endTime}`;
+        this.$http({
+          method: 'get',
+          url: '/files/exportVoyageList',
+          responseType: 'blob'
+        }).then(response => {
+          const file = response.headers['content-disposition']
+          let filename = file.split('=')[1];
+          this.download(response.data, filename)
+        }).catch(error => {
+          this.$message.error('导出错误！');
+        })
+      },
+      // 手动下载 手动创建a标签,并触发点击下载
+      download(data, file) {
+        if (!data) {
+          return
+        }
+        let url = window.URL.createObjectURL(new Blob([data]))
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', file)
+        document.body.appendChild(link)
+        link.click()
+      },
+
+
 
       // 到处excel的方法
       exportExcel() {

@@ -57,9 +57,9 @@
         </el-table-column>
         <el-table-column prop="createtime" label="提交时间">
         </el-table-column>
-        <el-table-column prop="createtime" label="审核时间">
+        <el-table-column prop="checkby" label="审核人">
         </el-table-column>
-        <el-table-column prop="createtime" label="审核人">
+        <el-table-column prop="checkTime" label="审核时间">
         </el-table-column>
         <el-table-column label="状态">
           <template slot-scope="scope">
@@ -307,6 +307,7 @@
         document.body.appendChild(link)
         link.click()
       },
+      
       async isGetList(batchNum = '', createBy = '', status = '', page = 1) {
         this.loading = true;
         batchNum = (batchNum === '') ? batchNum : ('%' + batchNum + '%');

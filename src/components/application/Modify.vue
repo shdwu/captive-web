@@ -96,7 +96,7 @@
         <el-table-column  label="船名" width="90px" prop="shipCName">
           <template scope="scope">{{scope.row.shipCName}}</template>
         </el-table-column>
-        <el-table-column align='center' label="航次" width="60px" prop="line">
+        <el-table-column align='center' label="航次" width="80px" prop="line">
           <template scope="scope">
             <el-button type="text" style="color:#606266" @click="toogleExpand(scope.row)">
              <span class="line-class" @click="clickLine(scope.row)">{{scope.row.line}}</span>
@@ -576,6 +576,7 @@
         }
       },
       isLings(value) {
+        console.log(value)
         value.state = '0'
         if (this.tableData.some(item => {
             if (item.state === '2') {
