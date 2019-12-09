@@ -57,7 +57,7 @@
         </el-table-column>
         <el-table-column prop="createtime" label="提交时间">
         </el-table-column>
-        <el-table-column prop="checkby" label="审核人">
+        <el-table-column prop="checkBy" label="审核人">
         </el-table-column>
         <el-table-column prop="checkTime" label="审核时间">
         </el-table-column>
