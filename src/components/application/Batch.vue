@@ -73,7 +73,7 @@
         :page-size="pagesize" @current-change="changePage">
       </el-pagination>
     </div>
-
+<!-- handleCurrentChange -->
 
     <el-dialog :visible.sync="dialogVisible" width="80%">
       <template slot="title">
@@ -307,6 +307,7 @@
       
       async isGetList(batchNum = '', createBy = '', status = '', page = 1) {
         this.loading = true;
+        console.log(this.page)
         batchNum = (batchNum === '') ? batchNum : ('%' + batchNum + '%');
         let res = await this.$http.get('/broker/batchList', {
           params: {
@@ -314,7 +315,7 @@
             createBy,
             status,
             num: 10,
-            page
+            page:this.page
           }
         })
 
@@ -335,6 +336,8 @@
 
       // tableData的数据
       async isGetLists(batchNum = '', createBy = '', status = '', page = 1) {
+        // page
+        
         this.loading = true
         batchNum = (batchNum === '') ? batchNum : ('%' + batchNum + '%');
         let res = await this.$http.get('/shiper/batchList', {
@@ -420,7 +423,9 @@
         })
       },
       changePage(Page) {
-        this.$router.push(`/batch/${Page}`)
+        this.page = Page;
+        this.isGetList();
+        // this.$router.push(`/batch/${Page}`)
       }
     },
     created() {

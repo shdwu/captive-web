@@ -136,11 +136,11 @@
           <template slot-scope="scope">
             <div  v-if="nameType === 'BROKER' && item.status !== '1'">
               <el-form id="amountForm" :label-position="labelPosition" label-width="90px">
+                 <el-form-item label="特战险">
+                  <el-input v-model="scope.row.sumPremium"></el-input>
+                </el-form-item>
                 <el-form-item label="赎金险">
                   <el-input v-model="scope.row.karAmount" oninput="value=value.replace(/^[^0-9]/,'')"></el-input>
-                </el-form-item>
-                <el-form-item label="特战险">
-                  <el-input v-model="scope.row.sumPremium"></el-input>
                 </el-form-item>
                 <el-form-item label="租金损失险">
                   <el-input v-model="scope.row.rentLossAmount"></el-input>
@@ -149,12 +149,12 @@
             </div>
             <div v-else>
               <div class="box">
-                <div class="title">赎金险</div>
-                <div class="value">{{scope.row.karAmount}}</div>
-              </div>
-              <div class="box">
                 <div class="title">特战险</div>
                 <div class="value">{{scope.row.sumPremium}}</div>
+              </div>
+              <div class="box">
+                <div class="title">赎金险</div>
+                <div class="value">{{scope.row.karAmount}}</div>
               </div>
                <div class="box">
                 <div class="title">租金损失险</div>

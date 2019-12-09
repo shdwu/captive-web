@@ -200,7 +200,7 @@
        * 导出
        */
       handleTableExport() {
-        console.log('导出')
+        // console.log(this.searchTime)
       // params: status = '', state = '', startDate = '', endDate = ''
         // let reqUrl = `/files/exportVoyageList?status=${this.status}&state=${this.state}'+
         //   '&startDate=${startTime}&endDate=${endTime}`;
