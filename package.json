@@ -11,9 +11,12 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "@csnt/map-core": "^0.0.12-alpha.10",
     "dateformat": "^3.0.3",
+    "file-saver": "^2.0.2",
     "vue": "^2.6.10",
-    "vue-route": "^1.5.1"
+    "vue-route": "^1.5.1",
+    "xlsx": "^0.15.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.2",
