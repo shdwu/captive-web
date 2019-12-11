@@ -586,8 +586,7 @@
           }
           this.tableData.forEach(item => {
             if (item.state !== '1') {
-              // item.state = '3'
-              item.state = '4'
+              item.state = '3'
             }
           })
           let promst = {
