@@ -65,7 +65,9 @@
           <template slot-scope="scope">
             <div v-if="scope.row.status === '0'" class="ysh">待审核</div>
             <div v-else-if="scope.row.status === '1'" class="dsh">已审核</div>
-            <div v-else class="yth">已退回</div>
+            <div v-else-if="scope.row.status === '2'" class="yth">已退回</div>
+            <div v-else-if="scope.row.status === '3'" class="yth diff">有疑议</div>
+            <div v-else class="ysh">待确认</div>
           </template>
         </el-table-column>
       </el-table>
@@ -73,7 +75,7 @@
         :page-size="pagesize" @current-change="changePage">
       </el-pagination>
     </div>
-<!-- handleCurrentChange -->
+
 
     <el-dialog :visible.sync="dialogVisible" width="80%">
       <template slot="title">
@@ -111,7 +113,6 @@
                 </el-table-column>
                 <el-table-column label="安保人数">
                   <template slot-scope="scope">
-
                     <el-select v-model="scope.row.guardsNo" v-if="nameType === 'SHIPOWNER' &&  props.row.state ==='2' "
                       placeholder="请选择">
                       <el-option v-for="todos in guardList" :key="todos.length" :label="todos.value"
@@ -149,8 +150,7 @@
               <span>{{scope.row.etd}}</span>
             </template>
           </el-table-column>
-          <!-- <el-table-column label="出发时间" width="100px" prop="etd">
-          </el-table-column> -->
+         
           <el-table-column label="目的港" prop="arrivalPort">
             <template slot-scope="scope">
               <span>{{ scope.row.arrivalPort }}</span><br>
@@ -219,6 +219,12 @@
         }, {
           value: '2',
           label: '已退回'
+        }, {
+          value: '3',
+          label: '有疑议'
+        }, {
+          value: '4',
+          label: '待确认'
         }],
         state: '',
         states: [{
@@ -248,7 +254,6 @@
     methods: {
 
 
-
       clickLine(row) {
         this.storage.clickLine(row);
       },
@@ -269,6 +274,7 @@
         };
         batchApi.detailsSearch(par).then(res => {
           this.dialogData = res.data.list
+          console.log( this.dialogData )
           this.dialogVisible = true
         })
       },
@@ -346,11 +352,12 @@
             createBy,
             status,
             num: 10,
-            page
+            page:this.page
           }
         })
 
         if (res.status === 200) {
+          console.log(res)
           this.tableData = res.data.list
           console.log(this.tableData)
           this.total = res.data.total
@@ -423,8 +430,14 @@
         })
       },
       changePage(Page) {
+        console.log('a')
         this.page = Page;
-        this.isGetList();
+        if(this.nameType === 'BROKER'){
+          this.isGetList();
+        }else{
+          this.isGetLists();
+        }
+        
         // this.$router.push(`/batch/${Page}`)
       }
     },
@@ -458,6 +471,11 @@
   }
 </script>
 <style scoped>
+  .diff{
+    background: #e6a23c !important;
+    border: 1px solid #e6a23c !important;
+  }
+
   .info {
     width: 100%;
     background-color: #f5f5f6;

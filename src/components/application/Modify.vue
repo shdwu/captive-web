@@ -5,25 +5,37 @@
     <div class="logo_bgc" :style="bgc"></div>
     <div class="logo_botton">
       <div class="btnxz">
-        <el-button type="primary" class="left_button" @click="isLoad(item.fileId)" :disabled="!item.fileId">下载附件
-        </el-button>
-        <el-button type="primary" class="left_button" @click="isExport(item.uuid, item.batchNum)">导出excel</el-button>
-        <el-button type="primary" class="left_button" @click="isFu">返回</el-button>
-        <el-form class="left_button" v-if="nameType === 'SHIPOWNER' &&item.status === '2' ">
-          <el-upload class="upload-demo" action="/files" :before-upload="beforeUpload" list-type="text">
-            <el-button type="primary">上传附件</el-button>
-          </el-upload>
-        </el-form>
-         <el-button :type="primarys" :loading="passeOperLoading"
-          v-if="nameType === 'BROKER'  && item.status === '0'" @click="tempSave">暂存</el-button>
-        <el-button type="primary" class="right_button" :loading="returnOperLoading"
-          v-if="nameType === 'BROKER'  && item.status === '0'" :disabled='!disabled' @click="isReturns">退回</el-button>
-        <el-button :type="primarys" class="right_button" :loading="passeOperLoading"
-          v-if="nameType === 'BROKER'  && item.status === '0'" :disabled='disabled' @click="isPass">审核通过</el-button>
-        <el-button type="primary" :loading="submitOperLoading" v-if="nameType === 'SHIPOWNER' && item.status === '2' "
-          @click="isSubmission" class="right_button">提交</el-button>
-        <span>&nbsp;&nbsp;&nbsp;附件:{{item.fileName}}</span>
+        <div class="box-left">
+          <el-button type="primary" class="left_button" @click="isLoad(item.fileId)" :disabled="!item.fileId">下载附件
+          </el-button>
+          <el-button type="primary" class="left_button" @click="isExport(item.uuid, item.batchNum)">导出excel</el-button>
+          <el-button type="primary" class="left_button" @click="isFu">返回</el-button>
+          <el-form class="left_button" v-if="nameType === 'SHIPOWNER' &&item.status === '2' ">
+            <el-upload class="upload-demo" action="/files" :before-upload="beforeUpload" list-type="text">
+              <el-button type="primary">上传附件</el-button>
+            </el-upload>
+          </el-form>
+          <el-button type="primary" :loading="passeOperLoading" v-if="nameType === 'BROKER'  && item.status === '0'"
+            @click="tempSave">暂存</el-button>
+          <el-button type="primary" class="right_button" :loading="returnOperLoading"
+            v-if="nameType === 'BROKER'  && item.status === '0'" :disabled='!disabled' @click="isReturns">退回</el-button>
+          <el-button :type="primarys" class="right_button" :loading="passeOperLoading"
+            v-if="nameType === 'BROKER'  && item.status === '0'" :disabled='disabled' @click="isPass">审核通过</el-button>
+          <el-button type="primary" :loading="submitOperLoading" v-if="nameType === 'SHIPOWNER' && item.status === '2' "
+            @click="isSubmission" class="right_button">提交</el-button>
+            <el-button :type="primarys" v-show="item.status === '3' && nameType === 'BROKER'" class="right_button" :loading="passeOperLoading" :disabled='disabled' @click="isPass">提交</el-button>
+          <span style="margin-left:15px">附件:{{item.fileName}}</span>
+        </div>
+        <!--   -->
+        <div v-show="item.status === '4' && nameType != 'BROKER'" class="box-right">
+          <el-button type="primary" plain @click="handleConfirm('3')">有疑议</el-button>
+          <el-button type="primary" @click="handleConfirm('1')">确认</el-button>
+        </div>
+
+
+
       </div>
+
       <div class="title_s">
         <div class="fdsa">
           <span class="ml10">申报批次：</span>
@@ -39,14 +51,17 @@
         </div>
         <div class="fdsa">
           <span class="ml10">申报状态：</span>
-          <div v-if="item.status === '0'" class="dsh">待审核</div>
-          <div v-else-if="item.status === '1'" class="ysh">已审核</div>
-          <div v-else class="yth">已退回</div>
+          <div v-if="item.status === '0'" class="ysh">待审核</div>
+          <div v-else-if="item.status === '1'" class="dsh">已审核</div>
+          <div v-else-if="item.status === '2'" class="yth">已退回</div>
+          <div v-else-if="item.status === '3'" class="ysh diff">有疑议</div>
+          <div v-else class="ysh">待确认</div>
         </div>
+
       </div>
 
-      <el-table  align='center' :data="tableData" :default-expand-all="true" :empty-text="emptyText" v-loading="loading" ref="tableMain"
-        @row-click="showHide" style="width: 100%;font-size:12px">
+      <el-table align='center' :data="tableData" :default-expand-all="true" :empty-text="emptyText" v-loading="loading"
+        ref="tableMain" @row-click="showHide" style="width: 100%;font-size:12px">
         <el-table-column width='30' type="expand">
           <template slot-scope="props">
             <el-table :data="props.row.orderDtos" border :cell-style="tableRowClassName"
@@ -95,13 +110,13 @@
             </el-table>
           </template>
         </el-table-column>
-        <el-table-column  label="船名" width="90px" prop="shipCName">
+        <el-table-column label="船名" width="90px" prop="shipCName">
           <template scope="scope">{{scope.row.shipCName}}</template>
         </el-table-column>
         <el-table-column align='center' label="航次" width="80px" prop="line">
           <template scope="scope">
             <el-button type="text" style="color:#606266" @click="toogleExpand(scope.row)">
-             <span class="line-class" @click="clickLine(scope.row)">{{scope.row.line}}</span>
+              <span class="line-class" @click="clickLine(scope.row)">{{scope.row.line}}</span>
             </el-button>
           </template>
         </el-table-column>
@@ -117,7 +132,7 @@
             <span>{{scope.row.eta_ext}}</span>
           </template>
         </el-table-column>
-        <el-table-column  label="特战区" width="85px" prop="throughAreaSum">
+        <el-table-column label="特战区" width="85px" prop="throughAreaSum">
           <!-- 表格内换行 -->
           <template scope="scope">{{scope.row.throughAreaSum}}</template>
         </el-table-column>
@@ -132,12 +147,12 @@
         </el-table-column>
         <el-table-column align='center' prop="insuranceAmountCurrency" width="100px" label="保险金额">
         </el-table-column>
-        <el-table-column align='center'  width="220px" prop="sumPremium" label="最终保费">
+        <el-table-column align='center' width="220px" prop="sumPremium" label="最终保费">
           <template slot-scope="scope">
-            <div  v-if="nameType === 'BROKER' && item.status !== '1'">
+            <div v-if="nameType === 'BROKER' && item.status === '0' || nameType === 'BROKER' && item.status === '3'">
               <el-form id="amountForm" :label-position="labelPosition" label-width="90px">
-                 <el-form-item label="特战险">
-                  <el-input v-model="scope.row.sumPremium"></el-input>
+                <el-form-item label="特战险">
+                  <el-input v-model="scope.row.sumPremium" oninput="value=value.replace(/^[^0-9]/,'')"></el-input>
                 </el-form-item>
                 <el-form-item label="赎金险">
                   <el-input v-model="scope.row.karAmount" oninput="value=value.replace(/^[^0-9]/,'')"></el-input>
@@ -156,7 +171,7 @@
                 <div class="title">赎金险</div>
                 <div class="value">{{scope.row.karAmount}}</div>
               </div>
-               <div class="box">
+              <div class="box">
                 <div class="title">租金损失险</div>
                 <div class="value">{{scope.row.rentLossAmount}}</div>
               </div>
@@ -175,20 +190,11 @@
           <template slot-scope="scope">
             <el-button type="info" v-if="nameType === 'BROKER' &&  scope.row.state ==='0' "
               :disabled="item.status==='2'? true:false" @click="isRuts(scope.row)">不通过</el-button>
-            <!--              <el-button type="warning"-->
-            <!--                        :disabled="item.status==='2'? true:false"-->
-            <!--                        v-if="nameType === 'BROKER' &&  scope.row.state ==='1' "-->
-            <!--                        @click="isRuts(scope.row)">需申报</el-button>-->
             <el-button type="danger" :disabled="item.status==='2'? true:false"
               v-if="nameType === 'BROKER' &&  scope.row.state ==='2' " @click="isLings(scope.row)">不通过</el-button>
             <el-button type="info" v-if="nameType === 'SHIPOWNER' &&  scope.row.state ==='0' ">待审核</el-button>
-            <!--              <el-button type="warning"-->
-            <!--                        v-if="nameType === 'SHIPOWNER' &&  scope.row.state ==='1' ">无需申报</el-button>-->
             <el-button type="danger" v-if="nameType === 'SHIPOWNER' &&  scope.row.state ==='2' ">被退回</el-button>
-
             <el-button type="info" v-if="nameType === 'CAPTIVE' &&  scope.row.state ==='0' ">待审核</el-button>
-            <!--              <el-button type="warning"-->
-            <!--                        v-if="nameType === 'CAPTIVE' &&  scope.row.state ==='1' ">无需申报</el-button>-->
             <el-button type="danger" v-if="nameType === 'CAPTIVE' &&  scope.row.state ==='2' ">被退回</el-button>
             <el-button type="success" v-if="scope.row.state ==='3' ">已审核</el-button>
           </template>
@@ -211,7 +217,6 @@
   </div>
 </template>
 <script>
-
   export default {
     data() {
       return {
@@ -265,21 +270,37 @@
     },
     methods: {
       // 点击航次
-      clickLine(row){
+      clickLine(row) {
         this.storage.clickLine(row);
       },
       // 点击暂存
-      async tempSave(){
+      async tempSave() {
         let promst = {
           list: this.tableData
         }
         let res = await this.$http.post('/broker/saveInsuranceOrdersPremium', promst);
-        if(res.status === 200){
+        if (res.status === 200) {
           this.$message.success('暂存成功')
-        }else{
+        } else {
           this.$message.error('暂存失败')
         }
       },
+
+      // 是否确认审核的批次
+      //
+      async handleConfirm(val){
+        console.log(this.item)
+          let promst = {
+          batchId: this.item.uuid,
+          status:val
+        }
+        let res = await this.$http.put('/shiper/confirmPremium', promst);
+        console.log(res)
+        if(res.data.msg === 'success'){
+          this.item.status = val
+        }
+      },
+
 
       showHide(row, column, e) {
         if ((column.label === '最终保费') ||
@@ -554,7 +575,7 @@
         if (this.tableData.every(this.checkAdult)) {
           let obj = {
             batchNum: this.item.batchNum,
-            status: '1',
+            status: '4',
             premium: this.item.premium,
             fileName: this.item.fileName,
             fileId: this.item.fileId,
@@ -565,7 +586,8 @@
           }
           this.tableData.forEach(item => {
             if (item.state !== '1') {
-              item.state = '3'
+              // item.state = '3'
+              item.state = '4'
             }
           })
           let promst = {
@@ -694,27 +716,48 @@
   }
 </script>
 <style scoped>
-.title{
-  flex: 1;
-  text-align: right
-}
-.value{
-  flex: 1;
-  text-align: left;
-  padding-left: 15px;
-}
-.box{
-  display: flex;
-}
-  #amountForm /deep/ .el-form-item__label{
-    font-size: 12px ;
+
+ .diff{
+    background: #e6a23c !important;
+    border: 1px solid #e6a23c !important;
   }
-   #amountForm /deep/ .el-form-item{
-     margin-bottom: 0px;
-   }
-  #amountForm /deep/ .el-input__inner{
-       height: 30px;
-   }
+  .btnxz{
+    display: flex;
+  }
+
+  .box-left{
+    flex: 5
+  }
+  .box-right{
+    flex: 1
+  }
+
+  .title {
+    flex: 1;
+    text-align: right
+  }
+
+  .value {
+    flex: 1;
+    text-align: left;
+    padding-left: 15px;
+  }
+
+  .box {
+    display: flex;
+  }
+
+  #amountForm /deep/ .el-form-item__label {
+    font-size: 12px;
+  }
+
+  #amountForm /deep/ .el-form-item {
+    margin-bottom: 0px;
+  }
+
+  #amountForm /deep/ .el-input__inner {
+    height: 30px;
+  }
 
   .info {
     width: 100%;
