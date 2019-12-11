@@ -151,7 +151,7 @@
           <template slot-scope="scope">
             <div v-if="nameType === 'BROKER' && item.status === '0' || nameType === 'BROKER' && item.status === '3'">
               <el-form id="amountForm" :label-position="labelPosition" label-width="90px">
-                <el-form-item label="特战险">
+                <el-form-item required label="特战险">
                   <el-input v-model="scope.row.sumPremium" oninput="value=value.replace(/^[^0-9]/,'')"></el-input>
                 </el-form-item>
                 <el-form-item label="赎金险">
