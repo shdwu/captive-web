@@ -233,7 +233,6 @@
         link.setAttribute('download', file)
         document.body.appendChild(link)
         link.click()
-        
       },
 
 
