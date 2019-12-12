@@ -433,6 +433,7 @@
 
 
           getOrderList(params).then(res => {
+            console.log('aa')
             //千分位 特战区 总时间
             for (let d of res.data.list) {
               let plus = 0;
