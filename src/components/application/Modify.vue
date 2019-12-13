@@ -152,13 +152,13 @@
             <div v-if="nameType === 'BROKER' && item.status === '0' || nameType === 'BROKER' && item.status === '3'">
               <el-form id="amountForm" :label-position="labelPosition" label-width="90px">
                 <el-form-item required label="特战险">
-                  <el-input v-model="scope.row.sumPremium" oninput="value=value.replace(/^[^0-9]/,'')"></el-input>
+                  <el-input v-model.number="scope.row.sumPremium" oninput="value=value.replace(/^[^0-9]/,'')"></el-input>
                 </el-form-item>
                 <el-form-item label="赎金险">
-                  <el-input v-model="scope.row.karAmount" oninput="value=value.replace(/^[^0-9]/,'')"></el-input>
+                  <el-input v-model.number="scope.row.karAmount" oninput="value=value.replace(/^[^0-9]/,'')"></el-input>
                 </el-form-item>
                 <el-form-item label="租金损失险">
-                  <el-input v-model="scope.row.rentLossAmount"></el-input>
+                  <el-input v-model.number="scope.row.rentLossAmount"></el-input>
                 </el-form-item>
               </el-form>
             </div>
@@ -361,6 +361,7 @@
               d['etd_ext'] = d['etd'].replace(' ', '\n')
             }
           }
+
           this.tableData = res.data.list
           this.tableData.forEach(item => {
             if (item.state === '2') {
@@ -420,6 +421,7 @@
             }
           }
           this.tableData = res.data.list
+          console.log(this.tableData)
         }
 
         if (!(this.tableData && this.tableData.length > 0)) {

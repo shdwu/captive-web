@@ -200,22 +200,28 @@
        * 导出
        */
       handleTableExport() {
-        // console.log(this.searchTime)
-      // params: status = '', state = '', startDate = '', endDate = ''
-        // let reqUrl = `/files/exportVoyageList?status=${this.status}&state=${this.state}'+
-        //   '&startDate=${startTime}&endDate=${endTime}`;
-        this.$http({
-          method: 'get',
-          url: '/files/exportVoyageList',
-          responseType: 'blob'
-        }).then(response => {
-          const file = response.headers['content-disposition']
-          let filename = file.split('=')[1];
-          this.download(response.data, filename)
-        }).catch(error => {
-          this.$message.error('导出错误！');
-        })
+          let reqUrl = ''
+          if(this.searchTime && this.searchTime.length >= 2){
+            let startDate = dateFormat(this.searchTime[0], "yyyy-mm-dd")
+            let endDate = dateFormat(this.searchTime[1], "yyyy-mm-dd")
+            reqUrl = `/files/exportVoyageList?startDate=${startDate}&endDate=${endDate}`;
+          }else{
+           reqUrl = '/files/exportVoyageList'
+          }
+
+          this.$http({
+            method: 'get',
+            url: reqUrl,
+            responseType: 'blob'
+          }).then(response => {
+            const file = response.headers['content-disposition']
+            let filename = file.split('=')[1];
+            this.download(response.data, filename)
+          }).catch(error => {
+            this.$message.error('导出错误！');
+          })
       },
+
       // 手动下载 手动创建a标签,并触发点击下载
       download(data, file) {
         if (!data) {
@@ -229,30 +235,6 @@
         link.click()
       },
 
-
-
-      // 到处excel的方法
-      exportExcel() {
-        // 绑定table的id
-        var wb = XLSX.utils.table_to_book(document.querySelector('#detailTeble'));
-        /* get binary string as output */
-        var wbout = XLSX.write(wb, {
-          bookType: "xlsx",
-          bookSST: true,
-          type: "array"
-        });
-        try {
-          FileSaver.saveAs(
-            new Blob([wbout], {
-              type: "application/octet-stream"
-            }),
-            "统计报表.xlsx" //到处的名字
-          );
-        } catch (e) {
-          if (typeof console !== "undefined") console.log(e, wbout);
-        }
-        return wbout;
-      },
 
 
       showHide(row, column, e) {
