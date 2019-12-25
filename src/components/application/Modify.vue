@@ -23,7 +23,7 @@
             v-if="nameType === 'BROKER'  && item.status === '0'" :disabled='disabled' @click="isPass">审核通过</el-button>
           <el-button type="primary" :loading="submitOperLoading" v-if="nameType === 'SHIPOWNER' && item.status === '2' "
             @click="isSubmission" class="right_button">提交</el-button>
-            <el-button :type="primarys" v-show="item.status === '3' && nameType === 'BROKER'" class="right_button" :loading="passeOperLoading" :disabled='disabled' @click="isPass">提交</el-button>
+            <el-button :type="primarys" v-show="item.status === '3' && nameType === 'BROKER'" class="right_button" :loading="passeOperLoading" :disabled='disabled' @click="isPass">审核通过</el-button>
           <span style="margin-left:15px">附件:{{item.fileName}}</span>
         </div>
         <!--   -->
